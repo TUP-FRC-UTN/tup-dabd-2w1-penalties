@@ -1,0 +1,15 @@
+<div class="card mb-3 scale-up-center" style="max-width: 20rem; background-color: #B7E4C7 ">
+    <div class="card-header shadow-none">Indique el motivo de cambio de Estado</div>
+    <div class="card-body">
+        <h5 class="card-title">Motivo</h5>
+        <p class="card-text">
+            <textarea id="reasonChange" [value]="reasonText"></textarea>
+        </p>
+    </div>
+    <div class="card-footer">
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-danger" (click)="cerrar()">Cancelar</button>
+          <button type="button" class="btn btn-success" (click)="putComplaint()">Enviar</button>
+        </div>
+      </div>
+</div>
