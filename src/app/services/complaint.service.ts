@@ -17,11 +17,11 @@ export class ComplaintService {
   }
 
   getTypes(): Observable<any> {
-    return this.http.get(this.url+'/types');
+    return this.http.get(this.url+'complaint/types');
   }
 
   getAllComplains(){
-    return this.http.get<ComplaintDto[]>(this.url+"Complaint/all")
+    return this.http.get<ComplaintDto[]>(this.url+"complaint/all")
   }
 
   putStateComplaint(idcomplaint: number, updatedData: PutStateComplaintDto): Observable<any> {

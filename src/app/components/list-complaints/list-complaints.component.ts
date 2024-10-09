@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ConsultarDenunciaModalComponent } from '../consultar-denuncia-modal/consultar-denuncia-modal.component';
 import { NgbModal, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { Complaint, ComplaintDto } from '../../models/complaint';
+import { ComplaintDto } from '../../models/complaint';
 import { ComplaintService } from '../../services/complaint.service';
 
 import { ModalStateReasonComponent } from '../modal-state-reason/modal-state-reason.component';
@@ -13,18 +13,20 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-list-complaints',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterOutlet, ConsultarDenunciaModalComponent ,FormsModule,NgbModule,
+  imports: [CommonModule, RouterModule, ConsultarDenunciaModalComponent ,FormsModule,NgbModule,
     NgbPaginationModule,],
   templateUrl: './list-complaints.component.html',
   styleUrl: './list-complaints.component.scss'
 })
 export class ListComplaintsComponent implements OnInit {
-  denuncias: ComplaintDto[]=[];
+  Complaint: ComplaintDto[]=[];
   complaintState: String = ""
-  denunciasfiltro: ComplaintDto[]=[];
+  filterComplaint: ComplaintDto[]=[];
   page:number=1;
-  pageSize:number = 10;
+  pageSize:number = 5;
   collectionSize:number=0;
+  filterDateStart:Date = new Date
+  filterDateEnd:Date = new Date
 
 constructor(private router: Router,private _modal:NgbModal, private complServ: ComplaintService){
 
@@ -36,7 +38,7 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
   
     if (filterValue) {
-      this.denunciasfiltro = this.denuncias.filter((p) => {
+      this.filterComplaint = this.Complaint.filter((p) => {
         const complaintStateStr = p.complaintState.toLowerCase();
         const descriptionStr = p.description.toLowerCase();
   
@@ -47,13 +49,13 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
       });
     } else {
       
-      this.denunciasfiltro = [...this.denuncias];
+      this.filterComplaint = [...this.Complaint];
     }
   }
 
 
   
-  modalConsulta(i:number){
+  viewComplaint(i:number){
     const modal = this._modal.open(ConsultarDenunciaModalComponent, { size: 'xl' ,  keyboard: false });
       modal.componentInstance.denunciaId =i ; 
       modal.result.then((result) => {
@@ -65,15 +67,18 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
   
   refreshData() {
     this.complServ.getAllComplains().subscribe(data=>{
-      this.denuncias=data
-      this.denunciasfiltro = [...data];
+      this.Complaint=data
+      this.filterComplaint = [...data];
       this.collectionSize = data.length; 
-      this.denuncias= data.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
-      this.denuncias.forEach((actividad) => {
+      this.filterComplaint= data.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
+      this.Complaint.forEach((c) => {
        
-        if (Array.isArray(actividad.createdDate)) {
-          const [year, month, day, hour, minute, second] = actividad.createdDate;
-          actividad.createdDate = new Date(year, month - 1, day, hour, minute, second); 
+        if (Array.isArray(c.createdDate)) {
+
+          console.log()
+          const [year, month, day, hour, minute, second] = c.createdDate;
+          c.createdDate = new Date(year, month - 1, day, hour, minute, second);
+
         }
       });
      
@@ -85,6 +90,7 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
     this.complaintState = option
     this.openModal(idComplaint,userId)
   }
+  
   openModal(idComplaint:number, userId:number){
     const modal = this._modal.open(ModalStateReasonComponent, { size: 'sm' ,  keyboard: false });
     modal.componentInstance.idComplaint = idComplaint
@@ -98,7 +104,7 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
 
 
 
-  getEstadoClase(estado: string): string {
+  getStatusClass(estado: string): string {
     switch (estado) {
       case 'Anexada':
         return 'btn-secondary';

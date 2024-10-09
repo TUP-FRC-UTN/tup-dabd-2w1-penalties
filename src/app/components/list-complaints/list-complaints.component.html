@@ -4,26 +4,41 @@
 
 
         <div class="text-center">
-        <h1 style="color: #ffffff;">Listado de denuncias</h1>
+            <h1 >Listado de denuncias</h1>
         </div>
         <br>
-        <div class="row">
-            <div class="col-4">
-              <input type="text"placeholder="Buscar"class="form-control"(keyup)="applyFilter($event)"/>
+        <div class="row align-items-center">
+            <div class="col-3">
+                <input type="text" placeholder="Buscar" class="form-control" (keyup)="applyFilter($event)" />
             </div>
-            <div class="col-4">
-                <select class="form-control" name="" id="estadoSelect" >
-                  <option value="">Seleccionar Estado</option>
-                  <option value="Nuevo">Nuevo</option>
-                  <option value="Pendiente">Pendiente</option>
-                  <option value="Anexado">Anexado</option>
-                  <option value="Rechazado">Rechazado</option>
+            <div class="col-3">
+                <select class="form-control" id="estadoSelect">
+                    <option value="">Seleccionar Estado</option>
+                    <option value="Nuevo">Nuevo</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Anexado">Anexado</option>
+                    <option value="Rechazado">Rechazado</option>
                 </select>
-              </div>
-            <div class="col-4 text-end">
-             
             </div>
-          </div>
+            <div class="col-6 text-end">
+                <div class="row">
+                    <div class="col-4">
+                        <input [(ngModel)]="filterDateStart" class="form-control" type="date" />
+                    </div>
+                    <div class="col-4">
+                        <input [(ngModel)]="filterDateEnd" class="form-control" type="date" />
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-success">Buscar</button>
+                        
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-success" [routerLink]="'/postComplaint'">Nuevo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
           <br>
 
         <div>
@@ -38,29 +53,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let d of denunciasfiltro">
-                    <td class="text-center"scope="row">{{d.createdDate | date : "dd/mm/YYYY"}}</td>
+                <tr *ngFor="let d of filterComplaint">
+                    <td class="text-center"scope="row">{{d.createdDate | date : "dd/MM/YYYY"}}</td>
                     
-                    <td class="text-center"><button class="btn {{ getEstadoClase(d.complaintState) }} text-center border rounded-pill text-dark" style="width: 130px;">{{d.complaintState}}</button></td>
+                    <td class="text-center"><button class="btn {{ getStatusClass(d.complaintState) }} text-center border rounded-pill text-dark" style="width: 130px;">{{d.complaintState}}</button></td>
                     <td class="text-center">{{d.description}}</td>
                     <td class="text-center"> <i class="bi bi-paperclip"></i>   {{d.randomValue}} Archivo adjunto</td>
 
-                    <td class="text-center"><div class="btn-group">
-                        <button class="" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="change-state-button"></button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" (click)="selectState('ATTACHED',d.id,d.userId)">Marcar como Anexada</a></li>
-                            <li><a class="dropdown-item" (click)="selectState('REJECTED',d.id,d.userId)">Marcar como Rechazada</a></li>
-                            <li><a class="dropdown-item" (click)="selectState('PENDING',d.id,d.userId)">Marcar como Pendiente</a></li>
-                        </ul>
-                    </div></td>
-
                     <td class="text-center">
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            (click)="modalConsulta(d.id)"
-                            >Consultar denuncia</button>
+                        <div class="btn-group gap-2">
+                            <button type="button" id="button"(click)="viewComplaint(d.id)">Ver más</button>
+                            <button type="button" data-bs-toggle="dropdown" aria-expanded="false" id="change-state-button"></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" (click)="selectState('ATTACHED',d.id,d.userId)">Marcar como Anexada</a></li>
+                                <li><a class="dropdown-item" (click)="selectState('REJECTED',d.id,d.userId)">Marcar como Rechazada</a></li>
+                                <li><a class="dropdown-item" (click)="selectState('PENDING',d.id,d.userId)">Marcar como Pendiente</a></li>
+                            </ul>
+                        </div>
+                    
                     </td>
+                    
                 </tr>
                
                 </tbody>
@@ -69,14 +81,15 @@
         <div class="d-flex justify-content-between p-2">
             <div>
               <select id="pageSizeSelect" [(ngModel)]="pageSize" (change)="refreshData()" class="form-control">
-                <option *ngFor="let size of [10, 20, 30, 50]" [value]="size">{{ size }}</option>
+                <option *ngFor="let size of [5,10, 20, 30, 50]" [value]="size">{{ size }}</option>
               </select>
             </div>
             <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="pageSize" (pageChange)="refreshData()">
             </ngb-pagination>
           </div>
+          
     </div>
+ </div>
     
-</div>
 
 
