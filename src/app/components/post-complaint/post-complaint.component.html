@@ -8,7 +8,7 @@
                     #optionField="ngModel" required>
                     <option value="" disabled selected>Seleccione una opción</option>
                     @for (type of complaintTypes; track $index) {
-                        <option [value]="type.id">{{type.value}}</option>
+                        <option [value]="type.key">{{type.value}}</option>
                     }
                 </select>
                 @if (optionField.invalid && (optionField.dirty || optionField.touched)) {
@@ -22,8 +22,8 @@
 
             <div class="input-box">
                 <label for="dateInput" class="form-label">Fecha</label>
-                <input type="date" id="dateInput" name="dateInput" class="form-control" [(ngModel)]="selectedDate"
-                    #dateField="ngModel" [max]="maxDate" required>
+                <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary" [(ngModel)]="selectedDate"
+                    #dateField="ngModel" [max]="maxDate" required disabled>
                 @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
                 <div class="text-danger">
                     @if (dateField.errors?.['required']) {
@@ -61,7 +61,7 @@
             </div>
             
             <div class="submit-box">
-                <button class="btn btn-secondary me-3">Cancelar</button>
+                <button  type="button" class="btn btn-secondary me-3">Cancelar</button>
                 <button type="submit" class="btn btn-success" [disabled]="formDenuncia.invalid">Enviar</button>
             </div>
         </div>

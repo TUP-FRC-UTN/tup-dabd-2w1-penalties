@@ -25,6 +25,7 @@ export enum TipoDenuncia {
 }
 
 
+
 //Aca deberia ser como ComplaintDto lo anterior debe ser llamado desde los services
 
 export interface ComplaintDto {
@@ -36,5 +37,4 @@ export interface ComplaintDto {
     description: string;
     createdDate: Date;
     randomValue: number;
-  }
-  
+}
