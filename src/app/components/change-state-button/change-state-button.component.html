@@ -1,8 +1,26 @@
 <div class="btn-group">
     <button class="" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="change-state-button"></button>
     <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Marcar como "Anexada"</a></li>
-        <li><a class="dropdown-item" href="#">Marcar como "Rechazada"</a></li>
-        <li><a class="dropdown-item" href="#">Marcar como "Pendiente"</a></li>
+        <li><a class="dropdown-item" (click)="selectState('ATTACHED')">Marcar como Anexada</a></li>
+        <li><a class="dropdown-item" (click)="selectState('REJECTED')">Marcar como Rechazada</a></li>
+        <li><a class="dropdown-item" (click)="selectState('PENDING')">Marcar como Pendiente</a></li>
     </ul>
+</div>
+
+<div *ngIf="modalStateReason" class="position-relative d-flex justify-content-center align-items-center">
+    <div class="card mb-3" style="max-width: 20rem; background-color: #B7E4C7">
+        <div class="card-header shadow-none">Indique el motivo de cambio de Estado</div>
+        <div class="card-body">
+            <h5 class="card-title">Motivo</h5>
+            <p class="card-text">
+                <textarea id=""></textarea>
+            </p>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+              <button type="button" class="btn btn-danger" (click)="closeModal()">Cancelar</button>
+              <button type="button" class="btn btn-success">Enviar</button>
+            </div>
+          </div>
+    </div>
 </div>
