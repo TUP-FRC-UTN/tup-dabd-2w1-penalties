@@ -13,7 +13,7 @@ export class ComplaintService {
 
 
   add(complaintData: any): Observable<any> {
-    return this.http.post(this.url, complaintData);
+    return this.http.post(this.url+'complaint', complaintData);
   }
 
   getTypes(): Observable<any> {

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ComplaintService } from '../../services/complaint.service';
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from "../file-upload/file-upload.component";
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-post-complaint',
@@ -19,7 +19,7 @@ export class PostComplaintComponent implements OnInit {
   textareaPlaceholder: string;
   complaintTypes: { key: string; value: string }[] = [];
 
-  constructor(private complaintService: ComplaintService) {
+  constructor(private complaintService: ComplaintService, private router: Router) {
     this.selectedOption = '';
     this.maxDate = '';
     this.textareaContent = '';
@@ -71,6 +71,7 @@ export class PostComplaintComponent implements OnInit {
       this.complaintService.add(denunciaData).subscribe({
         next: (response) => {
           console.log('Denuncia enviada correctamente', response);
+          this.router.navigate(['/list']);
         },
         error: (error) => {
           console.error('Error al enviar la denuncia', error);
