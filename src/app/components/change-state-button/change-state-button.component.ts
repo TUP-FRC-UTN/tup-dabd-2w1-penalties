@@ -26,4 +26,6 @@ export class ChangeStateButtonComponent {
     this.Reason = ""
     this.complaintState = ""
   }
+
+  
 }
