@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { ListComplaintsComponent } from './components/list-complaints/list-complaints.component';
-import { PostComplaintComponent } from './components/Complaints/post-complaint/post-complaint.component';
+import { ConsultarDenunciaModalComponent } from './components/consultar-denuncia-modal/consultar-denuncia-modal.component';
+import { PostComplaintComponent } from './components/post-complaint/post-complaint.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/list', pathMatch: 'full' },  
