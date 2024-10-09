@@ -1,53 +1,83 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { ConsultarDenunciaModalComponent } from '../consultar-denuncia-modal/consultar-denuncia-modal.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { Complaint, ComplaintDto } from '../../models/complaint';
 import { ComplaintService } from '../../services/complaint.service';
+
 import { ModalStateReasonComponent } from '../modal-state-reason/modal-state-reason.component';
+
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-list-complaints',
   standalone: true,
-  imports: [CommonModule, RouterLink, ConsultarDenunciaModalComponent, ModalStateReasonComponent],
+  imports: [CommonModule, RouterLink, RouterOutlet, ConsultarDenunciaModalComponent ,FormsModule,NgbModule,
+    NgbPaginationModule,],
   templateUrl: './list-complaints.component.html',
   styleUrl: './list-complaints.component.scss'
 })
 export class ListComplaintsComponent implements OnInit {
   denuncias: ComplaintDto[]=[];
   complaintState: String = ""
+  denunciasfiltro: ComplaintDto[]=[];
+  page:number=1;
+  pageSize:number = 10;
+  collectionSize:number=0;
 
 constructor(private router: Router,private _modal:NgbModal, private complServ: ComplaintService){
 
 }
   ngOnInit(): void {
+    this.refreshData()
+  }
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+  
+    if (filterValue) {
+      this.denunciasfiltro = this.denuncias.filter((p) => {
+        const complaintStateStr = p.complaintState.toLowerCase();
+        const descriptionStr = p.description.toLowerCase();
+  
+        return (
+          complaintStateStr.indexOf(filterValue) >= 0 || 
+          descriptionStr.indexOf(filterValue) >= 0
+        );
+      });
+    } else {
+      
+      this.denunciasfiltro = [...this.denuncias];
+    }
+  }
+
+
+  
+  modalConsulta(i:number){
+    const modal = this._modal.open(ConsultarDenunciaModalComponent, { size: 'xl' ,  keyboard: false });
+      modal.componentInstance.denunciaId =i ; 
+      modal.result.then((result) => {
+      
+      }).catch((error) => {
+        console.log('Modal dismissed with error:', error);
+      });
+  }
+  
+  refreshData() {
     this.complServ.getAllComplains().subscribe(data=>{
       this.denuncias=data
+      this.denunciasfiltro = [...data];
+      this.collectionSize = data.length; 
+      this.denuncias= data.slice((this.page - 1) * this.pageSize, this.page * this.pageSize);
       this.denuncias.forEach((actividad) => {
-        // Verificar si createdDate es un array antes de intentar convertirlo
+       
         if (Array.isArray(actividad.createdDate)) {
           const [year, month, day, hour, minute, second] = actividad.createdDate;
-          actividad.createdDate = new Date(year, month - 1, day, hour, minute, second); // El mes en JavaScript es 0 indexado
+          actividad.createdDate = new Date(year, month - 1, day, hour, minute, second); 
         }
       });
      
     })
-  }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    if(filterValue!=""){
-      this.denuncias = this.denuncias.filter((p) => {
-        const idProyectoStr = p.complaintState.toString().toLowerCase(); 
-        const clienteStr = p.description.toLowerCase();
-        const filterValueLower = filterValue.toLocaleLowerCase();
-      
-        return idProyectoStr.indexOf(filterValueLower) >= 0 || clienteStr.indexOf(filterValueLower) >= 0;
-      });
-    }else{
-       this.denuncias
-    }
-    
   }
 
   // Metodo para obtener el estado de la denuncia y mostrar el modal 

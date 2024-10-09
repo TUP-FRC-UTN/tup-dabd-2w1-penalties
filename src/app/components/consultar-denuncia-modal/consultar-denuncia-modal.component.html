@@ -1,22 +1,23 @@
-<button
+<!-- <button
   type="button"
   class="btn btn-primary"
   data-bs-toggle="modal"
   data-bs-target="#consultarDenunciaModal"
 >
   Consultar denuncia
-</button>
+</button> -->
+
 
 <!-- Modal -->
-<div
+<!-- <div
   class="modal fade"
   id="consultarDenunciaModal"
   tabindex="-1"
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
->
-  <div class="modal-dialog modal-xl" id="consultarDenunciaModal">
-    <div class="modal-content rounded-4">
+> -->
+  <!-- <div class="modal-dialog modal-xl" id="consultarDenunciaModal">
+    <div class="modal-content rounded-4"> -->
       <div class="modal-header verdeOscuro">
         <div class="col-6">
           <div class="mb-3">
@@ -48,7 +49,7 @@
           <!--ROW DEL TEXT AREA-->
           <div class="row">
             <div class="col-12">
-              <label class="fw-semibold" for="form-floating">Mensaje</label>
+              <label class="fw-semibold" for="form-floating">Mensaje{{denunciaId}}</label>
               <div class="form-floating">
                 <textarea
                   class="form-control fondoGris"
@@ -174,11 +175,12 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea perferendis illu
           type="button"
           class="btn btn-secondary btn-lg me-4"
           data-bs-dismiss="modal"
+          (click)="close()"
         >
           Cancelar
         </button>
-        <button type="button" class="btn verdeClaro btn-lg">Aceptar</button>
+        <button type="button" class="btn verdeClaro btn-lg" (click)="save()">Aceptar</button>
       </div>
-    </div>
+    <!-- </div>
   </div>
-</div>
+</div> -->
