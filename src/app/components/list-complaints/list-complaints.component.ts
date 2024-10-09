@@ -51,14 +51,15 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
   }
 
   // Metodo para obtener el estado de la denuncia y mostrar el modal 
-  selectState(option: string, id: number) {
+  selectState(option: string, idComplaint: number,userId:number) {
     this.complaintState = option
-    this.openModal(id)
+    this.openModal(idComplaint,userId)
   }
-  openModal(id:number){
+  openModal(idComplaint:number, userId:number){
     const modal = this._modal.open(ModalStateReasonComponent, { size: 'sm' ,  keyboard: false });
-    modal.componentInstance.idComplaint = id
+    modal.componentInstance.idComplaint = idComplaint
     modal.componentInstance.complaintState = this.complaintState
+    modal.componentInstance.userId = userId
     modal.result.then((result) => {
     }).catch((error) => {
       console.log('Modal dismissed with error:', error);
