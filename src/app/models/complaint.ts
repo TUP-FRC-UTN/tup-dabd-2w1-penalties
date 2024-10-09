@@ -23,3 +23,14 @@ export enum TipoDenuncia {
     InfracciónDeinquilino = 'infracción contra el inquilino',
     NoMantenimientoDeLimpieza = 'no mantenimiento de limpieza'
 }
+
+export interface ComplaintDto {
+    id: number;
+    userId: number;
+    reportId: number | null;
+    complaintType: string;
+    complaintState: string;
+    description: string;
+    createdDate: Date;
+    randomValue: number;
+}

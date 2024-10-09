@@ -8,14 +8,18 @@ import { Observable } from 'rxjs';
 export class ComplaintService {
 
   private readonly http: HttpClient = inject(HttpClient);
-  private readonly url = 'http://localhost:8040';
+  private readonly url = 'http://localhost:8040/api/';
 
 
   add(complaintData: any): Observable<any> {
-    return this.http.post(this.url+'/api/complaint', complaintData);
+    return this.http.post(this.url, complaintData);
   }
 
   getTypes(): Observable<any> {
-    return this.http.get(this.url+'/api/complaint/types');
+    return this.http.get(this.url+'/types');
+  }
+
+  getAllComplains(){
+    return this.http.get<ComplaintDto[]>(this.url+"Complaint/all")
   }
 }
