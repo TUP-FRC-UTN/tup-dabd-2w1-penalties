@@ -47,15 +47,18 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
       this.denunciasfiltro = [...this.denuncias];
     }
   }
-modalConsulta(i:number){
-  const modal = this._modal.open(ConsultarDenunciaModalComponent, { size: 'xl' ,  keyboard: false });
-    modal.componentInstance.denunciaId =i ; 
-    modal.result.then((result) => {
-     
-    }).catch((error) => {
-      console.log('Modal dismissed with error:', error);
-    });
-}
+
+
+  
+  modalConsulta(i:number){
+    const modal = this._modal.open(ConsultarDenunciaModalComponent, { size: 'xl' ,  keyboard: false });
+      modal.componentInstance.denunciaId =i ; 
+      modal.result.then((result) => {
+      
+      }).catch((error) => {
+        console.log('Modal dismissed with error:', error);
+      });
+  }
   
   refreshData() {
     this.complServ.getAllComplains().subscribe(data=>{
