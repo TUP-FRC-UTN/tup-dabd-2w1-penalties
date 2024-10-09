@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Complaint, ComplaintDto } from '../models/complaint';
+import { Complaint, ComplaintDto, PutStateComplaintDto } from '../models/complaint';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,13 @@ export class ComplaintService {
 
   getAllComplains(){
     return this.http.get<ComplaintDto[]>(this.url+"Complaint/all")
+  }
+
+  putStateComplaint(idcomplaint: number, updatedData: PutStateComplaintDto): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.put(this.url+"Complaint/"+idcomplaint, updatedData, { headers });
   }
 }

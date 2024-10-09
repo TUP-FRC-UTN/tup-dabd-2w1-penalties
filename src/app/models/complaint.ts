@@ -38,3 +38,10 @@ export interface ComplaintDto {
     createdDate: Date;
     randomValue: number;
 }
+
+export interface PutStateComplaintDto{
+    complaintId: number,
+    state: String,
+    userId: number,
+    changeReason: String
+}
