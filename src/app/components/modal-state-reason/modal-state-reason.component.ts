@@ -12,6 +12,8 @@ export class ModalStateReasonComponent {
   reasonText:String = ""
   @Input() idComplaint:number=0
   @Input() complaintState: string = ""
+  @Input() userId: string = ""
+
   constructor(public activeModal: NgbActiveModal) {}
   cerrar() {
     this.activeModal.close(); 
@@ -20,6 +22,6 @@ export class ModalStateReasonComponent {
 
     //metodo para enviar
     putComplaint(){
-
+      const url ="http://localhost:8040/api/Complaint/"+this.userId
     }
 }

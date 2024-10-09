@@ -52,9 +52,9 @@
                     <td class="text-center"><div class="btn-group">
                         <button class="" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="change-state-button"></button>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" (click)="selectState('ATTACHED',d.id)">Marcar como Anexada</a></li>
-                            <li><a class="dropdown-item" (click)="selectState('REJECTED',d.id)">Marcar como Rechazada</a></li>
-                            <li><a class="dropdown-item" (click)="selectState('PENDING',d.id)">Marcar como Pendiente</a></li>
+                            <li><a class="dropdown-item" (click)="selectState('ATTACHED',d.id,d.userId)">Marcar como Anexada</a></li>
+                            <li><a class="dropdown-item" (click)="selectState('REJECTED',d.id,d.userId)">Marcar como Rechazada</a></li>
+                            <li><a class="dropdown-item" (click)="selectState('PENDING',d.id,d.userId)">Marcar como Pendiente</a></li>
                         </ul>
                     </div></td>
                 </tr>
