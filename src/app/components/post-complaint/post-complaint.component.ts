@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ComplaintService } from '../../services/complaint.service';
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from "../file-upload/file-upload.component";
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-post-complaint',
   standalone: true,
-  imports: [FormsModule, FileUploadComponent],
+  imports: [FormsModule, FileUploadComponent,RouterModule],
   templateUrl: './post-complaint.component.html',
   styleUrl: './post-complaint.component.scss'
 })
