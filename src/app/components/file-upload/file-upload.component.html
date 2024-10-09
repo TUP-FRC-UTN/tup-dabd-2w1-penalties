@@ -1,10 +1,14 @@
 <input type="file" class="file-input" style="display: none;"
-(change)="selectFile($event)"  accept=".jpg, .jpeg, .png" #fileUpload multiple>
+(change)="selectFile($event)" #fileUpload multiple>
 
 <div>
-    <button class="badge rounded-pill"  (click)="fileUpload.click()"
-    style="background-color: #2D6A4F; border: 2px solid #1B4332; width: 22vh; height: 5vh; font-size: medium" name="file-upload">
+    <button class="badge rounded-pill"  (click)="fileUpload.click()" [disabled]="files.length>=maxFiles"
+    style="background-color: #2b7c58; border: 2px solid #1B4332; width: 22vh; height: 5vh; font-size: medium" name="file-upload">
     Adjuntar <i class="bi bi-paperclip"></i>
     </button>
 </div>
+<div *ngIf="files.length >= maxFiles" class="warning-message">
+    Límite máximo de {{ maxFiles }} archivos alcanzado.
+</div>
+<div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
 <app-file *ngFor="let file of files; let i = index" [file]="file" [index]="i" (selected)="eliminateImg(i)"></app-file>
