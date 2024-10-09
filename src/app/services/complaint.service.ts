@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Complaint, ComplaintDto } from '../models/complaint';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import { Observable } from 'rxjs';
 export class ComplaintService {
 
   private readonly http: HttpClient = inject(HttpClient);
-  private readonly url = 'http://localhost:8080';
+  private readonly url = 'http://localhost:8040/api/';
 
 
   add(complaintData: any): Observable<any> {
@@ -17,5 +18,9 @@ export class ComplaintService {
 
   getTypes(): Observable<any> {
     return this.http.get(this.url+'/types');
+  }
+
+  getAllComplains(){
+    return this.http.get<ComplaintDto[]>(this.url+"Complaint/all")
   }
 }

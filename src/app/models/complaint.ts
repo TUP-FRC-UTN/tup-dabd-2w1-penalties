@@ -23,3 +23,18 @@ export enum TipoDenuncia {
     InfracciónDeinquilino = 'infracción contra el inquilino',
     NoMantenimientoDeLimpieza = 'no mantenimiento de limpieza'
 }
+
+
+//Aca deberia ser como ComplaintDto lo anterior debe ser llamado desde los services
+
+export interface ComplaintDto {
+    id: number;
+    userId: number;
+    reportId: number | null;
+    complaintType: string;
+    complaintState: string;
+    description: string;
+    createdDate: Date;
+    randomValue: number;
+  }
+  

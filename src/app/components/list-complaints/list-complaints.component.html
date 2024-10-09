@@ -1,0 +1,55 @@
+
+<div class="container-fluid" >
+    <div class="container ">
+
+
+        <div class="text-center">
+        <h1 style="color: #ffffff;">Listado de denuncias</h1>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-4">
+              <input
+                type="text"
+                placeholder="Buscar"
+                class="form-control"
+                (keyup)="applyFilter($event)"
+              />
+            </div>
+            <div class="col-4">
+            </div>
+            <div class="col-4 text-end">
+             
+            </div>
+          </div>
+          <br>
+
+        <div>
+            <table class="table " style="border-radius: 15px;">
+                <thead >
+                <tr class="text-center">
+                    <th scope="col" style="background-color: #EEEEEE;">Fecha</th>
+                    <th scope="col"style="background-color: #EEEEEE;">Estado</th>
+                    <th scope="col"style="background-color: #EEEEEE;">Detalle</th>
+                    <th scope="col"style="background-color: #EEEEEE;">Archivos adjuntos</th>
+                    <th scope="col"style="background-color: #EEEEEE;">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let d of denuncias">
+                    <td class="text-center"scope="row">{{d.createdDate | date : "dd/mm/YYYY"}}</td>
+                    
+                    <td class="text-center"><button class="btn {{ getEstadoClase(d.complaintState) }} text-center border rounded-pill text-dark" style="width: 130px;">{{d.complaintState}}</button></td>
+                    <td class="text-center">{{d.description}}</td>
+                    <td class="text-center"> <i class="bi bi-paperclip"></i>   {{d.randomValue}} Archivo adjunto</td>
+                    <td class="text-center"><app-change-state-button></app-change-state-button></td>
+                </tr>
+               
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+
+
