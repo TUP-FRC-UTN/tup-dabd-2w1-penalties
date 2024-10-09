@@ -16,7 +16,7 @@ export class PostComplaintComponent implements OnInit {
   maxDate: string;
   textareaContent: string;
   textareaPlaceholder: string;
-  complaintTypes: { id: string; value: string }[] = [];
+  complaintTypes: { key: string; value: string }[] = [];
 
   constructor(private complaintService: ComplaintService) {
     this.selectedOption = '';
@@ -43,7 +43,10 @@ export class PostComplaintComponent implements OnInit {
   getTypes(): void {
     this.complaintService.getTypes().subscribe({
       next: (data) => {
-        this.complaintTypes = data;
+        this.complaintTypes = Object.keys(data).map(key => ({
+          key,
+          value: data[key]
+        }));
       },
       error: (error) => {
         console.error('error: ', error);
