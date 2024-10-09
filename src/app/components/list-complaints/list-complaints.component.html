@@ -49,7 +49,14 @@
                     <td class="text-center"><button class="btn {{ getEstadoClase(d.complaintState) }} text-center border rounded-pill text-dark" style="width: 130px;">{{d.complaintState}}</button></td>
                     <td class="text-center">{{d.description}}</td>
                     <td class="text-center"> <i class="bi bi-paperclip"></i>   {{d.randomValue}} Archivo adjunto</td>
-                    <td class="text-center"><app-change-state-button></app-change-state-button></td>
+                    <td class="text-center"><div class="btn-group">
+                        <button class="" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="change-state-button"></button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" (click)="selectState('ATTACHED',d.id)">Marcar como Anexada</a></li>
+                            <li><a class="dropdown-item" (click)="selectState('REJECTED',d.id)">Marcar como Rechazada</a></li>
+                            <li><a class="dropdown-item" (click)="selectState('PENDING',d.id)">Marcar como Pendiente</a></li>
+                        </ul>
+                    </div></td>
                 </tr>
                
                 </tbody>

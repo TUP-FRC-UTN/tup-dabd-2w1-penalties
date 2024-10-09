@@ -5,17 +5,18 @@ import { ConsultarDenunciaModalComponent } from '../consultar-denuncia-modal/con
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Complaint, ComplaintDto } from '../../models/complaint';
 import { ComplaintService } from '../../services/complaint.service';
-import { ChangeStateButtonComponent } from "../change-state-button/change-state-button.component";
+import { ModalStateReasonComponent } from '../modal-state-reason/modal-state-reason.component';
 
 @Component({
   selector: 'app-list-complaints',
   standalone: true,
-  imports: [CommonModule, RouterLink, ConsultarDenunciaModalComponent, ChangeStateButtonComponent],
+  imports: [CommonModule, RouterLink, ConsultarDenunciaModalComponent, ModalStateReasonComponent],
   templateUrl: './list-complaints.component.html',
   styleUrl: './list-complaints.component.scss'
 })
 export class ListComplaintsComponent implements OnInit {
   denuncias: ComplaintDto[]=[];
+  complaintState: String = ""
 
 constructor(private router: Router,private _modal:NgbModal, private complServ: ComplaintService){
 
@@ -49,7 +50,21 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
     
   }
 
- 
+  // Metodo para obtener el estado de la denuncia y mostrar el modal 
+  selectState(option: string, id: number) {
+    this.complaintState = option
+    this.openModal(id)
+  }
+  openModal(id:number){
+    const modal = this._modal.open(ModalStateReasonComponent, { size: 'sm' ,  keyboard: false });
+    modal.componentInstance.idComplaint = id
+    modal.componentInstance.complaintState = this.complaintState
+    modal.result.then((result) => {
+    }).catch((error) => {
+      console.log('Modal dismissed with error:', error);
+    });
+  }
+
 
 
   getEstadoClase(estado: string): string {

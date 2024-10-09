@@ -2,7 +2,7 @@
 (change)="selectFile($event)" #fileUpload multiple>
 
 <div>
-    <button class="badge rounded-pill"  (click)="fileUpload.click()" [disabled]="files.length>=maxFiles"
+    <button type="button" class="badge rounded-pill"  (click)="fileUpload.click()" [disabled]="files.length>=maxFiles"
     style="background-color: #2b7c58; border: 2px solid #1B4332; width: 22vh; height: 5vh; font-size: medium" name="file-upload">
     Adjuntar <i class="bi bi-paperclip"></i>
     </button>

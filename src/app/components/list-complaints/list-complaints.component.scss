@@ -1,3 +1,24 @@
 .btn{
     --bs-btn-border-color: #807f7f;
 }
+#change-state-button {
+    border: 3px solid #1B4332;
+    background-color: #2D6A4F;
+    color: white;
+    font-size: 12px;
+    width: 45px;
+    height: 35px;
+
+    border-radius: 15px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    padding: 0;
+}
+
+#change-state-button::before {
+    padding-left: 2px;
+    content: "\2022 \2022 \2022"; /*estos son los dots*/
+    letter-spacing: 3px;
+}
