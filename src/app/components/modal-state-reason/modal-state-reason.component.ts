@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintService } from '../../services/complaint.service';
 import { PutStateComplaintDto } from '../../models/complaint';
@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './modal-state-reason.component.html',
   styleUrl: './modal-state-reason.component.css'
 })
-export class ModalStateReasonComponent {
+export class ModalStateReasonComponent implements OnInit {
   reasonText:String = ""
   @Input() idComplaint:number=0
   @Input() complaintState: string = ""
@@ -19,6 +19,9 @@ export class ModalStateReasonComponent {
   
 
   constructor(public activeModal: NgbActiveModal, private complaintService: ComplaintService) {}
+  ngOnInit(): void {
+    console.log(this.idComplaint, this.complaintState)
+  }
   close() {
     this.activeModal.close(); 
   }

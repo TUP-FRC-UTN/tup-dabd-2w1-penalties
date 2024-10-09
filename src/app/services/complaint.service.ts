@@ -29,6 +29,6 @@ export class ComplaintService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.put(this.url+"Complaint/"+idcomplaint, updatedData, { headers });
+    return this.http.put(this.url+"complaint/"+idcomplaint, updatedData, { headers });
   }
 }

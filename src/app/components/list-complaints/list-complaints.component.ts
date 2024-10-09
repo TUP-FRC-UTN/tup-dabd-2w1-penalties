@@ -94,9 +94,11 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
   openModal(idComplaint:number, userId:number){
     const modal = this._modal.open(ModalStateReasonComponent, { size: 'sm' ,  keyboard: false });
     modal.componentInstance.idComplaint = idComplaint
+    console.log(idComplaint,this.complaintState)
     modal.componentInstance.complaintState = this.complaintState
     modal.componentInstance.userId = userId
     modal.result.then((result) => {
+      this.refreshData() 
     }).catch((error) => {
       console.log('Modal dismissed with error:', error);
     });
