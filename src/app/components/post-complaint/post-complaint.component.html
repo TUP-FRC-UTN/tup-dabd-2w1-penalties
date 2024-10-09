@@ -22,8 +22,8 @@
 
             <div class="input-box">
                 <label for="dateInput" class="form-label">Fecha</label>
-                <input type="date" id="dateInput" name="dateInput" class="form-control" [(ngModel)]="selectedDate"
-                    #dateField="ngModel" [max]="maxDate" required>
+                <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary" [(ngModel)]="selectedDate"
+                    #dateField="ngModel" [max]="maxDate" required disabled>
                 @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
                 <div class="text-danger">
                     @if (dateField.errors?.['required']) {

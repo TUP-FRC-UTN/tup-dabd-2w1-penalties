@@ -11,17 +11,33 @@ import { FileUploadComponent } from "../file-upload/file-upload.component";
   styleUrl: './post-complaint.component.scss'
 })
 export class PostComplaintComponent implements OnInit {
-  selectedOption: string = '';
-  selectedDate: string = '';
-  maxDate: string = '';
-  textareaContent: string = '';
-  textareaPlaceholder: string = 'Ingrese su mensaje aquí...';
+  selectedOption: string;
+  selectedDate: string;
+  maxDate: string;
+  textareaContent: string;
+  textareaPlaceholder: string;
   complaintTypes: { id: string; value: string }[] = [];
 
-  constructor(private complaintService: ComplaintService) { }
+  constructor(private complaintService: ComplaintService) {
+    this.selectedOption = '';
+    this.maxDate = '';
+    this.textareaContent = '';
+    this.textareaPlaceholder = 'Ingrese su mensaje aquí...';
+    this.selectedDate = '';
+    this.setTodayDate();
+  }
 
   ngOnInit(): void {
     this.getTypes();
+  }
+
+  setTodayDate() {
+    const today = new Date();
+    const day = today.getDate().toString().padStart(2, '0');
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const year = today.getFullYear();
+
+    this.selectedDate = `${year}-${month}-${day}`;
   }
 
   getTypes(): void {
