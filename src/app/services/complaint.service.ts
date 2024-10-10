@@ -23,6 +23,9 @@ export class ComplaintService {
   getAllComplains(){
     return this.http.get<ComplaintDto[]>(this.url+"complaint/all")
   }
+  getById(id :number):Observable<any>{
+    return this.http.get(this.url+"complaint/complaint/"+id)
+  }
 
   putStateComplaint(idcomplaint: number, updatedData: PutStateComplaintDto): Observable<any> {
     const headers = new HttpHeaders({
