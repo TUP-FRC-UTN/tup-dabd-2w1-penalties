@@ -36,7 +36,7 @@
       <input
         type="date"
         id="inputDate"
-        value="{{ formattedDate }}"
+        value="{{ formattedDate | date : 'yyyy-MM-dd' }}"
         class="rounded-3 input-date form-control"
         disabled
       />
@@ -63,7 +63,7 @@
             style="height: 170px; resize: none"
             disabled
           >
- {{ data.description }}</textarea
+         {{ data.description }}</textarea
           >
         </div>
       </div>

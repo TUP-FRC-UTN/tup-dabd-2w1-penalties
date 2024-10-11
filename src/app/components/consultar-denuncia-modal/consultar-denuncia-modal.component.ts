@@ -1,11 +1,12 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintService } from '../../services/complaint.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-consultar-denuncia-modal',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './consultar-denuncia-modal.component.html',
   styleUrl: './consultar-denuncia-modal.component.scss'
 })
@@ -19,9 +20,10 @@ export class ConsultarDenunciaModalComponent implements OnInit {
   constructor(public activeModal: NgbActiveModal){}
 
   ngOnInit(): void {
-      console.log('Consiltar denunncia',this.denunciaId)
+      console.log('Consiltar denuncia',this.denunciaId)
       this.getComplaint()
-      this.setDate()
+      
+    //  console.log(this.setDate())
   }
   save(){
     this.activeModal.close()//aca podes agregar lo que se pasa
@@ -34,7 +36,7 @@ export class ConsultarDenunciaModalComponent implements OnInit {
     for (let index = 0; index <this.data.createdDate.length; index++) {
       dateArray.push(this.data.createdDate[index])
     }
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5]);
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]-1, dateArray[3], dateArray[4], dateArray[5]);
      this.formattedDate = date.toISOString().split('T')[0];
 
   }
@@ -44,6 +46,7 @@ export class ConsultarDenunciaModalComponent implements OnInit {
       (respuesta) => {
         console.log(respuesta); 
         this.data = respuesta
+        this.setDate()
       },
       (error) => {
         console.error('Error:', error);
