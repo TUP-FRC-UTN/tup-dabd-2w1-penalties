@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ConsultarDenunciaModalComponent } from './components/consultar-denuncia-modal/consultar-denuncia-modal.component';
-import { ConsultarInformeModalComponent } from "./components/consultar-informe-modal/consultar-informe-modal.component";
+import { ConsultarDenunciaModalComponent } from './components/modal-complaint/consultar-denuncia-modal.component';
+import { ConsultarInformeModalComponent } from "./components/modal-report/consultar-informe-modal.component";
 import { GetAllComplaintsComponent } from "./components/get-all-complaints/get-all-complaints.component";
 import { PostComplaintComponent } from "./components/post-complaint/post-complaint.component";
 import { ListComplaintsComponent } from "./components/list-complaints/list-complaints.component";

@@ -145,7 +145,50 @@
           <div class="col-4 mt-2"><h6>Adjuntos - 2/3</h6></div>
           <div class="col-4"></div>
           <div class="col-4 mb-3">
-            <button type="button" class="btn verdeClaro">Ver todos</button>
+            <button
+              type="button"
+              class="btn verdeClaro border border-black hover"
+              data-bs-toggle="modal"
+              data-bs-target="#seeMoreImages"
+            >
+              Ver todos
+            </button>
+            <div
+              class="modal fade"
+              id="seeMoreImages"
+              tabindex="-2"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      Modal title
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">...</div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Save changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row">
@@ -178,9 +221,9 @@
   >
     Cancelar
   </button>
-  <button type="button" class="btn verdeClaro btn-lg" (click)="save()">
+  <!-- <button type="button" class="btn verdeClaro btn-lg" (click)="save()">
     Aceptar
-  </button>
+  </button> -->
 </div>
 <!-- </div>
   </div>

@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
 import { Complaint, ComplaintDto, PutStateComplaintDto } from '../models/complaint';
 
 @Injectable({

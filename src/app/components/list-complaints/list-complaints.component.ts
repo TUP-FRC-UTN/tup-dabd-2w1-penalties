@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { ConsultarDenunciaModalComponent } from '../consultar-denuncia-modal/consultar-denuncia-modal.component';
+import { ConsultarDenunciaModalComponent } from '../modal-complaint/consultar-denuncia-modal.component';
 import { NgbModal, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintDto } from '../../models/complaint';
 import { ComplaintService } from '../../services/complaint.service';
