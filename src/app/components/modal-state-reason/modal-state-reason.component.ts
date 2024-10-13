@@ -29,10 +29,10 @@ export class ModalStateReasonComponent implements OnInit {
   //metodo para enviar
   putComplaint(){
     const ComplaintDto:PutStateComplaintDto = {
-      complaintId: this.idComplaint,
-      state: this.complaintState,
+      id: this.idComplaint,
       userId: this.userId,
-      changeReason: this.reasonText
+      complaintState: this.complaintState,
+      stateReason: this.reasonText
     }
     this.complaintService.putStateComplaint(this.idComplaint,ComplaintDto).subscribe({
       next: (response) => {

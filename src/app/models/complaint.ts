@@ -40,8 +40,8 @@ export interface ComplaintDto {
 }
 
 export interface PutStateComplaintDto{
-    complaintId: number,
-    state: String,
+    id: number,
     userId: number,
-    changeReason: String
+    complaintState: String,
+    stateReason: String
 }
