@@ -14,7 +14,19 @@ export class ComplaintService {
 
 
   add(complaintData: any): Observable<any> {
-    return this.http.post(this.url+'complaint', complaintData);
+    const formData = new FormData();
+  
+    formData.append('userId', complaintData.userId.toString());
+    formData.append('complaintType', complaintData.complaintType);
+    formData.append('description', complaintData.description);
+  
+    if (complaintData.pictures && complaintData.pictures.length > 0) {
+      complaintData.pictures.forEach((file: File, index: number) => {
+        formData.append('pictures', file, file.name);
+      });
+    }
+  
+    return this.http.post(this.url + 'complaint', formData);
   }
 
   getTypes(): Observable<any> {
@@ -24,6 +36,7 @@ export class ComplaintService {
   getAllComplains(){
     return this.http.get<ComplaintDto[]>(this.url+"complaint/all")
   }
+
   getById(id :number):Observable<any>{
     return this.http.get(this.url+"complaint/complaint/"+id)
   }

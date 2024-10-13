@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-post-complaint',
   standalone: true,
-  imports: [FormsModule, FileUploadComponent,RouterModule],
+  imports: [FormsModule, FileUploadComponent, RouterModule],
   templateUrl: './post-complaint.component.html',
   styleUrl: './post-complaint.component.scss'
 })
@@ -18,6 +18,7 @@ export class PostComplaintComponent implements OnInit {
   textareaContent: string;
   textareaPlaceholder: string;
   complaintTypes: { key: string; value: string }[] = [];
+  files?: File[];
 
   constructor(private complaintService: ComplaintService, private router: Router) {
     this.selectedOption = '';
@@ -26,10 +27,15 @@ export class PostComplaintComponent implements OnInit {
     this.textareaPlaceholder = 'Ingrese su mensaje aquí...';
     this.selectedDate = '';
     this.setTodayDate();
+    this.files = [];
   }
 
   ngOnInit(): void {
     this.getTypes();
+  }
+
+  getFiles(files: File[]) {
+    this.files = files;
   }
 
   setTodayDate() {
@@ -61,11 +67,9 @@ export class PostComplaintComponent implements OnInit {
         userId: 1,
         complaintType: this.selectedOption,
         description: this.textareaContent,
-        pictures: [
-         
-        ]
+        pictures: this.files
       };
-
+      
       this.complaintService.add(denunciaData).subscribe({
         next: (response) => {
           console.log('Denuncia enviada correctamente', response);
