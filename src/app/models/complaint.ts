@@ -36,7 +36,7 @@ export interface ComplaintDto {
     complaintState: string;
     description: string;
     createdDate: Date;
-    randomValue: number;
+    fileQuantity: number;
 }
 
 export interface PutStateComplaintDto{
