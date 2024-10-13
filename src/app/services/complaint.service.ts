@@ -38,7 +38,7 @@ export class ComplaintService {
   }
 
   getById(id :number):Observable<any>{
-    return this.http.get(this.url+"complaint/complaint/"+id)
+    return this.http.get(this.url+"complaint/"+id)
   }
 
   putStateComplaint(idcomplaint: number, updatedData: PutStateComplaintDto): Observable<any> {
