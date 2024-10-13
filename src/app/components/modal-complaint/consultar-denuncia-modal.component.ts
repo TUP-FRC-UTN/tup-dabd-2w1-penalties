@@ -36,7 +36,7 @@ export class ConsultarDenunciaModalComponent implements OnInit {
     for (let index = 0; index <this.data.createdDate.length; index++) {
       dateArray.push(this.data.createdDate[index])
     }
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]-1, dateArray[3], dateArray[4], dateArray[5]);
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5]);
      this.formattedDate = date.toISOString().split('T')[0];
 
   }
