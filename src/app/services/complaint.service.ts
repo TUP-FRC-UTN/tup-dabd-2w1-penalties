@@ -13,8 +13,12 @@ export class ComplaintService {
   private readonly url = 'http://localhost:8040/api/';
 
 
-  add(complaintData: any): Observable<any> {
-    return this.http.post(this.url+'complaint', complaintData);
+  add(denunciaData: FormData): Observable<any> {
+    return this.http.post(this.url+'complaint', denunciaData, {
+      headers: {
+        // No agregues el header de 'Content-Type', ya que el navegador lo establecerá automáticamente a multipart/form-data.
+      }
+    });
   }
 
   getTypes(): Observable<any> {

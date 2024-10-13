@@ -60,7 +60,7 @@
 
             <div class="buttons-box d-flex justify-content-between">
                 <div class="files-box">
-                    <app-file-upload />
+                    <app-file-upload (finalFiles)="getFiles($event)"/>
                 </div>
                 
                 <div class="submit-box">
