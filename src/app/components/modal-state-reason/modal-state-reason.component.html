@@ -1,16 +1,38 @@
-
-<div style="background-color: #B7E4C7" class="modal-header shadow-none border-bottom border-dark">
-  <h3>Indique el motivo de cambio de Estado</h3>
-</div>
-<div style="background-color: #B7E4C7" class="modal-body border-bottom border-dark">
-  <h5 class="card-title">Motivo</h5>
-  <p class="card-text">
-    <textarea id="reasonChange"  [(ngModel)]="reasonText"></textarea>
-  </p>
-</div>
-<div class="modal-footer" style="background-color: #B7E4C7">
-  <div class="d-flex justify-content-between">
-    <button type="button" class="btn btn-danger" style="margin-right: 110px;" (click)="close()">Cancelar</button>
-    <button type="submit" class="btn btn-success" (click)="putComplaint()">Enviar</button>
+<div id="tamaño">
+  <div
+    style="background-color: #ffffff"
+    class="modal-header shadow-none border-bottom border-dark"
+  >
+    <h3>Indique el motivo de cambio de Estado</h3>
+  </div>
+  <div
+    style="background-color: #ffffff"
+    class="modal-body border-bottom border-dark"
+  >
+    <h5 class="card-title">Motivo</h5>
+    <p class="card-text">
+      <textarea id="reasonChange" [(ngModel)]="reasonText"></textarea>
+    </p>
+  </div>
+  <div class="modal-footer" style="background-color: #ffffff">
+    <div class="d-flex justify-content-between row">
+      <div class="col-4"></div>
+      <div class="col-1">
+        <button type="submit" class="btn btn-success" (click)="putComplaint()">
+          Enviar
+        </button>
+      </div>
+      <div class="col-1">
+        <button
+          type="button"
+          class="btn btn-danger"
+          style="margin-right: 110px"
+          (click)="close()"
+        >
+          Cancelar
+        </button>
+      </div>
+      <div class="col-1"></div>
+    </div>
   </div>
 </div>

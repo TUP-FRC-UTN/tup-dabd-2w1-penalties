@@ -62,9 +62,7 @@ export class PostComplaintComponent implements OnInit {
         complaintType: this.selectedOption,
         description: this.textareaContent,
         pictures: [
-          {
-            pictureUrl: "https://picsum.photos/200/300"
-          }
+         
         ]
       };
 

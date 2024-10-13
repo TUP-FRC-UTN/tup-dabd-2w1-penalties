@@ -33,4 +33,7 @@ textarea{
               transform: scale(1);
     }
   }
-  
+#tamaño{
+  height: 300px;
+  width: 600px;
+}
