@@ -34,8 +34,8 @@ export class ListComplaintsComponent implements OnInit {
   page:number=1;
   pageSize:number = 5;
   collectionSize:number=0;
-  filterDateStart:Date = new Date
-  filterDateEnd:Date = new Date
+  filterDateStart:Date = new Date()
+  filterDateEnd:Date = new Date()
 
 constructor(private router: Router,private _modal:NgbModal, private complServ: ComplaintService){
 
@@ -83,15 +83,43 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
   search(event:Event){
     const selectedValue = (event.target as HTMLSelectElement).value;
     console.log(this.filterComplaint)
-
-    this.filterComplaint = this.Complaint.filter(estado => estado.complaintState == selectedValue)
+     
+    this.filterComplaint = this.Complaint.filter(c => c.complaintState == selectedValue)
+    if(selectedValue == ""){
+      this.filterComplaint = this.Complaint;
+    }
    // alert(this.filterComplaint)
     console.log(this.filterComplaint)
     this.updateDataTable();
   }
 
 
-
+  filterDate(){  
+    alert(this.filterDateStart)
+    alert(this.filterDateEnd)
+    this.refreshData()
+    this.filterComplaint = this.Complaint.map(complaint => {
+      
+      const date = new Date(complaint.createdDate[0], complaint.createdDate[1] - 1, complaint.createdDate[2]);
+      
+      const formattedDate = date.toISOString().split('T')[0];
+      complaint.createdDate = formattedDate
+        return complaint // Retornar el objeto original más la fecha formateada
+  });
+   
+    alert(this.filterComplaint[0].createdDate)
+    // for (let index = 0; index < this.filterComplaint.length; index++) {
+    //   alert( this.filterComplaint[index].createdDate);
+      
+    // }
+    if(this.filterComplaint[0].createdDate > this.filterDateStart){
+      alert("menor")
+    }
+    this.filterComplaint = this.filterComplaint.filter(c => c.createdDate >= this.filterDateStart)
+    this.filterComplaint = this.filterComplaint.filter(c => c.createdDate <= this.filterDateEnd)
+ 
+    this.updateDataTable()
+  }
 
   refreshData() {
     this.complServ.getAllComplains().subscribe(data => {
@@ -101,6 +129,19 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
       this.updateDataTable();
     });
   }
+   isValidDateFormat(date: Date): boolean {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mes en formato 2 dígitos
+    const day = date.getDate().toString().padStart(2, '0'); // Día en formato 2 dígitos
+   
+    const formattedDate = `${year}-${month}-${day}`;
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+  
+    return regex.test(formattedDate);
+  }
+  
+
+
   makeFunctionsGlobal() {
     (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     (window as any).selectState = (state: string, id: number, userId: number) => this.selectState(state, id, userId);
@@ -184,6 +225,14 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
       return createdDate.toLocaleDateString('es-ES'); 
     }
     return new Date(date).toLocaleDateString('es-ES'); 
+  }
+   formatDateNoString(date:Date) {
+    let year = date.getFullYear();
+    let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Agregar 1 porque los meses son 0-11
+    let day = date.getDate().toString().padStart(2, '0');
+    let formattedString = `${year}-${month}-${day}`;
+
+    return new Date(formattedString);
   }
 
   // Metodo para obtener el estado de la denuncia y mostrar el modal 
