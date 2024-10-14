@@ -16,6 +16,7 @@
       <div class="col-3">
         <select
           (change)="search($event)"
+          [(ngModel)]="selectedValue"
           class="form-control"
           id="estadoSelect"
         >

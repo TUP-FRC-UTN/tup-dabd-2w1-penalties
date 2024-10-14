@@ -31,7 +31,9 @@ export class ListComplaintsComponent implements OnInit {
   Complaint: ComplaintDto[]=[];
   complaintState: String = ""
   filterComplaint: ComplaintDto[]=[];
+  selectedValue:string = ""
   page:number=1;
+  data:any
   pageSize:number = 5;
   collectionSize:number=0;
   filterDateStart:Date = new Date()
@@ -41,6 +43,7 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
 
 }
   ngOnInit(): void {
+    this.filterDateEnd.setDate(new Date().getDate() -7)
    
     this.makeFunctionsGlobal();
     this.refreshData();
@@ -95,9 +98,12 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
 
 
   filterDate(){  
-    alert(this.filterDateStart)
-    alert(this.filterDateEnd)
-    this.refreshData()
+    //this.refreshData()
+    this.complServ.getAllComplains().subscribe(data => {
+      this.Complaint = data
+    })
+   // this.Complaint = this.data;
+   // this.filterComplaint = [...this.data]
     this.filterComplaint = this.Complaint.map(complaint => {
       
       const date = new Date(complaint.createdDate[0], complaint.createdDate[1] - 1, complaint.createdDate[2]);
@@ -106,24 +112,19 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
       complaint.createdDate = formattedDate
         return complaint // Retornar el objeto original más la fecha formateada
   });
-   
-    alert(this.filterComplaint[0].createdDate)
-    // for (let index = 0; index < this.filterComplaint.length; index++) {
-    //   alert( this.filterComplaint[index].createdDate);
-      
-    // }
-    if(this.filterComplaint[0].createdDate > this.filterDateStart){
-      alert("menor")
-    }
-    this.filterComplaint = this.filterComplaint.filter(c => c.createdDate >= this.filterDateStart)
-    this.filterComplaint = this.filterComplaint.filter(c => c.createdDate <= this.filterDateEnd)
- 
+  
+    this.filterComplaint = this.Complaint.filter(c => c.createdDate >= this.filterDateStart && c.createdDate <= this.filterDateEnd)
+   if(this.selectedValue != ""){
+    this.filterComplaint = this.filterComplaint.filter(c => c.complaintState == this.selectedValue)
+   }
+    console.log(this.filterComplaint)
     this.updateDataTable()
   }
 
   refreshData() {
     this.complServ.getAllComplains().subscribe(data => {
       this.Complaint = data;
+      this.data = data
       this.filterComplaint = [...data];
       this.collectionSize = data.length; 
       this.updateDataTable();
@@ -152,7 +153,7 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
     if ($.fn.dataTable.isDataTable('#complaintsTable')) {
       $('#complaintsTable').DataTable().clear().destroy();
     }
-
+    
     // Inicializa la DataTable
     let table= $('#complaintsTable').DataTable({
       data: this.filterComplaint,
