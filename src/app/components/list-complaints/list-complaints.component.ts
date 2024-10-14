@@ -77,8 +77,21 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
   
     this.updateDataTable();
   }
+
+
   
-  
+  search(event:Event){
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    console.log(this.filterComplaint)
+
+    this.filterComplaint = this.Complaint.filter(estado => estado.complaintState == selectedValue)
+   // alert(this.filterComplaint)
+    console.log(this.filterComplaint)
+    this.updateDataTable();
+  }
+
+
+
 
   refreshData() {
     this.complServ.getAllComplains().subscribe(data => {
