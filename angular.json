@@ -32,14 +32,20 @@
                 "input": "public"
               }
             ],
-           "styles": [
-              "src/styles.scss",
-              "node_modules/datatables.net-dt/css/dataTables.dataTables.min.css"
-            ],
-            "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/datatables.net-dt/js/dataTables.dataTables.min.js"
-            ]
+           "scripts": [
+  "node_modules/jquery/dist/jquery.min.js",
+  "node_modules/datatables.net/js/dataTables.js",
+  "node_modules/datatables.net-buttons/js/dataTables.buttons.min.js",
+  "node_modules/datatables.net-buttons/js/buttons.html5.js",
+  "node_modules/datatables.net-buttons/js/buttons.print.js",
+  "node_modules/jszip/dist/jszip.min.js",
+  "node_modules/pdfmake/build/pdfmake.min.js",
+  "node_modules/pdfmake/build/vfs_fonts.js"
+],
+"styles": [
+  "node_modules/datatables.net-dt/css/dataTables.dataTables.css",
+  "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css"
+]
 
           },
           "configurations": {

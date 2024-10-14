@@ -12,6 +12,12 @@ import { FormsModule } from '@angular/forms';
 
 import $ from 'jquery';
 import 'datatables.net'
+import 'datatables.net-dt';
+import 'datatables.net-buttons-dt';
+import 'datatables.net-buttons';
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.print';
+
 
 @Component({
   selector: 'app-list-complaints',
@@ -38,6 +44,10 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
    
     this.makeFunctionsGlobal();
     this.refreshData();
+  }
+
+  ngAfterViewInit() {
+    this.updateDataTable();
   }
 
   applyFilter(event: Event) {
@@ -142,12 +152,17 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
       ],
       paging: true,
       pageLength: this.pageSize,
-      searching: false // Deshabilitar la búsqueda global predeterminada
+      searching: false, // Deshabilitar la búsqueda global predeterminada
       //,dom: '<"top"i>rt<"bottom"flp><"clear">',
+      dom: '<"dt-buttons"B>frtip', // Esto define la estructura de la tabla, incluyendo los botones
+      buttons: [
+        'excel', 'pdf'
+      ]
       
     });
     
   }
+  
 
   formatDate(date: any): string {
     if (Array.isArray(date)) {
@@ -204,5 +219,11 @@ constructor(private router: Router,private _modal:NgbModal, private complServ: C
   }
   onButtonClick() {
     this.router.navigate(['/nuevaDenuncia']);
+  }
+}
+
+declare module 'datatables.net' {
+  interface Settings {
+    buttons?: string[];
   }
 }
