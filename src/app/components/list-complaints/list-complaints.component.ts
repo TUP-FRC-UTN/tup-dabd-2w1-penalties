@@ -1,15 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
 import { ConsultarDenunciaModalComponent } from '../modal-complaint/consultar-denuncia-modal.component';
 import { NgbModal, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintDto } from '../../models/complaint';
 import { ComplaintService } from '../../services/complaint.service';
 
 import { ModalStateReasonComponent } from '../modal-state-reason/modal-state-reason.component';
-
-import { FormsModule } from '@angular/forms';
-
 import $ from 'jquery';
 import 'datatables.net'
 import 'datatables.net-dt';
@@ -17,6 +13,8 @@ import 'datatables.net-buttons-dt';
 import 'datatables.net-buttons';
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
 
 
 @Component({
