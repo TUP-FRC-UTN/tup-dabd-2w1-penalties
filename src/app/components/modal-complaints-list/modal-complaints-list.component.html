@@ -1,0 +1,40 @@
+<div class="modal fade" id="complaintModal" tabindex="-1" aria-labelledby="complaintModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="complaintModalLabel">Denuncias</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>                            
+                            <th>Usuario</th>
+                            <th>Tipo de Denuncia</th>
+                            <th>Estado</th>
+                            <th>Descripción</th>
+                            <th>Razón</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let complaint of getFilteredComplaints()">      
+                            <td>
+                                <input type="checkbox" [(ngModel)]="complaint.selected">
+                            </td>                      
+                            <td>{{ complaint.user_id }}</td>
+                            <td>{{ complaint.complaint_type }}</td>
+                            <td>{{ complaint.complaint_state }}</td>
+                            <td>{{ complaint.description }}</td>
+                            <td>{{ complaint.state_reason }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" (click)="logSelectedComplaints()">Mostrar seleccionadas</button>
+            </div>
+        </div>
+    </div>
+</div>
