@@ -72,8 +72,9 @@ export class PenaltiesPostComplaintComponent {
       
       this.complaintService.add(denunciaData).subscribe({
         next: (response) => {
+          
           console.log('Denuncia enviada correctamente', response);
-          this.router.navigate(['/list']);
+          this.router.navigate(['home/listComplaint']);
         },
         error: (error) => {
           console.error('Error al enviar la denuncia', error);

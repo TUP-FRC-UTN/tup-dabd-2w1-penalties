@@ -48,4 +48,13 @@ export class ComplaintService {
 
     return this.http.put(this.url+"complaint/"+idcomplaint, updatedData, { headers });
   }
+  //esto es unicamente para mostrar fechas 
+  formatDate(date: any): string {
+    if (Array.isArray(date)) {
+      const [year, month, day] = date;
+      const createdDate = new Date(year, month - 1, day);
+      return createdDate.toLocaleDateString('es-ES'); 
+    }
+    return new Date(date).toLocaleDateString('es-ES');
+  }
 }
