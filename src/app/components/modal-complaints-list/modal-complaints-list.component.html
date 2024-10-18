@@ -3,13 +3,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="complaintModalLabel">Denuncias</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                    (click)="closeModal()"></button>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>Seleccionar</th>
                             <th>Usuario</th>
                             <th>Tipo de Denuncia</th>
                             <th>Estado</th>
@@ -33,7 +34,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" (click)="attachSelectedComplaintsToList()">Anexar denuncias</button>
+                <button type="button" class="btn btn-primary" (click)="attachSelectedComplaintsToList()">{{mode === 'anexar' ? 'Anexar denuncias' : 'Desanexar denuncias'}}</button>
             </div>
         </div>
     </div>

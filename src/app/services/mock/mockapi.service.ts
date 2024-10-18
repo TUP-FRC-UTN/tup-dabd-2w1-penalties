@@ -35,13 +35,7 @@ export class MockapiService {
   }
 
   updateComplaintState(complaint: any): Observable<any> {
-    const updatedComplaint = {
-      ...complaint,
-      report_id: 1,
-      complaint_state: 'ANEXADA'
-    };
-  
     const url = `${this.urlComplaints}/${complaint.id}`;
-    return this.http.put(url, updatedComplaint);
-  }
+    return this.http.put(url, complaint);
+}
 }

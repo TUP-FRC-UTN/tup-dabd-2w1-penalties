@@ -15,26 +15,21 @@ import { ModalComplaintsListComponent } from "../modal-complaints-list/modal-com
   styleUrl: './report-modify.component.scss'
 })
 export class ReportModifyComponent {
-  selectedOption: string;
-  selectedDate: string;
+  selectedOption = '';
+  selectedDate = '';
   maxDate: string;
-  textareaPlaceholder: string;
-  description: string;
-  complaintTypes: any[];
+  textareaPlaceholder = 'Ingrese su mensaje aquí...';
+  description = '';
+  complaintTypes: any[] = [];
   selectedComplaints: any[] = [];
-  complaints: any[];
+  selectedComplaintsToDetach: any[] = [];
+  modalMode: 'anexar' | 'desanexar' = 'anexar';
 
   constructor(private mockService: MockapiService, private router: Router) {
-    this.selectedOption = '';
     this.maxDate = this.setTodayDate();
-    this.textareaPlaceholder = 'Ingrese su mensaje aquí...';
-    this.selectedDate = '';
-    this.complaintTypes = [];
-    this.complaints = [];
-    this.description = '';
   }
 
-  setTodayDate() {
+  setTodayDate(): string {
     const today = new Date();
     const day = today.getDate().toString().padStart(2, '0');
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -42,43 +37,68 @@ export class ReportModifyComponent {
     return `${year}-${month}-${day}`;
   }
 
-  // Recibir las denuncias seleccionadas del modal
-  handleSelectedComplaints(selectedComplaints: any[]) {
-    this.selectedComplaints = selectedComplaints;
-    console.log('Denuncias seleccionadas para anexar:', this.selectedComplaints);
+  handleSelectedComplaints(selectedComplaints: any[]): void {
+    if (this.modalMode === 'anexar') {
+      this.selectedComplaints = selectedComplaints;
+      console.log(`Denuncias para anexar: `, this.selectedComplaints);
+    } else if (this.modalMode === 'desanexar') {
+      this.selectedComplaintsToDetach = selectedComplaints;
+      console.log('Denuncias para desanexar:', this.selectedComplaintsToDetach);
+    }
   }
 
-  updateReport() {
-    // Primero, actualiza la descripción del informe
+  updateReport(): void {
     this.mockService.updateReportDescription(this.description).subscribe(res => {
       console.log('Informe actualizado', res);
-  
-      // Luego, actualiza el estado de las denuncias seleccionadas
-      this.selectedComplaints.forEach(complaint => {
-        const updatedComplaint = {
-          ...complaint,
-          report_id: 1, // Ajusta según sea necesario
-          complaint_state: 'ANEXADA'
-        };
-  
-        this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
-          console.log(`Denuncia ${complaint.id} actualizada`, res);
-        }, error => {
-          console.error(`Error al actualizar la denuncia ${complaint.id}`, error);
-        });
-      });
-  
+
+      if (this.modalMode === 'anexar') {
+        this.updateComplaintsState('ANEXADA', 1);
+      } else if (this.modalMode === 'desanexar') {
+        this.updateDetachedComplaintsState();
+      }
     }, error => {
       console.error('Error al actualizar el informe', error);
     });
   }
 
-  openModal() {
+  private updateComplaintsState(newState: string, reportId: number): void {
+    this.selectedComplaints.forEach(complaint => {
+      const updatedComplaint = {
+        ...complaint,
+        report_id: reportId, // Usa el reportId pasado
+        complaint_state: newState // Usa el newState pasado
+      };
+
+      this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
+        console.log(`Denuncia ${complaint.id} actualizada`, res);
+      }, error => {
+        console.error(`Error al actualizar la denuncia ${complaint.id}`, error);
+      });
+    });
+  }
+
+  private updateDetachedComplaintsState(): void {
+    this.selectedComplaintsToDetach.forEach(complaint => {
+      const updatedComplaint = {
+        ...complaint,
+        report_id: 0, // Cambia a 0
+        complaint_state: 'PENDIENTE' // Cambia el estado a PENDIENTE
+      };
+
+      this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
+        console.log(`Denuncia ${complaint.id} desanexada`, res);
+      }, error => {
+        console.error(`Error al desanexar la denuncia ${complaint.id}`, error);
+      });
+    });
+  }
+
+  openModal(mode: 'anexar' | 'desanexar'): void {
     const modalElement = document.getElementById('complaintModal');
     if (modalElement) {
       const modal = new (window as any).bootstrap.Modal(modalElement);
       modal.show();
     }
+    this.modalMode = mode;
   }
-
 }

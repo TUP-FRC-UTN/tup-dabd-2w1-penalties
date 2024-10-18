@@ -24,7 +24,7 @@
                 <div class="input-box">
                     <label for="dateInput" class="form-label">Fecha</label>
                     <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary"
-                        [(ngModel)]="selectedDate" #dateField="ngModel" [max]="maxDate" required disabled>
+                        [(ngModel)]="maxDate" #dateField="ngModel" [max]="maxDate" required disabled>
                     @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
                     <div class="text-danger">
                         @if (dateField.errors?.['required']) {
@@ -64,7 +64,9 @@
                             placeholder="Infractor">
                         <button class="btn btn-success" style="white-space: nowrap;">Ver más</button> <!-- TODO trae la info del infractor -->
                     </div>
-                    <button type="button" class="btn btn-success" (click)="openModal()">Adjuntar denuncias <i class="bi bi-paperclip"></i></button>
+                    <button type="button" class="btn btn-success mb-3" (click)="openModal('anexar')">Anexar denuncias <i class="bi bi-file-earmark-plus"></i></button>
+                    <br>
+                    <button type="button" class="btn btn-warning" (click)="openModal('desanexar')">Desanexar denuncias <i class="bi bi-file-earmark-minus"></i></button>                    
                 </div>
             </div>
             <div class="submit-box d-flex justify-content-end">
@@ -75,4 +77,4 @@
     </div>
 </div>
 
-<app-modal-complaints-list (selectedComplaints)="selectedComplaints = $event"></app-modal-complaints-list>
+<app-modal-complaints-list (selectedComplaints)="selectedComplaints = $event" [mode]="modalMode"></app-modal-complaints-list>
