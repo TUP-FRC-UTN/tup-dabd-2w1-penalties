@@ -19,24 +19,19 @@ export class ReportModifyComponent {
   selectedDate: string;
   maxDate: string;
   textareaPlaceholder: string;
-  complaintTypes: { key: string; value: string }[] = [];
-  files?: File[];
   description: string;
+  complaintTypes: any[];
+  selectedComplaints: any[] = [];
   complaints: any[];
 
   constructor(private mockService: MockapiService, private router: Router) {
     this.selectedOption = '';
-    this.maxDate = '';
+    this.maxDate = this.setTodayDate();
     this.textareaPlaceholder = 'Ingrese su mensaje aquí...';
     this.selectedDate = '';
-    this.setTodayDate();
-    this.files = [];
-    this.description = '';
+    this.complaintTypes = [];
     this.complaints = [];
-  }
-
-  ngOnInit(): void {
-    this.getComplaints();
+    this.description = '';
   }
 
   setTodayDate() {
@@ -44,30 +39,38 @@ export class ReportModifyComponent {
     const day = today.getDate().toString().padStart(2, '0');
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
     const year = today.getFullYear();
-
-    this.selectedDate = `${year}-${month}-${day}`;
+    return `${year}-${month}-${day}`;
   }
 
-  updateDescription() {
-    const newDescription = this.description;
+  // Recibir las denuncias seleccionadas del modal
+  handleSelectedComplaints(selectedComplaints: any[]) {
+    this.selectedComplaints = selectedComplaints;
+    console.log('Denuncias seleccionadas para anexar:', this.selectedComplaints);
+  }
 
-    this.mockService.updateReportDescription(newDescription).subscribe(res => {
+  updateReport() {
+    // Primero, actualiza la descripción del informe
+    this.mockService.updateReportDescription(this.description).subscribe(res => {
       console.log('Informe actualizado', res);
+  
+      // Luego, actualiza el estado de las denuncias seleccionadas
+      this.selectedComplaints.forEach(complaint => {
+        const updatedComplaint = {
+          ...complaint,
+          report_id: 1, // Ajusta según sea necesario
+          complaint_state: 'ANEXADA'
+        };
+  
+        this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
+          console.log(`Denuncia ${complaint.id} actualizada`, res);
+        }, error => {
+          console.error(`Error al actualizar la denuncia ${complaint.id}`, error);
+        });
+      });
+  
     }, error => {
-      console.error('Error al actualizar', error);
-    })
-  }
-
-  getComplaints() {
-    this.mockService.getAllComplaints().subscribe(res => {
-      this.complaints = res.map(complaint => ({
-        ...complaint,
-        selected: false
-      }));
-      console.log('Denuncias:', this.complaints);
-    }, error => {
-      console.error('Error al obtener denuncias', error);
-    })
+      console.error('Error al actualizar el informe', error);
+    });
   }
 
   openModal() {

@@ -41,7 +41,7 @@
                 <label for="textareaMessage" class="form-label">Descripción</label>
                 <textarea class="form-control" name="textareaMessage" id="textareaMessage"
                     [placeholder]="textareaPlaceholder" [(ngModel)]="description" #textArea="ngModel" required
-                    minlength="10" maxlength="500" rows="8"></textarea>
+                    minlength="10" maxlength="500" rows="8" style="resize: none;"></textarea>
                 @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
                 @if (textArea.errors?.['required']) {
                 <span class="text-danger">
@@ -69,10 +69,10 @@
             </div>
             <div class="submit-box d-flex justify-content-end">
                 <button type="button" class="btn btn-secondary me-3" [routerLink]="'/list'">Cancelar</button>
-                <button type="button" class="btn btn-success" [disabled]="formDenuncia.invalid" (click)="updateDescription()">Actualizar</button>
+                <button type="button" class="btn btn-success" [disabled]="formDenuncia.invalid" (click)="updateReport()">Actualizar</button>
             </div>
         </form>
     </div>
 </div>
 
-<app-modal-complaints-list [complaints]="complaints"></app-modal-complaints-list>
+<app-modal-complaints-list (selectedComplaints)="selectedComplaints = $event"></app-modal-complaints-list>
