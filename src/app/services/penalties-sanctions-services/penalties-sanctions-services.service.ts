@@ -25,6 +25,9 @@ export class PenaltiesSanctionsServicesService {
     }
     return new Date(date).toLocaleDateString('es-ES');
   }
+  getById(id:number){
+    return this.http.get(this.url+"report/"+id)
+  }
 
 
 }

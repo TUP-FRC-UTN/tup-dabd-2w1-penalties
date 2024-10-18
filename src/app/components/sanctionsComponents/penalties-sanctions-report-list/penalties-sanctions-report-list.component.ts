@@ -4,7 +4,8 @@ import { ReportDTO } from '../../../models/reportDTO';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PenaltiesModalReportComponent } from '../modals/penalties-modal-report/penalties-modal-report.component';
 
 @Component({
   selector: 'app-penalties-sanctions-report-list',
@@ -21,9 +22,9 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   filterDateStart: Date = new Date();
   filterDateEnd: Date = new Date();
 
-  constructor(private reportServodes: PenaltiesSanctionsServicesService){
+  constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal){
     //Esto es importante para llamar los funciones dentro del data table con onClick
-    // (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
+     (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     // (window as any).selectState = (state: string, id: number, userId: number) =>
     //   this.selectState(state, id, userId);
   }
@@ -149,6 +150,18 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   }
 
 
+  viewComplaint(i: number) {
+    const modal = this._modal.open(PenaltiesModalReportComponent, {
+      size: 'xl',
+      keyboard: false,
+    });
+    modal.componentInstance.id = i;
+    modal.result
+      .then((result) => {})
+      .catch((error) => {
+        console.log('Modal dismissed with error:', error);
+      });
+  }
 
 
 
