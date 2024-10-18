@@ -43,6 +43,13 @@ export class NavbarComponent implements OnInit {
           title: "Listado",
           route: "home/listComplaint",
           roles: ["SuperAdmin", "Admin", "Owner"]
+        },
+
+        {
+          icon: "bi bi-piggy-bank-fill",
+          title: "Generar nueva Multa",
+          route: "home/postFine",
+          roles: ["SuperAdmin", "Admin"]
         }
         ]
       },

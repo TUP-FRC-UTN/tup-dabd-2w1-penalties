@@ -1,3 +1,143 @@
-<p>
-  penalties-post-fine works!
-</p>
+<div class="container p-3">
+  <div
+    class="post-Fine-section p-4 pe-0 border shadow-lg p-3 mb-5 bg-white rounded"
+  >
+    <h2 class="text-start">Generar Nueva Infraccion</h2>
+    <hr />
+
+    <form #formPostFine="ngForm" novalidate>
+      <div class="container pe-5">
+        <div class="row">
+          <div class="col d-flex">
+            <div class="row">
+              <div class="col-2">
+                <label for="" class="m-2">Infractor: </label>
+              </div>
+              <div class="col">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control bg-body-secondary"
+                    disabled
+                  />
+                  <span class="input-group-text bg-body-secondary">
+                    <i class="bi bi-lock"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="col-3 clearfix">
+                <button type="button" class="btn btn-info ms-3 float-end">
+                  Ver mas
+                </button>
+              </div>
+            </div>
+            <div class="col d-flex">
+              <div class="row ms-auto">
+                <div class="col d-flex">
+                  <label for="date" class="m-2">Fecha:</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    placeholder="0.00"
+                    style="max-width: 220px"
+                    id="date"
+                    name="date"
+                    [(ngModel)]="selectedDate"
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col d-flex">
+            <label for="" class="m-2">Motivo: </label>
+            <div>
+              <select
+                class="form-select"
+                id="validationFormCheck1"
+                aria-label="Default select example"
+                style="width: 500px"
+                disabled
+              >
+                <option selected>Motivo de Multa</option>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+          <div class="col d-flex">
+            <div class="row ms-auto m-2">
+              <div class="col">
+                <label for="reportReason" class="me-2">Tipo de Infracción: </label>
+              </div>
+              <div class="col d-flex">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexRadioDefault1"
+                    (change)="showAmountToPay('fine')"
+                  />
+                  <label class="form-check-label me-4" for="flexRadioDefault1">
+                    Multa
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="flexRadioDefault"
+                    id="flexCheckChecked2"
+                    checked
+                    (change)="showAmountToPay('warning')"
+                  />
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    Advertencia
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col d-flex">
+            <label for="description" class="m-2">Descripción: </label>
+            <textarea name="" id="description" [(ngModel)]="description" disabled></textarea>
+          </div>
+        </div>
+
+        <div class="clearfix mt-2">
+          <div class="float-end d-flex">
+            @if (showInput) {
+              <label for="" class="me-2 mt-3">Importe:</label>
+              <div class="input-group mt-2 mb-3">
+                <span class="input-group-text" id="basic-addon1">$</span>
+                <input
+                  type="text"
+                  class="form-control text-end"
+                  placeholder="0.00"
+                  style="max-width: 220px"
+                />
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="clearfix mt-1">
+          <button type="button" class="btn btn-danger float-start">
+            cancelar
+          </button>
+          <button type="button" class="btn btn-success float-end">
+            aceptar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
