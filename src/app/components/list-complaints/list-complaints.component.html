@@ -1,0 +1,81 @@
+<div class="container-fluid">
+  <div class="container border shadow-lg p-3 mb-5 bg-white rounded">
+    <div class="text-center">
+      <h2>LISTADO DE DENUNCIAS</h2>
+    </div>
+    <br />
+    <div class="row align-items-center">
+      <div class="col-3">
+        <input
+          type="text"
+          placeholder="Buscar"
+          class="form-control"
+          (keyup)="applyFilter($event)"
+        />
+      </div>
+      <div class="col-3">
+        <select
+          (change)="search($event)"
+          [(ngModel)]="selectedValue"
+          class="form-control"
+          id="estadoSelect"
+        >
+          <option value="">Seleccionar Estado</option>
+          <option value="Nueva">Nueva</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Anexada">Anexada</option>
+          <option value="Rechazada">Rechazada</option>
+        </select>
+      </div>
+      <div class="col-6 text-end">
+        <div class="row">
+          <div class="col-4">
+            <input
+              (change)="filterDate()"
+              [(ngModel)]="filterDateStart"
+              class="form-control"
+              type="date"
+            />
+          </div>
+          <div class="col-4">
+            <input
+              (change)="filterDate()"
+              [(ngModel)]="filterDateEnd"
+              class="form-control"
+              type="date"
+            />
+          </div>
+          <div class="col-2">
+            <button class="btn btn-success">Buscar</button>
+          </div>
+          <div class="col-2">
+            <button class="btn btn-success" [routerLink]="'/postComplaint'">
+              Nuevo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br />
+
+    <div>
+      <table id="complaintsTable" class="table" style="border-radius: 15px">
+        <thead>
+          <tr class="text-center">
+            <th scope="col" style="background-color: #eeeeee">Fecha</th>
+            <th scope="col" style="background-color: #eeeeee">Estado</th>
+            <th scope="col" style="background-color: #eeeeee">Detalle</th>
+            <th scope="col" style="background-color: #eeeeee">
+              Archivos adjuntos
+            </th>
+            <th scope="col" style="background-color: #eeeeee">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí no se usa ngFor porque DataTables lo manejará -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

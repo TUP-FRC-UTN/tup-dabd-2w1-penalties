@@ -1,0 +1,237 @@
+<!-- <button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#consultarDenunciaModal"
+>
+  Consultar denuncia
+</button> -->
+
+<!-- Modal -->
+<!-- <div
+  class="modal fade"
+  id="consultarDenunciaModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+> -->
+<!-- <div class="modal-dialog modal-xl" id="consultarDenunciaModal">
+    <div class="modal-content rounded-4"> -->
+<div class="modal-header verdeOscuro">
+  <div class="col-6">
+    <div class="mb-3">
+      <h4 class="modal-title fs-5" id="exampleModalLabel">Motivo</h4>
+      <select class="form-select" disabled aria-label="Default select example">
+        @if(data != null){
+        <option value="1" selected>{{ data?.complaintType }}</option>
+        }
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+    </div>
+  </div>
+  <div class="col-2"></div>
+  <div class="col-3">
+    <div class="mb-3">
+      <h4 class="modal-title fs-5" id="exampleModalLabel">Fecha</h4>
+      <input
+        type="date"
+        id="inputDate"
+        value="{{ formattedDate | date : 'yyyy-MM-dd' }}"
+        class="rounded-3 input-date form-control"
+        disabled
+      />
+    </div>
+  </div>
+  <button
+    type="button"
+    class="btn-close me-1"
+    data-bs-dismiss="modal"
+    aria-label="Close"
+  ></button>
+</div>
+<div class="modal-body">
+  <div class="conteiner-fluid">
+    <!--ROW DEL TEXT AREA-->
+    <div class="row">
+      <div class="col-12">
+        <label class="fw-semibold" for="form-floating">Mensaje</label>
+        <div class="form-floating">
+          @if(data != null){
+          <textarea
+            class="form-control fondoGris"
+            placeholder="Leave a comment here"
+            id="floatingTextarea2"
+            style="height: 170px; resize: none"
+            disabled
+          >
+         {{ data.description }}</textarea
+          >
+          }
+        </div>
+      </div>
+    </div>
+    <!--ROW DE LOS INPUTS Y LAS FOTOS-->
+    <div class="row mt-4">
+      <div class="col-7">
+        <div class="row">
+          <div class="col-6">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label fw-semibold"
+                >Denunciante</label
+              >
+              <div class="input-group">
+                <input
+                  type="text"
+                  disabled
+                  placeholder="Alexander Medina"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  aria-describedby="emailHelp"
+                />
+                <span class="input-group-text" id="basic-addon2"
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-lock"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2M5 8h6a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1"
+                    /></svg
+                ></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 p-2 mt-4">
+            <!--  <button type="button" class="btn verdeClaro">Ver mas</button>-->
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label fw-semibold"
+                >Estado</label
+              >
+              <select
+                class="form-select"
+                aria-label="Default select example"
+                disabled
+              >
+                @if(data != null){
+                <option value="1" selected>{{ data.complaintState }}</option>
+                }
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label fw-semibold"
+                >Motivo de Cambio</label
+              >
+              @if(data != null){
+              <input
+                type="text"
+                value="{{ data.stateReason }}"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                disabled
+              />
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-5">
+        <div class="row">
+          <div class="col-4 mt-2"><h6>Adjuntos - 2/3</h6></div>
+          <div class="col-4"></div>
+          <div class="col-4 mb-3">
+            <!-- <button
+              type="button"
+              class="btn verdeClaro border border-black hover"
+              data-bs-toggle="modal"
+              data-bs-target="#seeMoreImages"
+            >
+              Ver todos
+            </button>-->
+            <div
+              class="modal fade"
+              id="seeMoreImages"
+              tabindex="-2"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      Modal title
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div class="modal-body">...</div>
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Save changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrDR3640SdbcJorjtYNeb40kz5y7U60FUH6Q&s"
+              class="img-thumbnail"
+              alt="..."
+            />
+          </div>
+          <div class="col-6">
+            <img
+              src="https://imagenes.heraldo.es/files/image_1920_1080/uploads/imagenes/2019/08/14/coche-rayado.jpeg"
+              class="img-thumbnail"
+              alt="..."
+            />
+          </div>
+        </div>
+        <div class="row"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer verdeOscuro">
+  <button
+    type="button"
+    class="btn btn-secondary btn-lg me-4"
+    data-bs-dismiss="modal"
+    (click)="close()"
+  >
+    Cancelar
+  </button>
+  <!-- <button type="button" class="btn verdeClaro btn-lg" (click)="save()">
+    Aceptar
+  </button> -->
+</div>
+<!-- </div>
+  </div>
+</div> -->
