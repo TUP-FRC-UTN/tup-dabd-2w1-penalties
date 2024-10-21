@@ -47,10 +47,11 @@ export class ModalComplaintsListComponent implements OnInit {
   //emite al padre (formulario) las denuncias que se seleccionan con el chk
   attachSelectedComplaintsToList(): void {
     const selected = this.getSelectedComplaints();
-    this.selectedComplaints.emit(selected); // Asegúrate de que esto esté funcionando
-    console.log('Denuncias seleccionadas emitidas:', selected); // Verifica si aquí obtienes las correctas
+    console.log('Denuncias seleccionadas antes de emitir:', selected);
+    this.selectedComplaints.emit(selected);
     this.closeModal();
   }
+
 
   //filtra las denuncias seleccionadas
   private getSelectedComplaints(): any[] {

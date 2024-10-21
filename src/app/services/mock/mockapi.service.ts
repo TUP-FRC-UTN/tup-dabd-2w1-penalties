@@ -7,8 +7,6 @@ import { Observable } from 'rxjs';
 })
 export class MockapiService {
 
-  //! ESTE SERVICE ESTA PARA PROBAR LAS FUNCIONES DEL FRONT MOCKEADAS Y LAS TRANSACCIONES PARA DESPUES LLEVARLO AL BACKEND SIN ERRORES, NO LO BORREN PORFA XD (RENDER)
-
   private readonly urlReports = 'https://670e71123e7151861654888c.mockapi.io/api/reports';
   private readonly urlComplaints = 'https://670e71123e7151861654888c.mockapi.io/api/complaints';
 
@@ -37,5 +35,5 @@ export class MockapiService {
   updateComplaintState(complaint: any): Observable<any> {
     const url = `${this.urlComplaints}/${complaint.id}`;
     return this.http.put(url, complaint);
-}
+  }
 }

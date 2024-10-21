@@ -38,14 +38,16 @@ export class ReportModifyComponent {
   }
 
   handleSelectedComplaints(selectedComplaints: any[]): void {
+    console.log('Denuncias recibidas en handleSelectedComplaints:', selectedComplaints);
     if (this.modalMode === 'anexar') {
       this.selectedComplaints = selectedComplaints;
-      console.log(`Denuncias para anexar: `, this.selectedComplaints);
+      console.log('Denuncias para anexar:', this.selectedComplaints);
     } else if (this.modalMode === 'desanexar') {
       this.selectedComplaintsToDetach = selectedComplaints;
-      console.log('Denuncias para desanexar:', this.selectedComplaintsToDetach);
+      console.log('Denuncias seleccionadas para desanexar:', this.selectedComplaintsToDetach);
     }
   }
+
 
   updateReport(): void {
     this.mockService.updateReportDescription(this.description).subscribe(res => {
@@ -54,6 +56,7 @@ export class ReportModifyComponent {
       if (this.modalMode === 'anexar') {
         this.updateComplaintsState('ANEXADA', 1);
       } else if (this.modalMode === 'desanexar') {
+        console.log('Denuncias a desanexar:', this.selectedComplaintsToDetach);
         this.updateDetachedComplaintsState();
       }
     }, error => {
@@ -65,8 +68,8 @@ export class ReportModifyComponent {
     this.selectedComplaints.forEach(complaint => {
       const updatedComplaint = {
         ...complaint,
-        report_id: reportId, // Usa el reportId pasado
-        complaint_state: newState // Usa el newState pasado
+        report_id: reportId,
+        complaint_state: newState
       };
 
       this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
@@ -78,12 +81,16 @@ export class ReportModifyComponent {
   }
 
   private updateDetachedComplaintsState(): void {
+    console.log('Iniciando desanexado de denuncias:', this.selectedComplaintsToDetach);
+
     this.selectedComplaintsToDetach.forEach(complaint => {
       const updatedComplaint = {
         ...complaint,
-        report_id: 0, // Cambia a 0
-        complaint_state: 'PENDIENTE' // Cambia el estado a PENDIENTE
+        report_id: 10,
+        complaint_state: 'PENDIENTE'
       };
+
+      console.log('Actualizando denuncia para desanexar:', updatedComplaint);
 
       this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
         console.log(`Denuncia ${complaint.id} desanexada`, res);
@@ -94,11 +101,11 @@ export class ReportModifyComponent {
   }
 
   openModal(mode: 'anexar' | 'desanexar'): void {
+    this.modalMode = mode;
     const modalElement = document.getElementById('complaintModal');
     if (modalElement) {
       const modal = new (window as any).bootstrap.Modal(modalElement);
       modal.show();
     }
-    this.modalMode = mode;
   }
 }

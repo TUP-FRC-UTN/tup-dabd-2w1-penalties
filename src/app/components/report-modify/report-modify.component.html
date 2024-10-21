@@ -62,19 +62,23 @@
                     <div class="d-flex align-items-center mb-3">
                         <input type="text" id="infractorInput" class="form-control me-3" disabled
                             placeholder="Infractor">
-                        <button class="btn btn-success" style="white-space: nowrap;">Ver más</button> <!-- TODO trae la info del infractor -->
+                        <button class="btn btn-success" style="white-space: nowrap;">Ver más</button>
                     </div>
-                    <button type="button" class="btn btn-success mb-3" (click)="openModal('anexar')">Anexar denuncias <i class="bi bi-file-earmark-plus"></i></button>
+                    <button type="button" class="btn btn-success mb-3" (click)="openModal('anexar')">Anexar denuncias <i
+                            class="bi bi-file-earmark-plus"></i></button>
                     <br>
-                    <button type="button" class="btn btn-warning" (click)="openModal('desanexar')">Desanexar denuncias <i class="bi bi-file-earmark-minus"></i></button>                    
+                    <button type="button" class="btn btn-warning" (click)="openModal('desanexar')">Desanexar denuncias
+                        <i class="bi bi-file-earmark-minus"></i></button>
                 </div>
             </div>
             <div class="submit-box d-flex justify-content-end">
                 <button type="button" class="btn btn-secondary me-3" [routerLink]="'/list'">Cancelar</button>
-                <button type="button" class="btn btn-success" [disabled]="formDenuncia.invalid" (click)="updateReport()">Actualizar</button>
+                <button type="button" class="btn btn-success" [disabled]="formDenuncia.invalid"
+                    (click)="updateReport()">Actualizar</button>
             </div>
         </form>
     </div>
 </div>
 
-<app-modal-complaints-list (selectedComplaints)="selectedComplaints = $event" [mode]="modalMode"></app-modal-complaints-list>
+<app-modal-complaints-list (selectedComplaints)="handleSelectedComplaints($event)"
+    [mode]="modalMode"></app-modal-complaints-list>
