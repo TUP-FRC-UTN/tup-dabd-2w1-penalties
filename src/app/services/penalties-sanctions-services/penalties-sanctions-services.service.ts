@@ -25,6 +25,14 @@ export class PenaltiesSanctionsServicesService {
     }
     return new Date(date).toLocaleDateString('es-ES');
   }
+  /*
+  getFineById(){
+    return this.http.get<FineDisclaimerDto>(this.url+"sanction/fine/id")
+  }
+  postDisclaimer(){
+    return this.http.post<DisclaimerDto>(this.url+"sanction/fine/disclaimer")
+  }
+  */
 
 
 }
