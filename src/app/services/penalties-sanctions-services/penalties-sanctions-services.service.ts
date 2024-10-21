@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ReportDTO } from '../../models/reportDTO';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -26,5 +27,22 @@ export class PenaltiesSanctionsServicesService {
     return new Date(date).toLocaleDateString('es-ES');
   }
 
-
+  postFine(fineData: any): Observable<any> {
+    const formData = new FormData();
+  
+    formData.append('reportId', fineData.reportId);
+    formData.append('amount', fineData.amount);
+    formData.append('createdUser', fineData.createdUser);
+  
+    return this.http.post(this.url + 'sanction/fine', formData);
+  }
+  postWarning(warningData: any): Observable<any> {
+    const formData = new FormData();
+  
+    formData.append('reportId', warningData.reportId);
+    formData.append('amount', warningData.amount);
+    formData.append('createdUser', warningData.createdUser);
+  
+    return this.http.post(this.url + 'sanction/warning', formData);
+  }
 }

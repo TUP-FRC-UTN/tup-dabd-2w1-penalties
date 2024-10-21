@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router,RouterLink } from '@angular/router';
+import { ReportDTO, plotOwner } from '../../../models/reportDTO';
+import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
 
 @Component({
   selector: 'app-penalties-post-fine',
@@ -12,24 +14,31 @@ import { RouterLink } from '@angular/router';
 })
 export class PenaltiesPostFineComponent implements OnInit {
 
-  //deberia tener el estado del informe? 
-  // tengo que llamar al microservicio de usuario para traer el plot Id
-  @Input() plotId:Number=0
-  @Input() description:string=""
-  @Input() reportReason:string =""
-  @Input() reportReasonId:number =0
-  selectedDate:string =""
-  showInput:boolean=false
 
-  constructor() { }
+
+  //tengo que llamar al microservicio de usuario para traer el plot usando el plot Id
+  @Input() report:ReportDTO={
+    id: 0,
+    reportState: '',
+    plotId: 0,
+    description: '',
+    createdDate: new Date,
+    baseAmount: 0,
+  }
+
+  //plotOwner:plotOwner={}
+
+  selectedDate:string =""
+  newFine:boolean=false
+  newAmount: number=0
+
+  constructor(private router: Router, private penaltiesService: PenaltiesSanctionsServicesService) { }
 
   ngOnInit() {
     this.setTodayDate()
+    //this.getPlotOwner()
+    this.newAmount = this.report.baseAmount
   }
-
-
-
-
   setTodayDate() {
     const today = new Date();
     const day = today.getDate().toString().padStart(2, '0');
@@ -40,10 +49,55 @@ export class PenaltiesPostFineComponent implements OnInit {
   }
   showAmountToPay(radioButton: string) {
     if(radioButton==="fine"){
-      this.showInput=true
+      this.newFine=true
     }
     else{
-      this.showInput=false
+      this.newFine=false
     }
   }
+  //getPlotOwner(){}
+ 
+  onSubmit(): void {
+    if(this.newFine){
+
+      const fineData = {
+        reportId: this.report.id,
+        amount: this.newAmount,
+        createdUser: 1
+      };
+
+      this.penaltiesService.postFine(fineData).subscribe({
+        next: (response) => {
+          
+          console.log('Multa enviada correctamente', response);
+          this.router.navigate(['home/reportList']);
+        },
+        error: (error) => {
+          console.error('Error al enviar la Multa', error);
+        }
+      });
+    }
+    else{
+
+      const warningData = {
+        reportId: this.report.id,
+        createdUser: 1
+      };
+
+      this.penaltiesService.postWarning(warningData).subscribe({
+        next: (response) => {
+          
+          console.log('Advertencia enviada correctamente', response);
+          this.router.navigate(['home/reportList']);
+        },
+        error: (error) => {
+          console.error('Error al enviar la Advertencia', error);
+        }
+      });
+
+    }
+      
+  }
+
 }
+
