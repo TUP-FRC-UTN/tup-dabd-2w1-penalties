@@ -1,29 +1,34 @@
 <div class="container p-3">
     <div class="row p-4 border shadow-lg p-3 mb-5 bg-white rounded">
-        
         <h2 class="text-center">NUEVO DESCARGO</h2>
         <div class="col-6">
             <h3 class="text-center">Infracción</h3>
             <div class="d-flex justify-content-between w-100 mb-4">
                 <div class="input-box w-50">
                     <label for="selectOption" class="form-label">Motivo</label>
-                    <select id="selectOption" class="form-select w-100" name="option" [(ngModel)]="selectedOption"
-                        #optionField="ngModel" required disabled="">
-                        <option value="" disabled selected>{{selectedOption}}</option> 
+                    <select id="selectOption" class="form-select w-100" 
+                        name="option" 
+                        disabled>
+                        <option value="" disabled selected>
+                            {{ selectedOption }}
+                        </option>
                     </select>
             </div>
 
                 <div class="input-box">
                     <label for="dateInput" class="form-label">Fecha</label>
-                    <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary" [(ngModel)]="selectedDate"
-                        #dateField="ngModel" required disabled>
+                    <input type="date" id="dateInput" name="dateInput" 
+                        class="form-control bg-body-secondary" 
+                        value="{{ selectedDate | date : 'yyyy-MM-dd' }}" 
+                        disabled>
                     </div>
                 </div>
 
             <div class="input-box d-flex flex-column gap-2 mb-4">
                 <label for="textareaMessage" class="form-label">Descripcion</label>
                 <textarea class="form-control" name="textareaMessage" id="textareaMessage"
-                     [(ngModel)]="description" #textArea="ngModel" rows="10" disabled=""></textarea>
+                     style="height: calc(1.5em * 10.9);"
+                     rows="10" disabled>{{ description }}</textarea>
             </div>
         </div>
             
@@ -33,30 +38,31 @@
             <form #formDescargo="ngForm" (ngSubmit)="onSubmit()" novalidate>
                 <div class="input-box d-flex flex-column gap-2 mb-4">
                     <label for="textareaMessage2" class="form-label">Motivo de Descargo</label>
-                    <textarea class="form-control" name="textareaMessage2" id="textareaMessage2"
-                        [(ngModel)]="disclaimer" #textArea="ngModel" required
-                        minlength="50" maxlength="500" rows="16"></textarea>
-                    @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
-                    @if (textArea.errors?.['required']) {
-                    <span class="text-danger">
-                        Por favor, ingrese un mensaje.
-                    </span>
-                    }
-                    @if (textArea.errors?.['minlength']) {
-                    <span class="text-danger">
-                        El mensaje debe tener al menos 50 caracteres.
-                    </span>
-                    }
-                    @if(textArea.errors?.['maxlength']){
-                        <span class="text-danger">
-                            El máximo de caracteres es de 500.
-                        </span>
-                    }
+                    <textarea class="form-control" name="textareaMessage2" 
+                        id="textareaMessage2"
+                        [(ngModel)]="disclaimer" 
+                        #textArea2="ngModel" 
+                        required
+                        minlength="50" maxlength="700" rows="16"
+                        [placeholder]="textareaPlaceholder">
+                    </textarea>
+
+                    @if (textArea2.invalid && (textArea2.dirty || textArea2.touched)) {
+                        @if (textArea2.errors?.['required']) {
+                            <span class="text-danger">
+                                Por favor, ingrese un mensaje.
+                            </span>
+                        }
+                        @if (textArea2.errors?.['minlength']) {
+                            <span class="text-danger">
+                            El mensaje debe tener al menos 50 caracteres.
+                            </span>
+                        }
                     }
                 </div>
                 <div class="buttons-box d-flex justify-content-end">
                     <div class="submit-box">
-                        <button  type="button" class="btn btn-secondary me-3" [routerLink]="'/list'">Cancelar</button>
+                        <button  type="button" class="btn btn-secondary me-3" [routerLink]="'/home'">Cancelar</button>
                         <button type="submit" class="btn btn-success" [disabled]="formDescargo.invalid" >Enviar</button>
                     </div>
                 </div>

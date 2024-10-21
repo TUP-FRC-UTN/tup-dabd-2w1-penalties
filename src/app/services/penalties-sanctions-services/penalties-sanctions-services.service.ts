@@ -25,14 +25,21 @@ export class PenaltiesSanctionsServicesService {
     }
     return new Date(date).toLocaleDateString('es-ES');
   }
-  /*
-  getFineById(){
-    return this.http.get<FineDisclaimerDto>(this.url+"sanction/fine/id")
+  
+  //Estos dos metodos no tienen endpoint por ahora
+  getFineById(id:number){
+    return this.http.get<any>(this.url + "sanction/fine/" + id)
   }
-  postDisclaimer(){
-    return this.http.post<DisclaimerDto>(this.url+"sanction/fine/disclaimer")
+  
+  addDisclaimer(disclaimer:any){
+    const formData = new FormData();
+  
+    formData.append('userId', disclaimer.userId.toString());
+    formData.append('fineId', disclaimer.fineId);
+    formData.append('disclaimer', disclaimer.disclaimer);
+
+    return this.http.post(this.url + "sanction/fine/disclaimer", disclaimer) //revisar url
   }
-  */
 
 
 }
