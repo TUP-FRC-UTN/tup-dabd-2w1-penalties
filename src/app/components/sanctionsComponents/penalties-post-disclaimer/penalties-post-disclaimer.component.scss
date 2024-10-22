@@ -7,3 +7,8 @@
 textarea {
     resize: none;
 }
+
+textarea[disabled] {
+    background-color: #e9ecef;
+    color: #6c757d;
+  }

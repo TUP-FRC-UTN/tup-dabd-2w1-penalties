@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
@@ -12,7 +12,8 @@ import { PenaltiesSanctionsServicesService } from '../../../services/penalties-s
   styleUrl: './penalties-post-disclaimer.component.scss'
 })
 export class PenaltiesPostDisclaimerComponent implements OnInit {
-  fineId: number; 
+  userId:number;
+  @Input() fineId: number;
   selectedOption: string;
   selectedDate: string;
   description: string;
@@ -21,6 +22,8 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
   fine: any;
 
   constructor(private penaltiesService: PenaltiesSanctionsServicesService,private router: Router){
+    this.userId = 1;
+    this.fineId = 0; //Esto deberia venir del listado
     this.selectedOption = 'Cargando...',
     this.selectedDate = '2012-12-12',
     this.description = 'Si estas viendo este mensaje es porque aun no ha cargado la descripcion, por favor espere...',
@@ -30,7 +33,6 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
     fine?.description
     fine?.createdDate
      */
-    this.fineId = 0; //Esto deberia venir del listado
     this.disclaimer = '',
     this.textareaPlaceholder = 'Ingrese su descargo aquí...'
   }
@@ -53,20 +55,17 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
 
   onSubmit(){
     //Envio de formulario
-    const disclaimerData = {
-      userId: 1,
-      fineId:this.fineId,
-      disclaimer: this.disclaimer
-    };
-    this.penaltiesService.addDisclaimer(disclaimerData).subscribe({
+    this.penaltiesService.addDisclaimer(this.userId, this.fineId, this.disclaimer).subscribe({
       next: (response) => {
-        console.log('Reclamo enviad0 correctamente', response);
+        console.log('Reclamo enviado correctamente', response);
         this.router.navigate(['/home']);
       },
       error: (error) => {
         console.error('Error al enviar el reclamo', error);
       }
     });
+    //navegar al listado de sanciones
+    //this.router.navigate(['/sanctionList']);
   }
 
 }
