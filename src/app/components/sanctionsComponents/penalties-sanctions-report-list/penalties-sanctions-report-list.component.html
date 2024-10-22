@@ -1,24 +1,26 @@
 <div class="container-fluid">
   <div class="container border shadow-lg p-3 mb-5 bg-white rounded">
     <div class="text-center">
-      <h2>LISTADO DE SANCIONES</h2>
+      <h2>LISTADO DE REPORTES</h2>
     </div>
     <br />
     <div class="row align-items-center mb-2">
       <div class="col-6 gap-3">
         <div class="row">
           <div class="col">
-            <input type="text" placeholder="Buscar" class="form-control" />
+            <input type="text" placeholder="Buscar" class="form-control"  (keyup)="applyFilter($event)" />
           </div>
 
           <div class="col">
-            <select class="form-select" id="estadoSelect">
-              <option value="">Seleccionar Estado</option>
-              <option value="Nueva">Nueva</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="Anexada">Anexada</option>
-              <option value="Rechazada">Rechazada</option>
-            </select>
+            <select
+            (change)="search($event)"
+            [(ngModel)]="selectedValue"
+            class="form-select"
+            id="estadoSelect"
+          >
+            <option value="">Seleccionar Estado</option>
+            <option *ngFor="let s of states" [value]="s.value">{{s.value}}</option>
+          </select>
           </div>
         </div>
       </div>

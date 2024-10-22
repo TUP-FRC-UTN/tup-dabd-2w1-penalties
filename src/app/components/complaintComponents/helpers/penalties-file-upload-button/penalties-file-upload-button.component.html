@@ -11,4 +11,4 @@
     Límite máximo de {{ maxFiles }} archivos alcanzado.
 </div>
 <div *ngIf="errorMessage" class="text-danger">{{ errorMessage }}</div>
-<app-file *ngFor="let file of files; let i = index" [file]="file" [index]="i" (selected)="eliminateImg(i)"></app-file>
+<app-penalties-file-upload-item    *ngFor="let file of files; let i = index" [file]="file" [index]="i" (selected)="eliminateImg(i)"></app-penalties-file-upload-item  >

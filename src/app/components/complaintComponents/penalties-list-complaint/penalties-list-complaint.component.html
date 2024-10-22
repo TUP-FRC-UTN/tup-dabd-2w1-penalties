@@ -24,10 +24,7 @@
               id="estadoSelect"
             >
               <option value="">Seleccionar Estado</option>
-              <option value="Nueva">Nueva</option>
-              <option value="Pendiente">Pendiente</option>
-              <option value="Anexada">Anexada</option>
-              <option value="Rechazada">Rechazada</option>
+              <option *ngFor="let s of states" [value]="s.value">{{s.value}}</option>[]
             </select>
           </div>
         </div>

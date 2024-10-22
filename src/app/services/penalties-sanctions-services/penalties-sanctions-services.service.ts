@@ -15,8 +15,14 @@ export class PenaltiesSanctionsServicesService {
 
   //report/all
   getAllComplains(){
-    return this.http.get<ReportDTO[]>(this.url+"report/all")
+    return this.http.get<ReportDTO[]>(this.url+"report/all")//cambiar el nopmbre edel metodo
   }
+
+  ///report/states
+  getState(): Observable<any> {
+    return this.http.get(this.url+"report/states")
+  }
+
   //esto es unicamente para mostrar fechas 
   formatDate(date: any): string {
     if (Array.isArray(date)) {

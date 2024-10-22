@@ -29,9 +29,9 @@ export class PenaltiesListComplaintComponent {
   complaintState: String = '';
   filterComplaint: ComplaintDto[] = [];
   selectedValue: string = '';
-  //data:any
   filterDateStart: Date = new Date();
   filterDateEnd: Date = new Date();
+  states : { key: string; value: string }[] = [];
 
   constructor(
     private router: Router,
@@ -45,6 +45,8 @@ export class PenaltiesListComplaintComponent {
 
   ngOnInit(): void {
     this.refreshData();
+    this.getTypes()
+    
   }
 
   //filtro de la descripcion
@@ -152,11 +154,19 @@ export class PenaltiesListComplaintComponent {
           extend: 'excel',
           text: 'Excel',
           Class: 'btn btn-success export-excel-btn',
+          title: 'Listado de Denuncias',
+          exportOptions: {
+            columns: [0, 1, 2, 3],
+          },
         },
         {
           extend: 'pdf',
           text: 'PDF',
           className: 'btn btn-danger export-pdf-btn',
+          title: 'Listado de denuncias',
+          exportOptions: {
+            columns: [0, 1, 2, 3],
+          },
         },
       ],
     });
@@ -201,6 +211,23 @@ export class PenaltiesListComplaintComponent {
 
     this.updateDataTable();
   }
+
+  getTypes(): void {
+    this.complServ.getState().subscribe({
+      next: (data) => {
+        this.states = Object.keys(data).map(key => ({
+          key,
+          value: data[key]
+
+        }));
+        console.log(this.states)
+      },
+      error: (error) => {
+        console.error('error: ', error);
+      }
+    })
+  }
+  
 
   // Metodo para obtener el estado de la denuncia y mostrar el modal
   selectState(option: string, idComplaint: number, userId: number) {
@@ -256,54 +283,3 @@ export class PenaltiesListComplaintComponent {
 
 }
 
-// declare module 'datatables.net' {
-//   interface Settings {
-//     buttons?: string[];
-//   }
-// }
-
-//this.filterDateEnd.setDate(new Date().getDate() -7) --estyo estaba en el onInit
-
-//otro filtrado de fechas
-//  formatDateNoString(date:Date) {
-//   let year = date.getFullYear();
-//   let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Agregar 1 porque los meses son 0-11
-//   let day = date.getDate().toString().padStart(2, '0');
-//   let formattedString = `${year}-${month}-${day}`;
-
-//   return new Date(formattedString);
-// }
-// isValidDateFormat(date: Date): boolean {
-//   const year = date.getFullYear();
-//   const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Mes en formato 2 dígitos
-//   const day = date.getDate().toString().padStart(2, '0'); // Día en formato 2 dígitos
-
-//   const formattedDate = `${year}-${month}-${day}`;
-//   const regex = /^\d{4}-\d{2}-\d{2}$/;
-
-//   return regex.test(formattedDate);
-// }
-
-//filterDate(){
-//   //this.refreshData()
-//   this.complServ.getAllComplains().subscribe(data => {
-//     this.Complaint = data
-//   })
-//  // this.Complaint = this.data;
-//  // this.filterComplaint = [...this.data]
-//   this.filterComplaint = this.Complaint.map(complaint => {
-
-//     const date = new Date(complaint.createdDate[0], complaint.createdDate[1]-1 , complaint.createdDate[2]);//revisar
-
-//     const formattedDate = date.toISOString().split('T')[0];
-//     complaint.createdDate = formattedDate
-//       return complaint // Retornar el objeto original más la fecha formateada
-// });
-
-//   this.filterComplaint = this.Complaint.filter(c => c.createdDate >= this.filterDateStart && c.createdDate <= this.filterDateEnd)
-//  if(this.selectedValue != ""){
-//   this.filterComplaint = this.filterComplaint.filter(c => c.complaintState == this.selectedValue)
-//  }
-//   console.log(this.filterComplaint)
-//   this.updateDataTable()
-//}
