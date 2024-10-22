@@ -1,0 +1,14 @@
+.form-control {
+    background-color: #f8f9fa;    
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);    
+    border: 1px solid #ccc;    
+}
+
+textarea {
+    resize: none;
+}
+
+textarea[disabled] {
+    background-color: #e9ecef;
+    color: #6c757d;
+  }

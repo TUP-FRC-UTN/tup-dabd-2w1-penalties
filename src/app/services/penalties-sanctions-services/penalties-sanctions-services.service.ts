@@ -35,7 +35,7 @@ export class PenaltiesSanctionsServicesService {
   getById(id:number){
     return this.http.get(this.url+"report/"+id)
   }
-
+  
   postFine(fineData: any): Observable<any> {
     const formData = new FormData();
   
@@ -54,4 +54,22 @@ export class PenaltiesSanctionsServicesService {
   
     return this.http.post(this.url + 'sanction/warning', formData);
   }
+  
+  //Este metodo no tiene endpoint por ahora
+  //Si es necesario a quien le toque este metodo puede refactorizarlo
+  getFineById(id:number){
+    return this.http.get<any>(this.url + "sanction/fine/" + id)
+  }
+  
+  //Este metodo no tiene endpoint por ahora
+  addDisclaimer(userId:number, fineId:number, disclaimer:string){
+    const formData = {
+      userId: userId,
+      fineId: fineId,
+      disclaimer: disclaimer
+    };
+    //return this.http.post<any>(this.url + "sanction/fine/disclaimer", formData)
+    return this.http.post<any>("https://6716f1153fcb11b265d3fadf.mockapi.io/api/sanction/fine/discleimer", formData)
+  }
+
 }
