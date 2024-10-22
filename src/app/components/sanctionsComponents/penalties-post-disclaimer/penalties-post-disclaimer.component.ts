@@ -23,7 +23,7 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
 
   constructor(private penaltiesService: PenaltiesSanctionsServicesService,private router: Router){
     this.userId = 1;
-    this.fineId = 0; //Esto deberia venir del listado
+    this.fineId = 1; //Esto deberia venir del listado
     this.selectedOption = 'Cargando...',
     this.selectedDate = '2012-12-12',
     this.description = 'Si estas viendo este mensaje es porque aun no ha cargado la descripcion, por favor espere...',
@@ -54,8 +54,14 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
   }
 
   onSubmit(){
+    const disclaimerData = {
+      userId: 10,
+      fineId:3,
+      disclaimer:this.disclaimer
+    };
+
     //Envio de formulario
-    this.penaltiesService.addDisclaimer(this.userId, this.fineId, this.disclaimer).subscribe({
+    this.penaltiesService.addDisclaimer(disclaimerData).subscribe({
       next: (response) => {
         console.log('Reclamo enviado correctamente', response);
         this.router.navigate(['/home']);
