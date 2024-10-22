@@ -29,7 +29,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshData()
-    this.getTypes()
+    
   }
 
   refreshData(){
@@ -56,10 +56,11 @@ export class PenaltiesSanctionsListComponent implements OnInit {
           render: (data) => this.reportServodes.formatDate(data),
         },
           {
-              data: 'reportState',
+              data: 'fineState',
               render: (data) => `<div class="d-flex justify-content-center"><div class="${this.getStatusClass(data)} btn w-75 text-center border rounded-pill" >${data}</div></div>`
           },
           { data: 'plotId', render : (data)=> ` <div class="text-start">Nro: ${data}</div>`},
+          { data: 'amount', render : (data)=> ` <div class="text-start">$: ${data}</div>`},
           { data: 'description' },
           {
               data: null,
