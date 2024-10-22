@@ -13,8 +13,8 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './penalties-sanctions-list.component.scss'
 })
 export class PenaltiesSanctionsListComponent implements OnInit {
-  reportfilter : any[]=[];
-  report : any[]=[];
+  sanctionsfilter : any[]=[];
+  sanctions : any[]=[];
   selectedValue: string = '';
   states : { key: string; value: string }[] = [];
   filterDateStart: Date = new Date();
@@ -22,7 +22,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
 
   constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal){
     //Esto es importante para llamar los funciones dentro del data table con onClick
-     (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
+    // (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     // (window as any).selectState = (state: string, id: number, userId: number) =>
     //   this.selectState(state, id, userId);
   }
@@ -33,10 +33,10 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   }
 
   refreshData(){
-    this.reportServodes.getAllComplains().subscribe(
+    this.reportServodes.getAllSactions().subscribe(
       response=>{
-        this.report = response;
-        this.reportfilter=this.report;
+        this.sanctions = response;
+        this.sanctionsfilter=this.sanctions;
         this.CreateDataTable()
       },error=>{
         alert(error)
@@ -45,12 +45,12 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   }
 
   CreateDataTable(){
-    if ($.fn.dataTable.isDataTable('#reportsTable')) {//creo que es por la funcion
-      $('#reportsTable').DataTable().clear().destroy();
+    if ($.fn.dataTable.isDataTable('#sanctionsTable')) {//creo que es por la funcion
+      $('#sanctionsTable').DataTable().clear().destroy();
     }
 
-  let table = $('#reportsTable').DataTable({
-      data: this.reportfilter,
+  let table = $('#sanctionsTable').DataTable({
+      data: this.sanctionsfilter,
       columns: [
         {data: 'createdDate',
           render: (data) => this.reportServodes.formatDate(data),
@@ -129,13 +129,13 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     : null;
     const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
 
-    this.reportfilter = this.report.filter((report) => {
+    this.sanctionsfilter = this.sanctions.filter((sanctions) => {
     let complaintDate;
 
-    complaintDate = new Date(report.createdDate);
+    complaintDate = new Date(sanctions.createdDate);
 
     if (isNaN(complaintDate.getTime())) {
-      console.warn(`Fecha de queja no válida: ${report.createdDate}`);
+      console.warn(`Fecha de queja no válida: ${sanctions.createdDate}`);
       return false;
     }
 
@@ -159,16 +159,16 @@ export class PenaltiesSanctionsListComponent implements OnInit {
    //filtro de los estados
    search(event: Event) {
     const selectedValue = (event.target as HTMLSelectElement).value;
-    console.log(this.reportfilter);
+    console.log(this.sanctionsfilter);
 
-    this.reportfilter = this.report.filter(
+    this.sanctionsfilter = this.sanctions.filter(
       (c) => c.reportState == selectedValue
     );
     if (selectedValue == '') {
-      this.reportfilter = this.report;
+      this.sanctionsfilter = this.sanctions;
     }
     // alert(this.filterComplaint)
-    console.log(this.reportfilter);
+    console.log(this.sanctionsfilter);
     this.CreateDataTable();
   }
 
@@ -180,13 +180,13 @@ export class PenaltiesSanctionsListComponent implements OnInit {
       .trim(); // Añadido trim()
 
     if (filterValue) {
-      this.reportfilter = this.report.filter((p) => {
+      this.sanctionsfilter = this.sanctions.filter((p) => {
         const descriptionStr = p.description.toLowerCase().trim();
         const plotIdStr = p.plotId.toString().trim();
         return descriptionStr.includes(filterValue), plotIdStr.includes(filterValue);
       });
     } else {
-      this.reportfilter = [...this.report];
+      this.sanctionsfilter = [...this.sanctions];
     }
 
     this.CreateDataTable();

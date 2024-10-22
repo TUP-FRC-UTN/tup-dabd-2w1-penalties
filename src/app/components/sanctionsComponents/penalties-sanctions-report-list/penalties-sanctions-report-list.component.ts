@@ -35,7 +35,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   }
 
   refreshData(){
-    this.reportServodes.getAllComplains().subscribe(
+    this.reportServodes.getAllReports().subscribe(
       response=>{
         this.report = response;
         this.reportfilter=this.report;
