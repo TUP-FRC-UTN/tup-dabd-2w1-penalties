@@ -4,7 +4,8 @@ import { ReportDTO } from '../../../models/reportDTO';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { PenaltiesModalReportComponent } from '../modals/penalties-modal-report/penalties-modal-report.component';
 
 @Component({
   selector: 'app-penalties-sanctions-report-list',
@@ -16,28 +17,28 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 export class PenaltiesSanctionsReportListComponent implements OnInit {
   reportfilter : ReportDTO[]=[];
   report : ReportDTO[]=[];
-
-  
+  selectedValue: string = '';
+  states : { key: string; value: string }[] = [];
   filterDateStart: Date = new Date();
   filterDateEnd: Date = new Date();
 
-  constructor(private reportServodes: PenaltiesSanctionsServicesService){
+  constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal){
     //Esto es importante para llamar los funciones dentro del data table con onClick
-    // (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
+     (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     // (window as any).selectState = (state: string, id: number, userId: number) =>
     //   this.selectState(state, id, userId);
   }
 
   ngOnInit(): void {
     this.refreshData()
-    
+    this.getTypes()
   }
 
   refreshData(){
     this.reportServodes.getAllComplains().subscribe(
       response=>{
         this.report = response;
-        this.reportfilter=response;
+        this.reportfilter=this.report;
         this.CreateDataTable()
       },error=>{
         alert(error)
@@ -95,16 +96,24 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
       },
       buttons: [
         {
-            extend: 'excel',
-            text: 'Excel',
-            Class: 'btn btn-success export-excel-btn',
+          extend: 'excel',
+          text: 'Excel',
+          Class: 'btn btn-success export-excel-btn',
+          title: 'Listado de Denuncias',
+          exportOptions: {
+            columns: [0, 1, 2, 3],
+          },
         },
         {
-            extend: 'pdf',
-            text: 'PDF',
-            className: 'btn btn-danger export-pdf-btn'
-        }
-    ]
+          extend: 'pdf',
+          text: 'PDF',
+          className: 'btn btn-danger export-pdf-btn',
+          title: 'Listado de denuncias',
+          exportOptions: {
+            columns: [0, 1, 2, 3],
+          },
+        },
+      ],
   });
  
   $('#exportExcelBtn').on('click', function() {
@@ -118,38 +127,104 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
 
   filterDate() {
     const startDate = this.filterDateStart
-      ? new Date(this.filterDateStart)
-      : null;
+    ? new Date(this.filterDateStart)
+    : null;
     const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
 
     this.reportfilter = this.report.filter((report) => {
-      let complaintDate;
+    let complaintDate;
 
-      complaintDate = new Date(report.createdDate);
+    complaintDate = new Date(report.createdDate);
 
-      if (isNaN(complaintDate.getTime())) {
-        console.warn(`Fecha de queja no válida: ${report.createdDate}`);
-        return false;
-      }
+    if (isNaN(complaintDate.getTime())) {
+      console.warn(`Fecha de queja no válida: ${report.createdDate}`);
+      return false;
+    }
 
-      console.log(`Fecha de queja: ${complaintDate}`);
+    console.log(`Fecha de queja: ${complaintDate}`);
 
-      if (startDate && endDate) {
-        return complaintDate >= startDate && complaintDate <= endDate;
-      } else if (startDate) {
-        return complaintDate >= startDate;
-      } else if (endDate) {
-        return complaintDate <= endDate;
-      }
+    if (startDate && endDate) {
+      return complaintDate >= startDate && complaintDate <= endDate;
+    } else if (startDate) {
+      return complaintDate >= startDate;
+    } else if (endDate) {
+      return complaintDate <= endDate;
+    }
 
-      return true;
-    });
+    return true;
+  });
 
+
+    this.CreateDataTable(); // Actualizar la tabla con los datos filtrados
+  }
+
+   //filtro de los estados
+   search(event: Event) {
+    const selectedValue = (event.target as HTMLSelectElement).value;
+    console.log(this.reportfilter);
+
+    this.reportfilter = this.report.filter(
+      (c) => c.reportState == selectedValue
+    );
+    if (selectedValue == '') {
+      this.reportfilter = this.report;
+    }
+    // alert(this.filterComplaint)
+    console.log(this.reportfilter);
     this.CreateDataTable();
   }
 
 
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value
+      .toLowerCase()
+      .trim(); // Añadido trim()
+
+    if (filterValue) {
+      this.reportfilter = this.report.filter((p) => {
+        const descriptionStr = p.description.toLowerCase().trim();
+        const plotIdStr = p.plotId.toString().trim();
+        return descriptionStr.includes(filterValue), plotIdStr.includes(filterValue);
+      });
+    } else {
+      this.reportfilter = [...this.report];
+    }
+
+    this.CreateDataTable();
+  }
+
+  viewComplaint(i: number) {
+    const modal = this._modal.open(PenaltiesModalReportComponent, {
+      size: 'xl',
+      keyboard: false,
+    });
+    modal.componentInstance.id = i;
+    modal.result
+      .then((result) => {})
+      .catch((error) => {
+        console.log('Modal dismissed with error:', error);
+      });
+  }
+
+
+
+
+  getTypes(): void {
+    this.reportServodes.getState().subscribe({
+      next: (data) => {
+        this.states = Object.keys(data).map(key => ({
+          key,
+          value: data[key]
+
+        }));
+        console.log(this.states)
+      },
+      error: (error) => {
+        console.error('error: ', error);
+      }
+    })
+  }
 
 
 

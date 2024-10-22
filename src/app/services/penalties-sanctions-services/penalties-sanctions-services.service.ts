@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ReportDTO } from '../../models/reportDTO';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/internal/Observable';
 
 @Injectable({
   providedIn: 'root'
@@ -32,11 +32,10 @@ export class PenaltiesSanctionsServicesService {
     }
     return new Date(date).toLocaleDateString('es-ES');
   }
-
   getById(id:number){
     return this.http.get(this.url+"report/"+id)
   }
-
+  
   postFine(fineData: any): Observable<any> {
     const formData = new FormData();
   

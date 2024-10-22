@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { ComplaintService } from '../../../services/complaint.service';
 import { Router, RouterModule } from '@angular/router';
-import { FileUploadComponent } from '../../file-upload/file-upload.component';
 import { FormsModule } from '@angular/forms';
+import { PenaltiesFileUploadButtonComponent } from '../helpers/penalties-file-upload-button/penalties-file-upload-button.component';
 
 @Component({
   selector: 'app-penalties-post-complaint',
   standalone: true,
-  imports: [FormsModule, FileUploadComponent, RouterModule],
+  imports: [FormsModule, PenaltiesFileUploadButtonComponent, RouterModule],
   templateUrl: './penalties-post-complaint.component.html',
   styleUrl: './penalties-post-complaint.component.scss'
 })
@@ -74,7 +74,7 @@ export class PenaltiesPostComplaintComponent {
         next: (response) => {
           
           console.log('Denuncia enviada correctamente', response);
-          this.router.navigate(['home/listComplaint']);
+          this.router.navigate(['home/complaints/listComplaint']);
         },
         error: (error) => {
           console.error('Error al enviar la denuncia', error);

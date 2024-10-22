@@ -48,6 +48,9 @@ export class ComplaintService {
 
     return this.http.put(this.url+"complaint/"+idcomplaint, updatedData, { headers });
   }
+  getState(): Observable<any> {
+    return this.http.get(this.url+"complaint/states")
+  }
   //esto es unicamente para mostrar fechas 
   formatDate(date: any): string {
     if (Array.isArray(date)) {

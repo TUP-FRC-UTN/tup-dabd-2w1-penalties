@@ -33,7 +33,7 @@ export class NavbarComponent implements OnInit {
           //botón agregar usuario
           icon: "bi-person-plus-fill",
           title: "Añadir",
-          route: "home/postComplaint",
+          route: "home/complaints/postComplaint",
           roles: ["SuperAdmin", "Admin", "Owner"]
         },
         {
@@ -41,8 +41,15 @@ export class NavbarComponent implements OnInit {
           //botón listado
           icon: "bi-person-lines-fill",
           title: "Listado",
-          route: "home/listComplaint",
+          route: "home/complaints/listComplaint",
           roles: ["SuperAdmin", "Admin", "Owner"]
+        },
+
+        {
+          icon: "bi bi-piggy-bank-fill",
+          title: "Generar nueva Multa",
+          route: "home/sanctions/postFine",
+          roles: ["SuperAdmin", "Admin"]
         }
         ]
       },
@@ -50,7 +57,7 @@ export class NavbarComponent implements OnInit {
       {
         icon: "bi-box",
         title: "Añadir Lote",
-        route: "home/reportList",
+        route: "home/sanctions/reportList",
         roles: ["SuperAdmin", "Admin"]
       }
 

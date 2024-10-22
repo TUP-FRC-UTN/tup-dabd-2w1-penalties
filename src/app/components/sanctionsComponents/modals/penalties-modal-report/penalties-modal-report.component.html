@@ -1,38 +1,29 @@
-<!-- <button
-  type="button"
-  class="btn btn-primary"
-  data-bs-toggle="modal"
-  data-bs-target="#consultarInformeModal"
->
-  Consultar informe
-</button>
-
-<div
-  class="modal fade"
-  id="consultarInformeModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-xl" id="">
-    <div class="modal-content rounded-4"> -->
 <div class="modal-header verdeOscuro">
   <div class="col-6">
     <div class="mb-3">
       <h4 class="modal-title fs-5" id="exampleModalLabel">Motivo</h4>
-      <select class="form-select" aria-label="Default select example">
-        <option selected>Daño a la propiedad</option>
+      @if(data !=null){
+      <select class="form-select" aria-label="Default select example" disabled>
+        <option selected>{{ data.reportReason.reportReason }}</option>
         <option value="1"></option>
         <option value="2"></option>
         <option value="3"></option>
       </select>
+      }
     </div>
   </div>
   <div class="col-2"></div>
   <div class="col-3">
     <div class="mb-3">
       <h4 class="modal-title fs-5" id="exampleModalLabel">Fecha de alta</h4>
-      <input type="date" class="rounded-3 input-date form-control" />
+      @if(data != null){
+      <input
+        value="{{ formattedDate | date : 'yyyy-MM-dd' }}"
+        type="date"
+        class="rounded-3 input-date form-control"
+        disabled
+      />
+      }
     </div>
   </div>
   <button
@@ -49,14 +40,16 @@
       <div class="col-12">
         <label class="fw-semibold" for="form-floating">Descripcion</label>
         <div class="form-floating">
+          @if(data != null){
           <textarea
             class="form-control fondoGris"
             placeholder="Leave a comment here"
             id="floatingTextarea2"
             style="height: 200px; resize: none"
+            disabled
           >
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea perferendis illum? Hic repellendus quos nemo sequi error magnam adipisci illo provident eius maxime odit nihil fugiat tempore, dolorem expedita. Lorem ipsum dolor sit, amet consectetur adipisicing elit. Error modi delectus id nostrum asperiores expedita aut architecto iusto, tempora repudiandae ullam cum, sunt cupiditate in velit necessitatibus ut cumque fuga. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Modi molestiae veniam maiores quibusdam non hic, sed laudantium. Facere, repellendus sunt et asperiores, error odit, amet modi consequatur id veniam quas!</textarea
-          >
+  {{ data.description }}</textarea
+          >}
         </div>
       </div>
     </div>
@@ -82,9 +75,9 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea perferendis illu
           </div>
           <div class="col-3">
             <div class="p-2 mt-4">
-              <button style="width: 100px" type="button" class="btn verdeClaro">
+              <!-- <button style="width: 100px" type="button" class="btn verdeClaro">
                 Ver mas
-              </button>
+              </button> -->
             </div>
           </div>
           <div class="col-3">
@@ -97,9 +90,11 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea perferendis illu
                 aria-label="Default select example"
                 disabled
               >
-                <option value="1">Cerrado</option>
+                @if(data != null){
+                <option value="1">{{ data.reportState }}</option>
                 <option value="2">Two</option>
                 <option value="3">Three</option>
+                }
               </select>
             </div>
           </div>
@@ -108,14 +103,15 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea perferendis illu
               <label for="exampleInputEmail1" class="form-label fw-semibold"
                 >Motivo de Cambio</label
               >
+              @if(data != null){
               <input
                 type="text"
-                value="Aprobacion del consejo"
+                value="{{ data.stateReason }}"
                 disabled
                 class="form-control"
                 id="exampleInputEmail1"
                 aria-describedby="emailHelp"
-              />
+              />}
             </div>
           </div>
         </div>
@@ -126,14 +122,15 @@ Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui ea perferendis illu
 </div>
 <div class="modal-footer verdeOscuro">
   <button
+    (click)="close()"
     type="button"
     class="btn btn-secondary btn-lg me-4"
     data-bs-dismiss="modal"
   >
     Cancelar
   </button>
-  <button type="button" class="btn verdeClaro btn-lg">Aceptar</button>
+  <!--  <button type="button" class="btn verdeClaro btn-lg">Aceptar</button>-->
 </div>
 <!-- </div>
-  </div>
-</div> -->
+    </div>
+  </div> -->

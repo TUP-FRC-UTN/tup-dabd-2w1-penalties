@@ -1,11 +1,11 @@
 import { Component, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FileComponent } from '../../../file/file.component';
 import { CommonModule } from '@angular/common';
+import { PenaltiesFileUploadItemComponent } from '../penalties-file-upload-item/penalties-file-upload-item.component';
 
 @Component({
   selector: 'app-penalties-file-upload-button',
   standalone: true,
-  imports: [FileComponent,CommonModule],
+  imports: [PenaltiesFileUploadItemComponent,CommonModule],
   templateUrl: './penalties-file-upload-button.component.html',
   styleUrl: './penalties-file-upload-button.component.scss'
 })
