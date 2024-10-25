@@ -67,14 +67,9 @@ export class PenaltiesSanctionsServicesService {
   }
   
   //Este metodo no tiene endpoint por ahora
-  addDisclaimer(userId:number, fineId:number, disclaimer:string){
-    const formData = {
-      userId: userId,
-      fineId: fineId,
-      disclaimer: disclaimer
-    };
-    //return this.http.post<any>(this.url + "sanction/fine/disclaimer", formData)
-    return this.http.post<any>("https://6716f1153fcb11b265d3fadf.mockapi.io/api/sanction/fine/discleimer", formData)
+  addDisclaimer(disclaimerData:any){
+
+    return this.http.post<any>(this.url + "disclaimer/", disclaimerData)
   }
 
 }
