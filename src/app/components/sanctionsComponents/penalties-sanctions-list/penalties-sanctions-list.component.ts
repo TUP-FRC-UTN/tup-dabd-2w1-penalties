@@ -57,27 +57,42 @@ export class PenaltiesSanctionsListComponent implements OnInit {
         },
           {
               data: 'fineState',
-              render: (data) => `<div class="d-flex justify-content-center"><div class="${this.getStatusClass(data)} btn w-75 text-center border rounded-pill" >${data}</div></div>`
-          },
+              render: (data) => {
+                //Si es advertencia
+                const displayValue = data === null ? 'Advertencia' : data;
+                return `<div class="d-flex justify-content-center"><div class="${this.getStatusClass(data)} btn w-75 text-center border rounded-pill">${displayValue}</div></div>`;
+            } },
           { data: 'plotId', render : (data)=> ` <div class="text-start">Nro: ${data}</div>`},
-          { data: 'amount', render : (data)=> ` <div class="text-start">$: ${data}</div>`},
+          { 
+            data: 'amount', 
+            render: (data) => {
+                //Si es advertencia
+                const amountValue = data != null ? '$' + data : '';
+                return `<div class="text-start">${amountValue}</div>`;
+            }
+        },
           { data: 'description' },
           {
-              data: null,
-              render: (data) => `
-               <div class="btn-group gap-2">
-                    <div class="dropdown">
-                        <button type="button" class="btn btn-light border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a> </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
-                            <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
-                            <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
-                        </ul>
-                    </div>
-                </div>`,
-          }
+            data: null,
+            render: (data) => {
+                if (data.amount === null) {
+                    return '';
+                }
+                return `
+                   <div class="btn-group gap-2">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-light border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
+                                <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
+                                <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
+                            </ul>
+                        </div>
+                    </div>`;
+            }
+        }
       ],
       paging: true, 
       pageLength: 10, 
