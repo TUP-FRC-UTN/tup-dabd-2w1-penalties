@@ -42,22 +42,11 @@ export class PenaltiesSanctionsServicesService {
   }
   
   postFine(fineData: any): Observable<any> {
-    const formData = new FormData();
-  
-    formData.append('reportId', fineData.reportId);
-    formData.append('amount', fineData.amount);
-    formData.append('createdUser', fineData.createdUser);
-  
-    return this.http.post(this.url + 'sanction/fine', formData);
+    return this.http.post(this.url + 'sanction/fine', fineData);
   }
+  
   postWarning(warningData: any): Observable<any> {
-    const formData = new FormData();
-  
-    formData.append('reportId', warningData.reportId);
-    formData.append('amount', warningData.amount);
-    formData.append('createdUser', warningData.createdUser);
-  
-    return this.http.post(this.url + 'sanction/warning', formData);
+    return this.http.post(this.url + 'sanction/warning', warningData);
   }
   
   //Este metodo no tiene endpoint por ahora

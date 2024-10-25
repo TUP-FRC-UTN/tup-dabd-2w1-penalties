@@ -61,7 +61,7 @@ export class PenaltiesPostFineComponent implements OnInit {
     if(this.newFine){
 
       const fineData = {
-        reportId: this.report.id,
+        reportId: 1,
         amount: this.newAmount,
         createdUser: 1
       };
@@ -70,7 +70,7 @@ export class PenaltiesPostFineComponent implements OnInit {
         next: (response) => {
           
           console.log('Multa enviada correctamente', response);
-          this.router.navigate(['home/reportList']);
+          this.router.navigate(['home/sanctions/sanctionsList']);
         },
         error: (error) => {
           console.error('Error al enviar la Multa', error);
@@ -80,7 +80,7 @@ export class PenaltiesPostFineComponent implements OnInit {
     else{
 
       const warningData = {
-        reportId: this.report.id,
+        reportId: 1,
         createdUser: 1
       };
 
@@ -88,7 +88,7 @@ export class PenaltiesPostFineComponent implements OnInit {
         next: (response) => {
           
           console.log('Advertencia enviada correctamente', response);
-          this.router.navigate(['home/reportList']);
+          this.router.navigate(['home/sanctions/sanctionsList']);
         },
         error: (error) => {
           console.error('Error al enviar la Advertencia', error);

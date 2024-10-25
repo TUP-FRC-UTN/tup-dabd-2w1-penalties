@@ -46,6 +46,7 @@
                     required
                     #date="ngModel"
                     [ngClass]="{ 'is-invalid': date.invalid && date.touched }"
+                    disabled
                   />
                   <div *ngIf="date.invalid && date.touched" class="invalid-feedback">
                     La fecha es requerida.
@@ -69,6 +70,7 @@
                 minlength="5"
                 #reportState="ngModel"
                 [ngClass]="{ 'is-invalid': reportState.invalid && reportState.touched }"
+                disabled
               />
               <div *ngIf="reportState.invalid && reportState.touched" class="invalid-feedback">
                 <div *ngIf="reportState.errors?.['required']">El motivo es requerido.</div>
@@ -125,6 +127,7 @@
               minlength="10"
               #description="ngModel"
               [ngClass]="{ 'is-invalid': description.invalid && description.touched }"
+              disabled
             ></textarea>
             <div *ngIf="description.invalid && description.touched" class="invalid-feedback">
               <div *ngIf="description.errors?.['required']">La descripción es requerida.</div>
