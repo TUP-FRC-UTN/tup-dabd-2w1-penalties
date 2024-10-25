@@ -13,7 +13,7 @@
           disabled
         >
           <option value="" disabled selected>
-            {{ selectedOption }}
+            {{ fine.report.reportReason.reportReason }}
           </option>
         </select>
       </div>
@@ -25,7 +25,7 @@
           id="dateInput"
           name="dateInput"
           class="form-control bg-body-secondary"
-          value="{{ selectedDate | date : 'yyyy-MM-dd' }}"
+          value="{{ fine.createdDate | date : 'yyyy-MM-dd' }}"
           disabled
         />
       </div>
@@ -39,7 +39,7 @@
         id="textareaMessage"
         rows="7"
         disabled
-        >{{ description }}</textarea
+        >{{ fine.report.description }}</textarea
       >
     </div>
 
