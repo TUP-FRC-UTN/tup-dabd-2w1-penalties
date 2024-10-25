@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ReportDTO } from '../../models/reportDTO';
 import { Observable } from 'rxjs/internal/Observable';
+import { SanctionsDTO } from '../../models/SanctionsDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,12 @@ export class PenaltiesSanctionsServicesService {
   constructor() { }
 
   //report/all
-  getAllComplains(){
+  getAllReports(){
     return this.http.get<ReportDTO[]>(this.url+"report/all")//cambiar el nopmbre edel metodo
+  }
+//sanction/all
+  getAllSactions(){
+    return this.http.get<SanctionsDTO[]>(this.url+"sanction/all")
   }
 
   ///report/states
