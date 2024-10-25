@@ -45,7 +45,10 @@ export class ReportModifyComponent {
   updateReport(): void {
     const reportId = 1;
     const userId = 1;
-    const complaintsIds = this.selectedComplaints.map(complaint => complaint.id);
+
+    const complaintsIds = this.selectedComplaints.length > 0
+      ? this.selectedComplaints.map(complaint => complaint.id)
+      : []; 
 
     const reportDTO: PutReportDTO = {
       id: reportId,
@@ -54,10 +57,35 @@ export class ReportModifyComponent {
       complaintsIds: complaintsIds,
     };
 
-    this.mockService.updateReport(reportDTO).subscribe(res => {
-      console.log('Informe actualizado', res);
-    }, error => {
-      console.error('Error al actualizar el informe', error);
+    (window as any).Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Deseas confirmar la actualización del informe?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, actualizar',
+      cancelButtonText: 'No, cancelar'
+    }).then((result: any) => {
+      if (result.isConfirmed) {        
+        this.mockService.updateReport(reportDTO).subscribe(res => {
+          console.log('Informe actualizado', res);
+          
+          (window as any).Swal.fire({
+            title: '¡Actualización exitosa!',
+            text: 'El informe ha sido actualizado correctamente.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        }, error => {
+          console.error('Error al actualizar el informe', error);          
+          (window as any).Swal.fire({
+            title: 'Error',
+            text: 'No se pudo actualizar el informe. Inténtalo de nuevo.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        });
+      }
     });
   }
 
