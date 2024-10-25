@@ -4,6 +4,7 @@ import { PenaltiesSanctionsReportListComponent } from './penalties-sanctions-rep
 import { PenaltiesPostFineComponent } from './penalties-post-fine/penalties-post-fine.component';
 import { PenaltiesPostDisclaimerComponent } from './penalties-post-disclaimer/penalties-post-disclaimer.component';
 import { PenaltiesSanctionsListComponent } from './penalties-sanctions-list/penalties-sanctions-list.component';
+import { ReportModifyComponent } from '../report-modify/report-modify.component';
 
 export const routes: Routes = [
     {
@@ -26,7 +27,10 @@ export const routes: Routes = [
           path: 'sanctionsList',
           component: PenaltiesSanctionsListComponent,
         },
-        
+        {
+          path: 'putReport',
+          component: ReportModifyComponent
+        }
       ]
     },
 

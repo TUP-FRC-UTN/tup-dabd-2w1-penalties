@@ -3,7 +3,6 @@ import { ComplaintService } from '../../services/complaint.service';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
-import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MockapiService } from '../../services/mock/mockapi.service';
 import { ModalComplaintsListComponent } from "../modal-complaints-list/modal-complaints-list.component";
 import { PutReportDTO } from '../../models/PutReportDTO';
@@ -11,7 +10,7 @@ import { PutReportDTO } from '../../models/PutReportDTO';
 @Component({
   selector: 'app-report-modify',
   standalone: true,
-  imports: [FormsModule, RouterLink, FileUploadComponent, ModalComplaintsListComponent],
+  imports: [FormsModule, RouterLink, ModalComplaintsListComponent],
   templateUrl: './report-modify.component.html',
   styleUrl: './report-modify.component.scss'
 })
