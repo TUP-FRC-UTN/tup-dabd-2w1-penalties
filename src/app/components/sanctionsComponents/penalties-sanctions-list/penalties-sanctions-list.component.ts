@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-penalties-sanctions-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, NgbModule],
+  imports: [CommonModule, RouterModule, FormsModule, NgbModule, RouterModule],
   templateUrl: './penalties-sanctions-list.component.html',
   styleUrl: './penalties-sanctions-list.component.scss'
 })
@@ -20,7 +20,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   filterDateStart: Date = new Date();
   filterDateEnd: Date = new Date();
 
-  constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal){
+  constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal, private router:Router){
     //Esto es importante para llamar los funciones dentro del data table con onClick
     // (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     // (window as any).selectState = (state: string, id: number, userId: number) =>
@@ -29,7 +29,20 @@ export class PenaltiesSanctionsListComponent implements OnInit {
 
   ngOnInit(): void {
     this.refreshData()
-    
+
+    //Esto es para acceder al metodo desde afuera del datatable
+    const that = this;
+    $('#sanctionsTable').on('click', 'a.dropdown-item', function(event) {
+      const action = $(this).data('action');
+      const id = $(this).data('id');
+  
+      switch(action) {
+        case 'newDisclaimer':
+          that.newDisclaimer(id);
+          break;
+      }
+    });
+
   }
 
   refreshData(){
@@ -88,6 +101,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
                                 <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
                                 <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
                                 <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
+                                ${data.hasSubmittedDisclaimer ? '' : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
                             </ul>
                         </div>
                     </div>`;
@@ -137,7 +151,13 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   $('#exportPdfBtn').on('click', function() {
     table.button('.buttons-pdf').trigger(); 
   });
+
   }
+
+
+  newDisclaimer(id: number) {
+    this.router.navigate([`/home/sanctions/postDisclaimer/${id}`])
+  } 
 
   filterDate() {
     const startDate = this.filterDateStart

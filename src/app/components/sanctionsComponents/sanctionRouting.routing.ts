@@ -19,7 +19,7 @@ export const routes: Routes = [
           component: PenaltiesPostFineComponent,
         },
         {
-          path: 'postDisclaimer',
+          path: 'postDisclaimer/:fineId',
           component: PenaltiesPostDisclaimerComponent,
         },
         {
