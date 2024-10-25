@@ -5,8 +5,7 @@
                 <h5 class="modal-title" id="complaintModalLabel">Gestión de denuncias <i
                         class="bi bi-question-circle ms-2" data-bs-toggle="tooltip" data-bs-placement="right"
                         [title]="tooltipTitle"></i></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                    (click)="closeModal()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <table class="table table-bordered">
@@ -32,7 +31,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" (click)="attachSelectedComplaintsToList()">Seleccionar
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                    (click)="attachSelectedComplaintsToList()">Seleccionar
                     denuncias</button>
             </div>
         </div>

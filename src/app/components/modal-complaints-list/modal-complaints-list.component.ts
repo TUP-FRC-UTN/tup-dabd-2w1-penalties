@@ -39,21 +39,11 @@ export class ModalComplaintsListComponent implements OnInit {
     const selected = this.getSelectedComplaints();
     console.log('Denuncias seleccionadas antes de emitir:', selected);
     this.selectedComplaints.emit(selected);
-    this.closeModal();
   }
-
 
   //filtra las denuncias seleccionadas
   private getSelectedComplaints(): any[] {
     return this.complaints.filter(complaint => complaint.selected);
-  }
-
-  public closeModal(): void {
-    const modalElement = document.getElementById('complaintModal');
-    if (modalElement) {
-      const modal = new (window as any).bootstrap.Modal(modalElement);
-      modal.hide();
-    }
   }
 
   //tooltip para el icono del signo de pregunta

@@ -24,7 +24,6 @@ export class ReportModifyComponent {
   complaintTypes: any[] = [];
   selectedComplaints: any[] = [];
   selectedComplaintsToDetach: any[] = [];
-  modalMode: 'anexar' | 'desanexar' = 'anexar';
 
   constructor(private mockService: MockapiService, private router: Router) {
     this.maxDate = this.setTodayDate();
@@ -39,7 +38,7 @@ export class ReportModifyComponent {
   }
 
   handleSelectedComplaints(selectedComplaints: any[]): void {
-    console.log('Denuncias recibidas en handleSelectedComplaints:', selectedComplaints);
+    console.log('Denuncias recibidas del modal:', selectedComplaints);
     this.selectedComplaints = selectedComplaints;
   }
 
