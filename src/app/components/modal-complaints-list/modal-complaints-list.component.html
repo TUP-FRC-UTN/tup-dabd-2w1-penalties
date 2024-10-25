@@ -2,7 +2,9 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="complaintModalLabel">Denuncias</h5>
+                <h5 class="modal-title" id="complaintModalLabel">Gestión de denuncias <i
+                        class="bi bi-question-circle ms-2" data-bs-toggle="tooltip" data-bs-placement="right"
+                        [title]="tooltipTitle"></i></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
                     (click)="closeModal()"></button>
             </div>
@@ -10,31 +12,28 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Seleccionar</th>
-                            <th>Usuario</th>
                             <th>Tipo de Denuncia</th>
                             <th>Estado</th>
-                            <th>Descripción</th>
-                            <th>Razón</th>
+                            <th>Fecha</th>
+                            <th>Seleccionar</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let complaint of getFilteredComplaints()">
-                            <td>
+                        <tr *ngFor="let complaint of complaints">
+                            <td>{{ complaint.complaintType }}</td>
+                            <td>{{ complaint.complaintState }}</td>
+                            <td>{{ complaint.createdDate | date }}</td>
+                            <td class="text-center">
                                 <input type="checkbox" [(ngModel)]="complaint.selected">
                             </td>
-                            <td>{{ complaint.user_id }}</td>
-                            <td>{{ complaint.complaint_type }}</td>
-                            <td>{{ complaint.complaint_state }}</td>
-                            <td>{{ complaint.description }}</td>
-                            <td>{{ complaint.state_reason }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" (click)="attachSelectedComplaintsToList()">{{mode === 'anexar' ? 'Anexar denuncias' : 'Desanexar denuncias'}}</button>
+                <button type="button" class="btn btn-primary" (click)="attachSelectedComplaintsToList()">Seleccionar
+                    denuncias</button>
             </div>
         </div>
     </div>

@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { FileUploadComponent } from '../file-upload/file-upload.component';
 import { MockapiService } from '../../services/mock/mockapi.service';
 import { ModalComplaintsListComponent } from "../modal-complaints-list/modal-complaints-list.component";
+import { PutReportDTO } from '../../models/PutReportDTO';
 
 @Component({
   selector: 'app-report-modify',
@@ -39,69 +40,29 @@ export class ReportModifyComponent {
 
   handleSelectedComplaints(selectedComplaints: any[]): void {
     console.log('Denuncias recibidas en handleSelectedComplaints:', selectedComplaints);
-    if (this.modalMode === 'anexar') {
-      this.selectedComplaints = selectedComplaints;
-      console.log('Denuncias para anexar:', this.selectedComplaints);
-    } else if (this.modalMode === 'desanexar') {
-      this.selectedComplaintsToDetach = selectedComplaints;
-      console.log('Denuncias seleccionadas para desanexar:', this.selectedComplaintsToDetach);
-    }
+    this.selectedComplaints = selectedComplaints;
   }
 
-
   updateReport(): void {
-    this.mockService.updateReportDescription(this.description).subscribe(res => {
-      console.log('Informe actualizado', res);
+    const reportId = 1;
+    const userId = 1;
+    const complaintsIds = this.selectedComplaints.map(complaint => complaint.id);
 
-      if (this.modalMode === 'anexar') {
-        this.updateComplaintsState('ANEXADA', 1);
-      } else if (this.modalMode === 'desanexar') {
-        console.log('Denuncias a desanexar:', this.selectedComplaintsToDetach);
-        this.updateDetachedComplaintsState();
-      }
+    const reportDTO: PutReportDTO = {
+      id: reportId,
+      userId: userId,
+      description: this.description,
+      complaintsIds: complaintsIds,
+    };
+
+    this.mockService.updateReport(reportDTO).subscribe(res => {
+      console.log('Informe actualizado', res);
     }, error => {
       console.error('Error al actualizar el informe', error);
     });
   }
 
-  private updateComplaintsState(newState: string, reportId: number): void {
-    this.selectedComplaints.forEach(complaint => {
-      const updatedComplaint = {
-        ...complaint,
-        report_id: reportId,
-        complaint_state: newState
-      };
-
-      this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
-        console.log(`Denuncia ${complaint.id} actualizada`, res);
-      }, error => {
-        console.error(`Error al actualizar la denuncia ${complaint.id}`, error);
-      });
-    });
-  }
-
-  private updateDetachedComplaintsState(): void {
-    console.log('Iniciando desanexado de denuncias:', this.selectedComplaintsToDetach);
-
-    this.selectedComplaintsToDetach.forEach(complaint => {
-      const updatedComplaint = {
-        ...complaint,
-        report_id: 10,
-        complaint_state: 'PENDIENTE'
-      };
-
-      console.log('Actualizando denuncia para desanexar:', updatedComplaint);
-
-      this.mockService.updateComplaintState(updatedComplaint).subscribe(res => {
-        console.log(`Denuncia ${complaint.id} desanexada`, res);
-      }, error => {
-        console.error(`Error al desanexar la denuncia ${complaint.id}`, error);
-      });
-    });
-  }
-
-  openModal(mode: 'anexar' | 'desanexar'): void {
-    this.modalMode = mode;
+  openModal(): void {
     const modalElement = document.getElementById('complaintModal');
     if (modalElement) {
       const modal = new (window as any).bootstrap.Modal(modalElement);

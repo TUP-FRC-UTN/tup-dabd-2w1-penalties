@@ -64,11 +64,8 @@
                             placeholder="Infractor">
                         <button class="btn btn-success" style="white-space: nowrap;">Ver más</button>
                     </div>
-                    <button type="button" class="btn btn-success mb-3" (click)="openModal('anexar')">Anexar denuncias <i
-                            class="bi bi-file-earmark-plus"></i></button>
-                    <br>
-                    <button type="button" class="btn btn-warning" (click)="openModal('desanexar')">Desanexar denuncias
-                        <i class="bi bi-file-earmark-minus"></i></button>
+                    <button type="button" class="btn btn-warning" (click)="openModal()">Gestionar denuncias
+                        <i class="bi bi-file-earmark-text"></i></button>
                 </div>
             </div>
             <div class="submit-box d-flex justify-content-end">
@@ -80,5 +77,4 @@
     </div>
 </div>
 
-<app-modal-complaints-list (selectedComplaints)="handleSelectedComplaints($event)"
-    [mode]="modalMode"></app-modal-complaints-list>
+<app-modal-complaints-list (selectedComplaints)="handleSelectedComplaints($event)"></app-modal-complaints-list>
