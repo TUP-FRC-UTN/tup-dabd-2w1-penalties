@@ -31,7 +31,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     this.refreshData()
 
     //Esto es para acceder al metodo desde afuera del datatable
-    const that = this;
+    const that = this; // para referenciar metodos afuera de la datatable
     $('#sanctionsTable').on('click', 'a.dropdown-item', function(event) {
       const action = $(this).data('action');
       const id = $(this).data('id');
@@ -39,6 +39,9 @@ export class PenaltiesSanctionsListComponent implements OnInit {
       switch(action) {
         case 'newDisclaimer':
           that.newDisclaimer(id);
+          break;
+        case 'seeDisclaimer':
+          that.seeDisclaimer(id);
           break;
       }
     });
@@ -101,7 +104,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
                                 <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
                                 <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
                                 <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
-                                ${data.hasSubmittedDisclaimer ? '' : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
+                                ${data.hasSubmittedDisclaimer ? `<li><a class="dropdown-item" data-action="seeDisclaimer" data-id="${data.id}"">Consultar Descargo</a></li>` : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
                             </ul>
                         </div>
                     </div>`;
@@ -157,7 +160,11 @@ export class PenaltiesSanctionsListComponent implements OnInit {
 
   newDisclaimer(id: number) {
     this.router.navigate([`/home/sanctions/postDisclaimer/${id}`])
-  } 
+  }
+
+  seeDisclaimer(id:number){
+    alert('No implementado!')
+  }
 
   filterDate() {
     const startDate = this.filterDateStart
