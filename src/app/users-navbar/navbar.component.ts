@@ -26,51 +26,57 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.buttonsList = [
       {
-        icon: "bi-people",
-        title: "Usuarios",
-        roles: ["SuperAdmin", "Admin"],
+        //Denuncias
+        icon: "bi-envelope-exclamation",
+        title: "Denuncia",
+        roles: ["SuperAdmin", "Admin", "SanctionManager", "Owner", "Tenant"],
         childButtons: [{
-          //botón agregar usuario
-          icon: "bi-person-plus-fill",
-          title: "Añadir",
+          //botón nueva denuncia
+          icon: "bi-envelope-plus-fill",
+          title: "Enviar",
           route: "home/complaints/postComplaint",
-          roles: ["SuperAdmin", "Admin", "Owner"]
+          roles: ["SuperAdmin", "Admin", "SanctionManager", "Owner", "Tenant"]
         },
         {
-
-          //botón listado
-          icon: "bi-person-lines-fill",
+          //botón listado denuncia
+          icon: "bi-envelope-paper-fill",
           title: "Listado",
           route: "home/complaints/listComplaint",
-          roles: ["SuperAdmin", "Admin", "Owner"]
+          roles: ["SuperAdmin", "Admin", "SanctionManager"]
+        }]
+      },
+      {
+        //Sanciones
+        icon: "bi-exclamation-triangle",
+        title: "Sanciones",
+        roles: ["SuperAdmin", "Admin", "SanctionManager", "Owner", "Tenant"],
+        childButtons: [{
+          //Listado multas y advertencias
+          icon: "bi-receipt",
+          title: "Multas/Advertencias",
+          route: "home/sanctions/sanctionsList",
+          roles: ["SuperAdmin", "Admin", "SanctionManager", "Owner", "Tenant"]
         },
-
         {
-          icon: "bi bi-piggy-bank-fill",
-          title: "Generar nueva Multa",
-          route: "home/sanctions/postFine",
+          //Listado Informes
+          icon: "bi-clipboard2-fill",
+          title: "Informes",
+          route: "home/sanctions/reportList",
+          roles: ["SuperAdmin", "Admin", "SanctionManager"]
+        },
+        {
+          icon: "bi-slash-circle",
+          title: "Infracciones",
+          route: "home",
           roles: ["SuperAdmin", "Admin"]
         },
         {
-          icon: "bi bi-piggy-bank-fill",
-          title: "Modificar informe",
-          route: "home/sanctions/putReport",
+          icon: "bi-chat-text-fill",
+          title: "Descargo",
+          route: "home/sanctions/postDisclaimer/:fineId1",
           roles: ["SuperAdmin", "Admin"]
         }
         ]
-      },
-
-      {
-        icon: "bi-box",
-        title: "Añadir Lote",
-        route: "home/sanctions/reportList",
-        roles: ["SuperAdmin", "Admin"]
-      },
-      {
-        icon: "bi-box",
-        title: "Añadir Lote",
-        route: "home/sanctions/sanctionsList",
-        roles: ["SuperAdmin", "Admin"]
       }
 
     ];

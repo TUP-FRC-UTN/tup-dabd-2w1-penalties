@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { ComplaintService } from '../../../services/complaint.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PenaltiesFileUploadButtonComponent } from '../helpers/penalties-file-upload-button/penalties-file-upload-button.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-penalties-post-complaint',
   standalone: true,
-  imports: [FormsModule, PenaltiesFileUploadButtonComponent, RouterModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, PenaltiesFileUploadButtonComponent, RouterModule],
   templateUrl: './penalties-post-complaint.component.html',
   styleUrl: './penalties-post-complaint.component.scss'
 })
@@ -29,6 +30,22 @@ export class PenaltiesPostComplaintComponent {
     this.setTodayDate();
     this.files = [];
   }
+
+  //Esto esta puesto solo de ejemplo
+  formReactivo = new FormGroup({
+    text: new FormControl("asd", [Validators.required]),
+    number: new FormControl(0, [Validators.required]),
+    email: new FormControl("", [Validators.required]),
+    password: new FormControl("", [Validators.required]),
+    select: new FormControl(['T1'], [Validators.required]),
+    date: new FormControl(new Date(), [Validators.required]),
+    radio: new FormControl(['choice1'], [Validators.required]),
+    check: new FormControl([false], [Validators.required]),
+    file: new FormControl([], [Validators.required]),
+    range: new FormControl(0, [Validators.required]),
+    dissabled: new FormControl("", [Validators.required]),
+    textarea: new FormControl("", [Validators.required])
+  });
 
   ngOnInit(): void {
     this.getTypes();
