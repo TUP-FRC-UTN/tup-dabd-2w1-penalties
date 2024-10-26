@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { PenaltiesSanctionsServicesService } from '../../../services/penalties-s
 })
 export class PenaltiesPostDisclaimerComponent implements OnInit {
   userId:number;
-  @Input() fineId: number;
+  fineIdFromList: number;
   selectedOption: string;
   selectedDate: string;
   description: string;
@@ -21,9 +21,9 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
   textareaPlaceholder: string;
   fine: any;
 
-  constructor(private penaltiesService: PenaltiesSanctionsServicesService,private router: Router){
+  constructor(private penaltiesService: PenaltiesSanctionsServicesService,private router: Router, private route: ActivatedRoute){
     this.userId = 1;
-    this.fineId = 0; //Esto deberia venir del listado
+    this.fineIdFromList = 0; //Esto deberia venir del listado
     this.selectedOption = 'Cargando...',
     this.selectedDate = '2012-12-12',
     this.description = 'Si estas viendo este mensaje es porque aun no ha cargado la descripcion, por favor espere...',
@@ -38,11 +38,14 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getFine();
+    this.route.paramMap.subscribe(params => {
+      this.fineIdFromList = + params.get('fineId')!;
+      this.getFine(this.fineIdFromList);
+    });
   }
 
-  getFine(){
-    this.penaltiesService.getFineById(this.fineId)
+  getFine(fineId:number){
+    this.penaltiesService.getFineById(this.fineIdFromList)
     .subscribe(
       (response) => {
         console.log(response); 
@@ -54,18 +57,22 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
   }
 
   onSubmit(){
+    const disclaimerData = {
+      userId: 10,
+      fineId:this.fineIdFromList,
+      disclaimer:this.disclaimer
+    };
+
     //Envio de formulario
-    this.penaltiesService.addDisclaimer(this.userId, this.fineId, this.disclaimer).subscribe({
+    this.penaltiesService.addDisclaimer(disclaimerData).subscribe({
       next: (response) => {
         console.log('Reclamo enviado correctamente', response);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home/sanctions/sanctionsList']);
       },
       error: (error) => {
         console.error('Error al enviar el reclamo', error);
       }
     });
-    //navegar al listado de sanciones
-    //this.router.navigate(['/sanctionList']);
   }
 
 }

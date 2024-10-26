@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ReportDTO } from '../../models/reportDTO';
 import { Observable } from 'rxjs/internal/Observable';
+import { SanctionsDTO } from '../../models/SanctionsDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,12 @@ export class PenaltiesSanctionsServicesService {
   constructor() { }
 
   //report/all
-  getAllComplains(){
+  getAllReports(){
     return this.http.get<ReportDTO[]>(this.url+"report/all")//cambiar el nopmbre edel metodo
+  }
+//sanction/all
+  getAllSactions(){
+    return this.http.get<SanctionsDTO[]>(this.url+"sanction/all")
   }
 
   ///report/states
@@ -37,22 +42,11 @@ export class PenaltiesSanctionsServicesService {
   }
   
   postFine(fineData: any): Observable<any> {
-    const formData = new FormData();
-  
-    formData.append('reportId', fineData.reportId);
-    formData.append('amount', fineData.amount);
-    formData.append('createdUser', fineData.createdUser);
-  
-    return this.http.post(this.url + 'sanction/fine', formData);
+    return this.http.post(this.url + 'sanction/fine', fineData);
   }
+  
   postWarning(warningData: any): Observable<any> {
-    const formData = new FormData();
-  
-    formData.append('reportId', warningData.reportId);
-    formData.append('amount', warningData.amount);
-    formData.append('createdUser', warningData.createdUser);
-  
-    return this.http.post(this.url + 'sanction/warning', formData);
+    return this.http.post(this.url + 'sanction/warning', warningData);
   }
   
   //Este metodo no tiene endpoint por ahora
@@ -62,14 +56,9 @@ export class PenaltiesSanctionsServicesService {
   }
   
   //Este metodo no tiene endpoint por ahora
-  addDisclaimer(userId:number, fineId:number, disclaimer:string){
-    const formData = {
-      userId: userId,
-      fineId: fineId,
-      disclaimer: disclaimer
-    };
-    //return this.http.post<any>(this.url + "sanction/fine/disclaimer", formData)
-    return this.http.post<any>("https://6716f1153fcb11b265d3fadf.mockapi.io/api/sanction/fine/discleimer", formData)
+  addDisclaimer(disclaimerData:any){
+
+    return this.http.post<any>(this.url + "disclaimer/", disclaimerData)
   }
 
 }

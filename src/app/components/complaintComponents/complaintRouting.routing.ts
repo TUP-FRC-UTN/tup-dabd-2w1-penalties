@@ -2,6 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NavbarComponent } from '../../users-navbar/navbar.component';
 import { PenaltiesPostComplaintComponent } from './penalties-post-complaint/penalties-post-complaint.component';
 import { PenaltiesListComplaintComponent } from './penalties-list-complaint/penalties-list-complaint.component';
+import { ReportModifyComponent } from '../report-modify/report-modify.component';
 
 export const routes: Routes = [
   {

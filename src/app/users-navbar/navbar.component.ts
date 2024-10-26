@@ -50,6 +50,12 @@ export class NavbarComponent implements OnInit {
           title: "Generar nueva Multa",
           route: "home/sanctions/postFine",
           roles: ["SuperAdmin", "Admin"]
+        },
+        {
+          icon: "bi bi-piggy-bank-fill",
+          title: "Modificar informe",
+          route: "home/sanctions/putReport",
+          roles: ["SuperAdmin", "Admin"]
         }
         ]
       },
@@ -58,6 +64,12 @@ export class NavbarComponent implements OnInit {
         icon: "bi-box",
         title: "Añadir Lote",
         route: "home/sanctions/reportList",
+        roles: ["SuperAdmin", "Admin"]
+      },
+      {
+        icon: "bi-box",
+        title: "Añadir Lote",
+        route: "home/sanctions/sanctionsList",
         roles: ["SuperAdmin", "Admin"]
       }
 
