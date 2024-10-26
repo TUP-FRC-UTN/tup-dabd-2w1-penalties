@@ -1,84 +1,282 @@
-<div class="container p-5 border rounded border-3 border-secondary" style="min-height: 70vh;">
-    <h2 class="text-center mb-5">NUEVA DENUNCIA</h2>
-    <form #formDenuncia="ngForm" (ngSubmit)="onSubmit()" novalidate>
-        <div class="row mb-4">
-            <div class="col-1">
-                <label for="selectOption" class="col-form-label">Motivo</label>
+<section class="pt-5">
+    <div class="container p-3 border border-2 rounded shadow-lg mb-5">
+        <!-- Formulario -->
+        <form #formDenuncia="ngForm" (ngSubmit)="onSubmit()" novalidate>
+
+            <div class="row">
+
+                <!-- Ejemplo input text -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Text</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo input number -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Number</label>
+                        <div class="col-10">
+                            <input type="number" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo input email -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Email</label>
+                        <div class="col-10">
+                            <input type="email" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo input password -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Password</label>
+                        <div class="col-10">
+                            <input [type]="false ? 'text' : 'password'" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo select -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Select</label>
+                        <div class="col-10">
+                            <select id="selectOption" class="form-select">
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                @for (type of complaintTypes; track $index) {
+                                <option [value]="type.key">{{type.value}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo input date -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">DateTime</label>
+                        <div class="col-10">
+                            <input type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo radio buttons -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row">
+                        <label class="col-2 col-form-label">Radios</label>
+                        <div class="col-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radios" id="radio1" checked>
+                                <label class="form-check-label" for="radio1">Choice 1</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radios" id="radio2">
+                                <label class="form-check-label" for="radio2">Choice 2</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radios" id="radio3">
+                                <label class="form-check-label" for="radio3">Choice 3</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo check buttons -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row">
+                        <label class="col-2 col-form-label">Checkboxs</label>
+                        <div class="col-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="1" id="check1" checked>
+                                <label class="form-check-label" for="check1">Choice 1</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="2" id="check2">
+                                <label class="form-check-label" for="check2">Choice 2</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="3" id="check3">
+                                <label class="form-check-label" for="check3">Choice 3</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo input file -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">File</label>
+                        <div class="col-10">
+                            <input type="file" class="form-control" multiple accept="image/*">
+                        </div>
+                    </div>
+                </div>
+                <!-- Pueden limitar los tipos de archivos que necesiten Ej: accept=".png, .jpg, .jpeg" -->
+
+
+                <!-- Ejemplo input range -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Range</label>
+                        <div class="col-10">
+                            <input type="range" class="form-range" id="range" min="1" max="100" value="1">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo input dissabled -->
+                <div class="col-lg-6 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-2 col-form-label">Dissabled</label>
+                        <div class="col-10">
+                            <input type="text" class="form-control" name="dissabled" id="dissabled" disabled>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Ejemplo text area -->
+                <div class="col-12 mb-3">
+                    <div class="row align-items-center">
+                        <label class="col-1 col-form-label">Textarea</label>
+                        <div class="col-11">
+                            <textarea class="form-control" name="textarea" id="textarea" minlength="10" maxlength="500"
+                                rows="8"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
-            <div class="col-5">
-                <div class="row align-items-center mb-2">
-                    <div class="col-12">
-                        <select id="selectOption" class="form-select" name="option" [(ngModel)]="selectedOption"
-                            #optionField="ngModel" required>
-                            <option value="" disabled selected>Seleccione una opción</option>
-                            @for (type of complaintTypes; track $index) {
-                            <option [value]="type.key">{{type.value}}</option>
-                            }
-                        </select>
-                        @if (optionField.invalid && (optionField.dirty || optionField.touched)) {
-                        <div class="form-text text-danger mt-1">
-                            @if (optionField.errors?.['required']) {
-                            <span>Por favor, ingrese una opción</span>
+
+
+            <hr>
+            <!-- ----------------------------------------------------------------------------------- -->
+            <div class="row mb-3">
+                <div class="col-1">
+                    <label for="selectOption" class="col-form-label">Motivo</label>
+                </div>
+                <div class="col-5">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-12">
+                            <select id="selectOption" class="form-select" name="option" [(ngModel)]="selectedOption"
+                                #optionField="ngModel" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                @for (type of complaintTypes; track $index) {
+                                <option [value]="type.key">{{type.value}}</option>
+                                }
+                            </select>
+                            @if (optionField.invalid && (optionField.dirty || optionField.touched)) {
+                            <div class="form-text text-danger mt-1">
+                                @if (optionField.errors?.['required']) {
+                                <span>Por favor, ingrese una opción</span>
+                                }
+                            </div>
                             }
                         </div>
-                        }
+                    </div>
+                </div>
+
+                <div class="col-1">
+                    <label for="dateInput" class="col-form-label text-end">Fecha</label>
+                </div>
+                <div class="col-5">
+                    <div class="row align-items-center mb-2">
+                        <div class="col-12">
+                            <input type="date" id="dateInput" name="dateInput" class="form-control"
+                                [(ngModel)]="selectedDate" #dateField="ngModel" [max]="maxDate" required disabled>
+                            @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
+                            <div class="form-text text-danger mt-1">
+                                @if (dateField.errors?.['required']) {
+                                <span>Por favor, seleccione una fecha.</span>
+                                } @else if (dateField.errors?.['max']) {
+                                <span>La fecha no puede ser posterior a la de hoy.</span>
+                                }
+                            </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-1">
-                <label for="dateInput" class="col-form-label text-end">Fecha</label>
-            </div>
-            <div class="col-5">
-                <div class="row align-items-center mb-2">
-                    <div class="col-12">
-                        <input type="date" id="dateInput" name="dateInput" class="form-control" [(ngModel)]="selectedDate"
-                            #dateField="ngModel" [max]="maxDate" required disabled>
-                        @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
-                        <div class="form-text text-danger mt-1">
-                            @if (dateField.errors?.['required']) {
-                            <span>Por favor, seleccione una fecha.</span>
-                            } @else if (dateField.errors?.['max']) {
-                            <span>La fecha no puede ser posterior a la de hoy.</span>
-                            }
-                        </div>
+            <div class="row mb-4">
+                <div class="col-1">
+                    <label for="textareaMessage" class="col-form-label">Mensaje</label>
+                </div>
+                <div class="col-11">
+                    <textarea class="form-control" name="textareaMessage" id="textareaMessage"
+                        [placeholder]="textareaPlaceholder" [(ngModel)]="textareaContent" #textArea="ngModel" required
+                        minlength="10" maxlength="500" rows="8"></textarea>
+                    @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
+                    <div class="form-text text-danger mt-1">
+                        @if (textArea.errors?.['required']) {
+                        <span>Por favor, ingrese un mensaje.</span>
+                        }
+                        @if (textArea.errors?.['minlength']) {
+                        <span>El mensaje debe tener al menos 10 caracteres.</span>
                         }
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-4">
-            <div class="col-1">
-                <label for="textareaMessage" class="col-form-label">Mensaje</label>
-            </div>
-            <div class="col-11">
-                <textarea class="form-control" name="textareaMessage" id="textareaMessage"
-                    [placeholder]="textareaPlaceholder" [(ngModel)]="textareaContent" #textArea="ngModel" required
-                    minlength="10" maxlength="500" rows="8"></textarea>
-                @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
-                <div class="form-text text-danger mt-1">
-                    @if (textArea.errors?.['required']) {
-                    <span>Por favor, ingrese un mensaje.</span>
-                    }
-                    @if (textArea.errors?.['minlength']) {
-                    <span>El mensaje debe tener al menos 10 caracteres.</span>
                     }
                 </div>
-                }
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-auto">
-                <app-penalties-file-upload-button (finalFiles)="getFiles($event)" />
+            <div class="row">
+                <div class="col-auto">
+                    <app-penalties-file-upload-button (finalFiles)="getFiles($event)" />
+                </div>
+                <div class="col d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary me-3"
+                        [routerLink]="'../listComplaint'">Cancelar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="formDenuncia.invalid">Enviar</button>
+                </div>
             </div>
-            <div class="col d-flex justify-content-end">
-                <button type="button" class="btn btn-secondary me-3" [routerLink]="'../listComplaint'">Cancelar</button>
-                <button type="submit" class="btn btn-success" [disabled]="formDenuncia.invalid">Enviar</button>
+        </form>
+    </div>
+
+    <!-- TODO ver clase invalid-feedback de bootstrap para los marcos en los inputs segun validaciones -->
+</section>
+
+
+
+<div class="modal fade" id="infoModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Esta pagina te permite dar de alta una denuncia
+                <div>
+                    <ul>
+                        <li>item 1 hace X</li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
-    </form>
+    </div>
 </div>
-
-<!-- TODO ver clase invalid-feedback de bootstrap para los marcos en los inputs segun validaciones -->

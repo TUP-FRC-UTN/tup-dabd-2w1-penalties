@@ -104,8 +104,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
           render: (data) => {
             const slicedData = (data.length > 45) ? (data.slice(0, 45) + '...') : (data);
             return `<div>${slicedData}</div>`
-          }
-            
+          } 
         },
         {
           data: 'fileQuantity',
