@@ -1,30 +1,18 @@
 <div class="container p-3">
     <div class="post-complaint-section p-4 border shadow-lg p-3 mb-5 bg-white rounded">
-        <h2 class="text-center">MODIFICAR INFORME</h2>
+        <h2 class="text-center">MODIFICAR REPORTE</h2>
         <form #formDenuncia="ngForm" novalidate>
             <div class="d-flex justify-content-between w-100 mb-4">
                 <div class="input-box w-50">
-                    <label for="selectOption" class="form-label">Motivo</label>
-                    <select id="selectOption" class="form-select w-100" name="option" [(ngModel)]="selectedOption"
-                        #optionField="ngModel" required disabled>
-                        <option value="" disabled selected>Seleccione una opción</option>
-                        @for (type of complaintTypes; track $index) {
-                        <option [value]="type.key">{{type.value}}</option>
-                        }
-                    </select>
-                    @if (optionField.invalid && (optionField.dirty || optionField.touched)) {
-                    <div class="text-danger">
-                        @if (optionField.errors?.['required']) {
-                        <span>Por favor, ingrese una opción</span>
-                        }
-                    </div>
-                    }
+                    <label for="selectOption" class="form-label">Estado</label>
+                    <input type="text" id="selectOption" class="form-control w-100" name="reportState" required disabled
+                        [(ngModel)]="reportState" />
                 </div>
 
                 <div class="input-box">
                     <label for="dateInput" class="form-label">Fecha</label>
                     <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary"
-                        [(ngModel)]="maxDate" #dateField="ngModel" [max]="maxDate" required disabled>
+                        [(ngModel)]="selectedDate" #dateField="ngModel" required disabled>
                     @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
                     <div class="text-danger">
                         @if (dateField.errors?.['required']) {
@@ -61,7 +49,7 @@
                     <label for="infractorInput" class="form-label">Infractor</label>
                     <div class="d-flex align-items-center mb-3">
                         <input type="text" id="infractorInput" class="form-control me-3" disabled
-                            placeholder="Infractor">
+                            [placeholder]="infractorPlaceholder">
                         <button class="btn btn-success" style="white-space: nowrap;">Ver más</button>
                     </div>
                     <button type="button" class="btn btn-warning" (click)="openModal()">Gestionar denuncias
@@ -69,7 +57,7 @@
                 </div>
             </div>
             <div class="submit-box d-flex justify-content-end">
-                <button type="button" class="btn btn-secondary me-3" [routerLink]="'/list'">Cancelar</button>
+                <button type="button" class="btn btn-secondary me-3" [routerLink]="'../reportList'">Cancelar</button>
                 <button type="button" class="btn btn-success" [disabled]="formDenuncia.invalid"
                     (click)="updateReport()">Actualizar</button>
             </div>
