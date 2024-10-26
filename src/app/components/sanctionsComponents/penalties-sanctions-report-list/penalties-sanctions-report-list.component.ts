@@ -47,8 +47,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
     )
   }
 
-  editReport(id: number) {
-    // Encuentra el reporte con el ID seleccionado
+  editReport(id: number) {    
     const selectedReport = this.report.find(report => report.id === id);
   
     if (selectedReport) {
@@ -58,8 +57,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
           createdDate: selectedReport.createdDate,
           reportState: selectedReport.reportState,
           plotId: selectedReport.plotId,
-          description: selectedReport.description
-          // Agrega más campos si es necesario
+          description: selectedReport.description        
         }
       });
     }
@@ -95,7 +93,10 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
                             <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
                             <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>
+                            ${data.reportState === 'Abierto' || data.reportState === 'Nuevo' ? 
+                              `<li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>` : 
+                              ''
+                            }
                         </ul>
                     </div>
                 </div>`,
