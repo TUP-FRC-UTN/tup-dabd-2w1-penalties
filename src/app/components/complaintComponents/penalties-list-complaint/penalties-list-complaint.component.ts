@@ -4,14 +4,22 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-//Imports de DataTable
+// Imports de DataTable con soporte para Bootstrap 5
 import $ from 'jquery';
-import 'datatables.net';
-import 'datatables.net-dt';
-import 'datatables.net-buttons-dt';
-import 'datatables.net-buttons';
+import 'datatables.net-bs5'; // DataTables con Bootstrap 5
+import 'datatables.net-buttons-bs5'; // Botones con estilos de Bootstrap 5
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
+
+//Si los estilos fallan (sobretodo en la paginacion) usen estos comandos
+// npm uninstall datatables.net
+// npm uninstall datatables.net-dt
+// npm uninstall datatables.net-buttons-dt
+
+// npm cache clean --force
+
+// npm install datatables.net-bs5
+// npm install datatables.net-buttons-bs5
 
 //Imports propios de multas
 import { PenaltiesModalConsultComplaintComponent } from '../modals/penalties-modal-consult-complaint/penalties-modal-consult-complaint.component';
@@ -92,27 +100,32 @@ export class PenaltiesListComplaintComponent implements OnInit {
       columns: [
         {
           data: 'createdDate',
+          className: 'align-middle',
           render: (data) =>
-            this.complaintService.formatDate(data)
+            `<div>${this.complaintService.formatDate(data)}</div>`
         },
         {
           data: 'complaintState',
+          className: 'align-middle',
           render: (data) =>
             `<div class="btn ${this.getStatusClass(data)} border rounded-pill w-75">${data}</div>`
         },
-        { data: 'description',  //Usar cuando tengan texto muy largo
-          render: (data) => {
-            const slicedData = (data.length > 45) ? (data.slice(0, 45) + '...') : (data);
-            return `<div>${slicedData}</div>`
-          } 
+        {
+          data: 'description',
+          className: 'align-middle',
+          render: (data) => 
+            `<div>${data}</div>`
         },
         {
           data: 'fileQuantity',
+          className: 'align-middle',
           render: (data) =>
             `<i class="bi bi-paperclip"></i> ${data} Archivo adjunto`
         },
         {
           data: null,
+          className: 'align-middle',
+          searchable: false, //Marquen esto en falso si no quieren que se intente filtrar por esta columna tambien
           render: (data) =>
             `<div class="text-center">
               <div class="btn-group">
@@ -131,6 +144,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
         },
         // {
         //   data: null,
+        //   className: 'align-middle',
         //   render: (data) =>
         //     `<div class="text-center">
         //       <input class="form-check-input border border-2 p-2" type="checkbox" value="" id="flexCheckDefault">
@@ -148,12 +162,8 @@ export class PenaltiesListComplaintComponent implements OnInit {
             <option value="50">50</option>
           </select>`,
         zeroRecords: "No se encontraron resultados",
-        paginate: {
-          first: '<i class="bi-chevron-double-left"></i>',
-          previous: '<i class="bi-chevron-left"></i>',
-          next: '<i class="bi-chevron-right"></i>',
-          last: '<i class="bi-chevron-double-right"></i>'
-        }
+        loadingRecords: "Cargando...",
+        processing: "Procesando...",
       },
       //Uso de botones para exportar
       buttons: [
@@ -163,7 +173,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
           className: 'btn btn-success export-excel-btn',
           title: 'Listado de Denuncias',
           exportOptions: {
-            columns: [0, 1, 2, 3], //Esto indica que columnas se van a exportar
+            columns: [0, 1, 2, 3], //Esto indica las columnas que se van a exportar a excel
           },
         },
         {
@@ -172,7 +182,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
           className: 'btn btn-danger export-pdf-btn',
           title: 'Listado de denuncias',
           exportOptions: {
-            columns: [0, 1, 2, 3],
+            columns: [0, 1, 2, 3], //Esto indica las columnas que se van a exportar a pdf
           },
         }
       ]
@@ -277,8 +287,8 @@ export class PenaltiesListComplaintComponent implements OnInit {
     })
   }
 
-
-  redirect(path: string){
+  //Metodo para redireccionar a otra ruta
+  redirect(path: string) {
     this.router.navigate([path]);
   }
 
