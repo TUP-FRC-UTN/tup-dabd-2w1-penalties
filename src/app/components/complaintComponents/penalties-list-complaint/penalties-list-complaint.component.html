@@ -1,86 +1,85 @@
-<div class="container-fluid">
-  <div class="container border shadow-lg p-3 mb-5 bg-white rounded">
-    <div class="text-center">
-      <h2>LISTADO DE DENUNCIAS</h2>
+<section class="pt-5">
+  <div class="container p-3 border rounded shadow-lg mb-5">
+
+    <!-- BOTON DE AGREGAR ITEM AL LISTADO PARA QUIENES LO NECESITEN -->
+    <div class="row mb-3 text-end">
+      <div class="col">
+        <button class="btn btn-primary" (click)="redirect('/home/complaints/postComplaint')">
+          Agregar
+          <span class="bi-plus-lg"></span>
+        </button>
+      </div>
     </div>
-    <br />
-    <div class="row align-items-center mb-2">
-      <div class="col-6 gap-3">
+
+    <!-- Fila de botones de filtro -->
+    <div class="row mb-3">
+      <!-- Primera columna principal -->
+      <div class="col-lg-6 mb-3">
         <div class="row">
+
+          <!-- Barra de busqueda -->
           <div class="col">
-            <input
-              type="text"
-              placeholder="Buscar"
-              class="form-control"
-              (keyup)="applyFilter($event)"
-            />
+            <input type="text" placeholder="Buscar" class="form-control" [(ngModel)]="searchTerm"
+              (input)="onSearch($event)">
           </div>
 
+          <!-- Select de estado -->
           <div class="col">
-            <select
-              (change)="search($event)"
-              [(ngModel)]="selectedValue"
-              class="form-select"
-              id="estadoSelect"
-            >
+            <select (change)="onFilter($event)" [(ngModel)]="selectedValue" class="form-select" id="estadoSelect">
               <option value="">Seleccionar Estado</option>
-              <option *ngFor="let s of states" [value]="s.value">{{s.value}}</option>[]
+              @for (state of states; track $index) {
+              <option [value]="state.value">{{state.value}}</option>
+              }
             </select>
           </div>
-        </div>
-      </div>
-
-      <div class="col-6 gap-3">
-        <div class="row text-end justify-content-end">
-          <div class="col">
-            <input
-              (change)="filterDate()"
-              [(ngModel)]="filterDateStart"
-              class="form-control"
-              type="date"
-            />
-          </div>
-
-          <div class="col ">
-            <input
-              (change)="filterDate()"
-              [(ngModel)]="filterDateEnd"
-              class="form-control"
-              type="date"
-            />
-          </div>
-
-          <div class="col-auto">
-            <button id="exportExcelBtn" class="btn btn-success me-2">
-              <i class="bi bi-file-earmark-excel"></i>
-            </button>
-            <button id="exportPdfBtn" class="btn btn-danger me-2">
-              <i class="bi bi-file-earmark-pdf"></i>
-            </button>
-          </div>
-        </div>
 
         </div>
       </div>
 
+      <!-- Segunda columna principal -->
+      <div class="col-lg-6 mb-3">
+        <div class="row">
 
-    <br />
+          <!-- Filtro de fechas -->
+          <div class="col d-flex gap-3">
+            <div class="col">
+              <input (change)="filterDate()" [(ngModel)]="filterDateStart" class="form-control" type="date">
+            </div>
+            <div class="col">
+              <input (change)="filterDate()" [(ngModel)]="filterDateEnd" class="form-control" type="date">
+            </div>
+          </div>
 
-    <div>
-      <table id="complaintsTable" class="table table-striped border border-3 rounded">
-        <thead>
-          <tr class="text-center">
-            <th scope="col">Fecha</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Detalle</th>
-            <th scope="col">Archivos adjuntos</th>
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+
+          <!-- BOTON DE FILTRO PARA QUIENES LO NECESITEN -->
+          <!-- <div class="col">
+            <button class="btn btn-primary bi-filter">Filtros</button>
+          </div> -->
+
+          <!-- Botones de exportar -->
+          <div class="col-auto d-flex gap-1 text-end">
+            <button id="exportExcelBtn" class="btn btn-success bi-file-earmark-excel"></button>
+            <button id="exportPdfBtn" class="btn btn-danger bi-file-earmark-pdf"></button>
+          </div>
+
+        </div>
+
+      </div>
     </div>
+
+    <table id="complaintsTable" class="table table-striped border border-3 rounded">
+      <thead>
+        <tr class="text-center">
+          <th scope="col">Fecha</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Detalle</th>
+          <th scope="col">Archivos adjuntos</th>
+          <th scope="col">Acciones</th>
+          <!-- <th scope="col">Seleccionar</th> -->
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
-</div>
 
-
+</section>
