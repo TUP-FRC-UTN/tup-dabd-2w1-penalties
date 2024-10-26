@@ -28,15 +28,15 @@ import { ComplaintDto } from '../../../models/complaint';
 })
 export class PenaltiesListComplaintComponent implements OnInit {
   //Variables
-  Complaint: ComplaintDto[] = [];
-  complaintState: String = '';
-  filterComplaint: ComplaintDto[] = [];
-  selectedValue: string = '';
-  filterDateStart: Date = new Date();
-  filterDateEnd: Date = new Date();
-  states: { key: string; value: string }[] = [];
-  table: any;
-  searchTerm: string = '';
+  Complaint: ComplaintDto[] = [];                 //Fuente de datos
+  filterComplaint: ComplaintDto[] = [];           //Fuente de datos a mostrar
+  complaintState: String = '';                    //valor del select?
+  selectedValue: string = '';                     //valor del select?
+  filterDateStart: Date = new Date();             //valor fecha inicio
+  filterDateEnd: Date = new Date();               //valor fecha fin
+  states: { key: string; value: string }[] = [];  //Mapa de estados para el select
+  table: any;                                     //Tabla base
+  searchTerm: string = '';                        //Valor de la barra de busqueda
 
 
   //Init
@@ -208,17 +208,17 @@ export class PenaltiesListComplaintComponent implements OnInit {
     const startDate = this.filterDateStart ? new Date(this.filterDateStart) : null;
     const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
 
-    this.filterComplaint = this.Complaint.filter(complaint => {
-      const complaintDate = new Date(complaint.createdDate);
+    this.filterComplaint = this.Complaint.filter(item => {
+      const date = new Date(item.createdDate);
 
-      if (isNaN(complaintDate.getTime())) {
-        console.warn(`Fecha no valida: ${complaint.createdDate}`);
+      if (isNaN(date.getTime())) {
+        console.warn(`Fecha no valida: ${item.createdDate}`);
         return false;
       }
 
       // omprobar límites de fecha
-      const afterStartDate = !startDate || complaintDate >= startDate;
-      const beforeEndDate = !endDate || complaintDate <= endDate;
+      const afterStartDate = !startDate || date >= startDate;
+      const beforeEndDate = !endDate || date <= endDate;
 
       return afterStartDate && beforeEndDate; //Retorna verdadero solo si ambas condiciones se cumplen
     });
