@@ -84,7 +84,7 @@ export class PenaltiesListComplaintComponent {
   }
 
   refreshData() {
-    this.complServ.getAllComplains().subscribe((data) => {
+    this.complServ.getAllComplaints().subscribe((data) => {
       this.Complaint = data;
       this.filterComplaint = [...data];
       this.updateDataTable();

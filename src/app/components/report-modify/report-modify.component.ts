@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { MockapiService } from '../../services/mock/mockapi.service';
 import { ModalComplaintsListComponent } from "../modal-complaints-list/modal-complaints-list.component";
 import { PutReportDTO } from '../../models/PutReportDTO';
+import { ComplaintService } from '../../services/complaint.service';
+import { PenaltiesSanctionsServicesService } from '../../services/penalties-sanctions-services/penalties-sanctions-services.service';
 
 @Component({
   selector: 'app-report-modify',
@@ -13,34 +14,35 @@ import { PutReportDTO } from '../../models/PutReportDTO';
   styleUrl: './report-modify.component.scss'
 })
 export class ReportModifyComponent implements OnInit {
+  reportId: number = 0;
   reportState = '';
   selectedDate = '';
-  plotId : number = 0;
+  plotId: number = 0;
   infractorPlaceholder: string = '';
   textareaPlaceholder = 'Ingrese su mensaje aquí...';
   description = '';
   selectedComplaints: any[] = [];
   private route: ActivatedRoute;
 
-  constructor(private mockService: MockapiService, private router: Router, route: ActivatedRoute) {
+  constructor(private complaintService: ComplaintService, private reportService: PenaltiesSanctionsServicesService, private router: Router, route: ActivatedRoute) {
     this.route = route;
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       if (params) {
+        this.reportId = params['id'] || '';
         this.reportState = params['reportState'] || '';
         this.selectedDate = this.formatDate(params['createdDate'] || '');
         this.description = params['description'] || '';
-        this.plotId = params['plotId'];
+        this.plotId = params['plotId'] || '';
         if (this.plotId) {
           this.infractorPlaceholder = 'Lote ' + this.plotId;
         }
         console.log(params);
       }
-    });    
+    });
   }
-
 
   formatDate(dateString: string): string {
     if (!dateString) return '';
@@ -53,7 +55,6 @@ export class ReportModifyComponent implements OnInit {
   }
 
   updateReport(): void {
-    const reportId = 1;
     const userId = 1;
 
     const complaintsIds = this.selectedComplaints.length > 0
@@ -61,7 +62,7 @@ export class ReportModifyComponent implements OnInit {
       : [];
 
     const reportDTO: PutReportDTO = {
-      id: reportId,
+      id: this.reportId,
       userId: userId,
       description: this.description,
       complaintsIds: complaintsIds,
@@ -76,7 +77,7 @@ export class ReportModifyComponent implements OnInit {
       cancelButtonText: 'No, cancelar'
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.mockService.updateReport(reportDTO).subscribe(res => {
+        this.reportService.updateReport(reportDTO).subscribe(res => {
           (window as any).Swal.fire({
             title: '¡Actualización exitosa!',
             text: 'El informe ha sido actualizado correctamente.',

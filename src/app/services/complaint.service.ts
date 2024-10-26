@@ -12,33 +12,33 @@ export class ComplaintService {
   private readonly http: HttpClient = inject(HttpClient);
   private readonly url = 'http://localhost:8040/api/';
 
-
+  
   add(complaintData: any): Observable<any> {
     const formData = new FormData();
-  
+
     formData.append('userId', complaintData.userId.toString());
     formData.append('complaintType', complaintData.complaintType);
     formData.append('description', complaintData.description);
-  
+
     if (complaintData.pictures && complaintData.pictures.length > 0) {
       complaintData.pictures.forEach((file: File, index: number) => {
         formData.append('pictures', file, file.name);
       });
     }
-  
+
     return this.http.post(this.url + 'complaint', formData);
   }
 
   getTypes(): Observable<any> {
-    return this.http.get(this.url+'complaint/types');
+    return this.http.get(this.url + 'complaint/types');
   }
 
-  getAllComplains(){
-    return this.http.get<ComplaintDto[]>(this.url+"complaint/all")
+  getAllComplaints() {
+    return this.http.get<ComplaintDto[]>(this.url + "complaint/all")
   }
 
-  getById(id :number):Observable<any>{
-    return this.http.get(this.url+"complaint/"+id)
+  getById(id: number): Observable<any> {
+    return this.http.get(this.url + "complaint/" + id)
   }
 
   putStateComplaint(idcomplaint: number, updatedData: PutStateComplaintDto): Observable<any> {
@@ -46,17 +46,19 @@ export class ComplaintService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.put(this.url+"complaint/"+idcomplaint, updatedData, { headers });
+    return this.http.put(this.url + "complaint/" + idcomplaint, updatedData, { headers });
   }
+
   getState(): Observable<any> {
-    return this.http.get(this.url+"complaint/states")
+    return this.http.get(this.url + "complaint/states")
   }
+
   //esto es unicamente para mostrar fechas 
   formatDate(date: any): string {
     if (Array.isArray(date)) {
       const [year, month, day] = date;
       const createdDate = new Date(year, month - 1, day);
-      return createdDate.toLocaleDateString('es-ES'); 
+      return createdDate.toLocaleDateString('es-ES');
     }
     return new Date(date).toLocaleDateString('es-ES');
   }
