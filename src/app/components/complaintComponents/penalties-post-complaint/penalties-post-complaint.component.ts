@@ -74,7 +74,7 @@ export class PenaltiesPostComplaintComponent {
         next: (response) => {
           
           console.log('Denuncia enviada correctamente', response);
-          this.router.navigate(['home/complaints/listComplaint']);
+          this.router.navigate(['home/sanctions/reportList']);
         },
         error: (error) => {
           console.error('Error al enviar la denuncia', error);
