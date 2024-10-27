@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import { NavbarComponent } from '../../users-navbar/navbar.component';
+import { UsersNavbarComponent } from '../../users-navbar/users-navbar.component'; 
 import { PenaltiesSanctionsReportListComponent } from './penalties-sanctions-report-list/penalties-sanctions-report-list.component';
 import { PenaltiesPostFineComponent } from './penalties-post-fine/penalties-post-fine.component';
 import { PenaltiesPostDisclaimerComponent } from './penalties-post-disclaimer/penalties-post-disclaimer.component';
@@ -9,7 +9,7 @@ import { ReportModifyComponent } from '../report-modify/report-modify.component'
 export const routes: Routes = [
     {
       path: '',
-      component: NavbarComponent,
+      component: UsersNavbarComponent,
       children:[
         {
           path: 'reportList',

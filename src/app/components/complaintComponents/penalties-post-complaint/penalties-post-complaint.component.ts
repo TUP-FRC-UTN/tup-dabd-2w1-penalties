@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ComplaintService } from '../../../services/complaint.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PenaltiesFileUploadButtonComponent } from '../helpers/penalties-file-upload-button/penalties-file-upload-button.component';
 import { CommonModule } from '@angular/common';
 
@@ -26,17 +26,9 @@ export class PenaltiesPostComplaintComponent implements OnInit {
     private formBuilder: FormBuilder
   ) { 
     this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
-      text: new FormControl('', [Validators.required, Validators.minLength(10)]),
-      number: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      select: new FormControl('', [Validators.required]),
-      date: new FormControl(this.formatDate(new Date()), Validators.required),
-      radio: new FormControl('', [Validators.required, Validators.min(2)]),
-      file: new FormControl(null, [Validators.required]),
-      range: new FormControl('', [Validators.required, Validators.min(50)]),
-      disabled: new FormControl({ value: '', disabled: true }),
-      textarea: new FormControl('', [Validators.required, Validators.minLength(5)]),
+      typeControl: new FormControl('', [Validators.required]),
+      descriptionControl: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]),
+      fileControl: new FormControl(null),
     });
   }
 
@@ -50,11 +42,16 @@ export class PenaltiesPostComplaintComponent implements OnInit {
   //Submit del form
   onSubmit(): void {
     if (this.reactiveForm.valid) {
-      console.log(this.reactiveForm.value);
+      let formData = this.reactiveForm.value;
+      let data = {
+        userId: 1,
+        complaintType: formData.typeControl,
+        description: formData.descriptionControl,
+        pictures: this.files
+      }
 
-      this.complaintService.add("").subscribe({
+      this.complaintService.add(data).subscribe({
         next: (response) => {
-
           //Redireccion a otra ruta
           console.log('Denuncia enviada correctamente', response);
           this.router.navigate(['home/complaints/listComplaint']);
@@ -142,9 +139,10 @@ export class PenaltiesPostComplaintComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+
+  //Evento para actualizar el listado de files a los seleccionados actualmente
   onFileChange(event: any) {
     this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
   }
-
 
 }

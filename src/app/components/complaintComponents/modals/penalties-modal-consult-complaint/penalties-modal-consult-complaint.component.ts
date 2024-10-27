@@ -2,6 +2,7 @@ import { Component, inject, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintService } from '../../../../services/complaint.service';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-penalties-modal-consult-complaint',
@@ -12,44 +13,69 @@ import { CommonModule } from '@angular/common';
 })
 export class PenaltiesModalConsultComplaintComponent {
   @Input() denunciaId!: number;
-  data:any;
-  formattedDate:any;
-  private service = inject(ComplaintService)
+  complaintTypes: { key: string; value: string }[] = [];
+  reactiveForm: FormGroup;
+  files: File[] = [];
+  data: any;
 
-  constructor(public activeModal: NgbActiveModal){}
+  constructor(
+    public activeModal: NgbActiveModal,
+    private complaintService: ComplaintService,
+    private formBuilder: FormBuilder
+  ) {
+    this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
+      typeControl: new FormControl('T1'),
+      dateControl: new FormControl(this.formatDate(new Date())),
+      descriptionControl: new FormControl(''),
+      fileControl: new FormControl(null),
+    });
+   }
 
   ngOnInit(): void {
-      console.log('Consiltar denuncia',this.denunciaId)
-      this.getComplaint()
-      
-    //  console.log(this.setDate())
+    this.getTypes();
+    this.getComplaint();
   }
-  save(){
-    this.activeModal.close()//aca podes agregar lo que se pasa
-  }
-  close(){
+
+  close() {
     this.activeModal.close()
   }
-  setDate(){
-    const dateArray :number[] = []
-    for (let index = 0; index <this.data.createdDate.length; index++) {
-      dateArray.push(this.data.createdDate[index])
-    }
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5]);
-     this.formattedDate = date.toISOString().split('T')[0];
 
-  }
-  getComplaint(){
-    this.service.getById(this.denunciaId)
-    .subscribe(
+
+  getComplaint() {
+    this.complaintService.getById(this.denunciaId).subscribe(
       (respuesta) => {
-        console.log(respuesta); 
+        console.log(respuesta);
         this.data = respuesta
-        this.setDate()
       },
       (error) => {
         console.error('Error:', error);
       });
   }
 
+    //Carga de datos del service para el select (Propio del micro de multas)
+    getTypes(): void {
+      this.complaintService.getTypes().subscribe({
+        next: (data) => {
+          this.complaintTypes = Object.keys(data).map(key => ({
+            key,
+            value: data[key]
+          }));
+        },
+        error: (error) => {
+          console.error('error: ', error);
+        }
+      })
+    }
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  //Formatea la fecha en yyyy-MM-dd para enviarla al input
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
 }
