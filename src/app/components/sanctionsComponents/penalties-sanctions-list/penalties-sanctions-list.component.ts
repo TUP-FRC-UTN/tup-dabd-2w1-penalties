@@ -5,6 +5,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
+// Imports de DataTable con soporte para Bootstrap 5
+import $ from 'jquery';
+import 'datatables.net-bs5'; // DataTables con Bootstrap 5
+import 'datatables.net-buttons-bs5'; // Botones con estilos de Bootstrap 5
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.print';
+
+
 @Component({
   selector: 'app-penalties-sanctions-list',
   standalone: true,
@@ -28,22 +36,6 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   //Init
   ngOnInit(): void {
     this.refreshData()
-
-    //Esto es para acceder al metodo desde afuera del datatable
-    const that = this; // para referenciar metodos afuera de la datatable
-    $('#sanctionsTable').on('click', 'a.dropdown-item', function (event) {
-      const action = $(this).data('action');
-      const id = $(this).data('id');
-
-      switch (action) {
-        case 'newDisclaimer':
-          that.newDisclaimer(id);
-          break;
-        case 'seeDisclaimer':
-          that.seeDisclaimer(id);
-          break;
-      }
-    });
   }
 
 
@@ -77,11 +69,11 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   ///////////////////////////////////////////////////////////////////////////////////////
   //Manejo del Datatable
   updateDataTable() {
-    if ($.fn.dataTable.isDataTable('#complaintsTable')) {
-      $('#complaintsTable').DataTable().clear().destroy();
+    if ($.fn.dataTable.isDataTable('#sanctionsTable')) {
+      $('#sanctionsTable').DataTable().clear().destroy();
     }
 
-    let table = this.table = $('#complaintsTable').DataTable({
+    let table = this.table = $('#sanctionsTable').DataTable({
       //Atributos de la tabla
       paging: true,
       searching: true,
@@ -95,19 +87,21 @@ export class PenaltiesSanctionsListComponent implements OnInit {
       columns: [
         {
           data: 'createdDate',
+          className: 'align-middle',
           render: (data) =>
-            this.sanctionService.formatDate(data)
+            `<div>${this.sanctionService.formatDate(data)}</div>`
         },
         {
           data: 'fineState',
+          className: 'align-middle',
           render: (data) => {
             const displayValue = data === null ? 'Advertencia' : data;
-            return `<div class="btn ${this.getStatusClass(data)} border rounded-pill w-75">${displayValue}</div>`
+            return `<div class="btn ${this.getStatusClass(displayValue)} border rounded-pill w-75">${displayValue}</div>`
           }
         },
         {
           data: 'plotId', render: (data) =>
-            `<div class="text-start">Nra: ${data}</div>`
+            `<div class="text-start">Nro: ${data}</div>`
         },
         {
           data: 'amount',
@@ -127,17 +121,16 @@ export class PenaltiesSanctionsListComponent implements OnInit {
         {
           data: null,
           render: (data) =>
-            `<div class="btn-group gap-2">
-              <div class="dropdown">
-                <button type="button" class="btn btn-light border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
-                  <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
-                  <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
-                  ${data.hasSubmittedDisclaimer ? `<li><a class="dropdown-item" data-action="seeDisclaimer" data-id="${data.id}"">Consultar Descargo</a></li>` : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
-                </ul>
+            `<div class="text-center">
+              <div class="btn-group">
+                <div class="dropdown">
+                  <button type="button" class="btn border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" onclick="viewSanction(${data.id})">Ver más</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
+                  </ul>
+                </div>
               </div>
             </div>`
         },
@@ -160,12 +153,8 @@ export class PenaltiesSanctionsListComponent implements OnInit {
             <option value="50">50</option>
           </select>`,
         zeroRecords: "No se encontraron resultados",
-        paginate: {
-          first: '<i class="bi-chevron-double-left"></i>',
-          previous: '<i class="bi-chevron-left"></i>',
-          next: '<i class="bi-chevron-right"></i>',
-          last: '<i class="bi-chevron-double-right"></i>'
-        }
+        loadingRecords: "Cargando...",
+        processing: "Procesando...",
       },
       //Uso de botones para exportar
       buttons: [
@@ -173,18 +162,18 @@ export class PenaltiesSanctionsListComponent implements OnInit {
           extend: 'excel',
           text: 'Excel',
           className: 'btn btn-success export-excel-btn',
-          title: 'Listado de Denuncias',
+          title: 'Listado de Multas y Advertencias',
           exportOptions: {
-            columns: [0, 1, 2, 3], //Esto indica que columnas se van a exportar
+            columns: [0, 1, 2, 3, 4], //Esto indica las columnas que se van a exportar a excel
           },
         },
         {
           extend: 'pdf',
           text: 'PDF',
           className: 'btn btn-danger export-pdf-btn',
-          title: 'Listado de denuncias',
+          title: 'Listado de Multas y Advertencias',
           exportOptions: {
-            columns: [0, 1, 2, 3],
+            columns: [0, 1, 2, 3, 4], //Esto indica las columnas que se van a exportar a pdf
           },
         }
       ]
@@ -229,7 +218,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
         return false;
       }
 
-      // omprobar límites de fecha
+      //Comprobar limites de fecha
       const afterStartDate = !startDate || date >= startDate;
       const beforeEndDate = !endDate || date <= endDate;
 
@@ -245,29 +234,27 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     switch (estado) {
       case 'Pendiente':
         return 'text-bg-warning';
-      case 'Abierto':
-        return 'text-bg-success';
-      case 'Cerrado':
+      case 'Apelada':
         return 'text-bg-danger';
-      case 'Rechazado':
+      case 'Pendiente de pago':
+        return 'text-bg-primary';
+      case 'Absuelta':
         return 'text-bg-secondary';
-      case 'Finalizado':
-        return 'text-bg-secondary';
+      case 'Pagada':
+        return 'text-bg-success';
+      case 'Advertencia':
+        return 'text-bg-dark';
       default:
         return '';
     }
   }
 
   refreshData() {
-    this.sanctionService.getAllSactions().subscribe(
-      response => {
-        this.sanctions = response;
-        this.sanctionsfilter = this.sanctions;
-        this.CreateDataTable()
-      }, error => {
-        alert(error)
-      }
-    )
+    this.sanctionService.getAllSactions().subscribe((data) => {
+      this.sanctions = data;
+      this.sanctionsfilter = [...data];
+      this.updateDataTable();
+    });
   }
 
 
@@ -286,10 +273,10 @@ export class PenaltiesSanctionsListComponent implements OnInit {
 
   CreateDataTable() {
     if ($.fn.dataTable.isDataTable('#asd')) {//creo que es por la funcion
-      $('#sanctionsTable').DataTable().clear().destroy();
+      $('#asd').DataTable().clear().destroy();
     }
 
-    let table = $('#sanctionsTable').DataTable({
+    let table = $('#asd').DataTable({
       data: this.sanctionsfilter,
       columns: [
         {
@@ -500,3 +487,22 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   }
 
 }
+
+
+// //Esto es para acceder al metodo desde afuera del datatable
+// const that = this; // para referenciar metodos afuera de la datatable
+// $('#sanctionsTable').on('click', 'a.dropdown-item', function (event) {
+//   const action = $(this).data('action');
+//   const id = $(this).data('id');
+
+//   switch (action) {
+//     case 'newDisclaimer':
+//       that.newDisclaimer(id);
+//       break;
+//     case 'seeDisclaimer':
+//       that.seeDisclaimer(id);
+//       break;
+//   }
+// });
+
+// ${data.hasSubmittedDisclaimer ? `<li><a class="dropdown-item" data-action="seeDisclaimer" data-id="${data.id}"">Consultar Descargo</a></li>` : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}

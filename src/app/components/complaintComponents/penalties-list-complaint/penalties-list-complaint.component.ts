@@ -226,7 +226,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
         return false;
       }
 
-      // omprobar límites de fecha
+      //Comprobar limites de fecha
       const afterStartDate = !startDate || date >= startDate;
       const beforeEndDate = !endDate || date <= endDate;
 

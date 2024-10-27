@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ComplaintService } from '../../../services/complaint.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PenaltiesFileUploadButtonComponent } from '../helpers/penalties-file-upload-button/penalties-file-upload-button.component';
 import { CommonModule } from '@angular/common';
 
@@ -12,58 +12,112 @@ import { CommonModule } from '@angular/common';
   templateUrl: './penalties-post-complaint.component.html',
   styleUrl: './penalties-post-complaint.component.scss'
 })
-export class PenaltiesPostComplaintComponent {
-  selectedOption: string;
-  selectedDate: string;
-  maxDate: string;
-  textareaContent: string;
-  textareaPlaceholder: string;
+export class PenaltiesPostComplaintComponent implements OnInit {
+  //Variables
   complaintTypes: { key: string; value: string }[] = [];
-  files?: File[];
+  reactiveForm: FormGroup;
+  files: File[] = [];
 
-  constructor(private complaintService: ComplaintService, private router: Router) {
-    this.selectedOption = '';
-    this.maxDate = '';
-    this.textareaContent = '';
-    this.textareaPlaceholder = 'Ingrese su mensaje aquí...';
-    this.selectedDate = '';
-    this.setTodayDate();
-    this.files = [];
+
+  //Constructor
+  constructor(
+    private complaintService: ComplaintService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) { 
+    this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
+      text: new FormControl('', [Validators.required, Validators.minLength(10)]),
+      number: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      select: new FormControl('', [Validators.required]),
+      date: new FormControl(this.formatDate(new Date()), Validators.required),
+      radio: new FormControl('', [Validators.required, Validators.min(2)]),
+      file: new FormControl(null, [Validators.required]),
+      range: new FormControl('', [Validators.required, Validators.min(50)]),
+      disabled: new FormControl({ value: '', disabled: true }),
+      textarea: new FormControl('', [Validators.required, Validators.minLength(5)]),
+    });
   }
 
-  //Esto esta puesto solo de ejemplo
-  formReactivo = new FormGroup({
-    text: new FormControl("asd", [Validators.required]),
-    number: new FormControl(0, [Validators.required]),
-    email: new FormControl("", [Validators.required]),
-    password: new FormControl("", [Validators.required]),
-    select: new FormControl(['T1'], [Validators.required]),
-    date: new FormControl(new Date(), [Validators.required]),
-    radio: new FormControl(['choice1'], [Validators.required]),
-    check: new FormControl([false], [Validators.required]),
-    file: new FormControl([], [Validators.required]),
-    range: new FormControl(0, [Validators.required]),
-    dissabled: new FormControl("", [Validators.required]),
-    textarea: new FormControl("", [Validators.required])
-  });
 
+  //Init
   ngOnInit(): void {
     this.getTypes();
   }
 
-  getFiles(files: File[]) {
-    this.files = files;
+
+  //Submit del form
+  onSubmit(): void {
+    if (this.reactiveForm.valid) {
+      console.log(this.reactiveForm.value);
+
+      this.complaintService.add("").subscribe({
+        next: (response) => {
+
+          //Redireccion a otra ruta
+          console.log('Denuncia enviada correctamente', response);
+          this.router.navigate(['home/complaints/listComplaint']);
+        },
+        error: (error) => {
+          console.error('Error al enviar la denuncia', error);
+        }
+      });
+    }
   }
 
-  setTodayDate() {
-    const today = new Date();
-    const day = today.getDate().toString().padStart(2, '0');
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const year = today.getFullYear();
 
-    this.selectedDate = `${year}-${month}-${day}`;
+  //Retorna una clase para poner el input en verde o rojo dependiendo si esta validado
+  onValidate(controlName: string) {
+    const control = this.reactiveForm.get(controlName);
+    return {
+      'is-invalid': control?.invalid && (control?.dirty || control?.touched),
+      'is-valid': control?.valid
+    }
   }
 
+
+  //Retorna el primer error encontrado para el input dentro de los posibles
+  showError(controlName: string) {
+    const control = this.reactiveForm.get(controlName);
+    //Si encuentra un error retorna un mensaje describiendolo
+    if (control && control.errors) {
+      const errorKey = Object.keys(control!.errors!)[0];
+      switch (errorKey) {
+        case 'required':
+          return 'Este campo no puede estar vacío.';
+        case 'email':
+          return 'Formato de correo electrónico inválido.';
+        case 'minlength':
+          return `El valor ingresado es demasiado corto. Mínimo ${control.errors['minlength'].requiredLength} caracteres.`;
+        case 'maxlength':
+          return `El valor ingresado es demasiado largo. Máximo ${control.errors['maxlength'].requiredLength} caracteres.`;
+        case 'pattern':
+          return 'El formato ingresado no es válido.';
+        case 'min':
+          return `El valor es menor que el mínimo permitido (${control.errors['min'].min}).`;
+        case 'max':
+          return `El valor es mayor que el máximo permitido (${control.errors['max'].max}).`;
+        case 'requiredTrue':
+          return 'Debe aceptar el campo requerido para continuar.';
+        case 'date':
+          return 'La fecha ingresada es inválida.';
+        case 'url':
+          return 'El formato de URL ingresado no es válido.';
+        case 'number':
+          return 'Este campo solo acepta números.';
+        case 'customError':
+          return 'Error personalizado: verifique el dato ingresado.';
+        default:
+          return 'Error no identificado en el campo.';
+      }
+    }
+    //Si no se cumplen ninguno de los anteriores retorna vacio
+    return '';
+  }
+
+
+  //Carga de datos del service para el select (Propio del micro de multas)
   getTypes(): void {
     this.complaintService.getTypes().subscribe({
       next: (data) => {
@@ -78,26 +132,19 @@ export class PenaltiesPostComplaintComponent {
     })
   }
 
-  onSubmit(): void {
-    if (this.selectedOption && this.selectedDate && this.textareaContent) {
-      const denunciaData = {
-        userId: 1,
-        complaintType: this.selectedOption,
-        description: this.textareaContent,
-        pictures: this.files
-      };
-      
-      this.complaintService.add(denunciaData).subscribe({
-        next: (response) => {
-          
-          console.log('Denuncia enviada correctamente', response);
-          this.router.navigate(['home/complaints/listComplaint']);
-        },
-        error: (error) => {
-          console.error('Error al enviar la denuncia', error);
-        }
-      });
-    }
+
+  //Formatea la fecha en yyyy-MM-dd para enviarla al input
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
+
+  onFileChange(event: any) {
+    this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
+  }
+
 
 }
