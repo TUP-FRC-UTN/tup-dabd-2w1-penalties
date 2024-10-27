@@ -1,39 +1,26 @@
-<div id="tamaño">
-    <div
-      style="background-color: #ffffff"
-      class="modal-header shadow-none border-bottom border-dark"
-    >
-      <h3>Indique el motivo de cambio de Estado</h3>
-    </div>
-    <div
-      style="background-color: #ffffff"
-      class="modal-body border-bottom border-dark"
-    >
-      <h5 class="card-title">Motivo</h5>
-      <p class="card-text">
-        <textarea id="reasonChange" [(ngModel)]="reasonText"></textarea>
-      </p>
-    </div>
-    <div class="modal-footer" style="background-color: #ffffff">
-      <div class="d-flex justify-content-between row">
-        <div class="col-4"></div>
-        <div class="col-1">
-          <button type="submit" class="btn btn-success" (click)="putComplaint()">
-            Enviar
-          </button>
-        </div>
-        <div class="col-1">
-          <button
-            type="button"
-            class="btn btn-danger"
-            style="margin-right: 110px"
-            (click)="close()"
-          >
-            Cancelar
-          </button>
-        </div>
-        <div class="col-1"></div>
-      </div>
-    </div>
+<div class="modal-content border border-2">
+  <div class="modal-header">
+    <h1 class="modal-title fs-5" id="complaintModal">MOTIVO DE CAMBIO DE ESTADO</h1>
+    <button type="button" class="btn-close" (click)="close()"></button>
   </div>
-  
+  <div class="modal-body">
+    <div class="row">
+
+      <!-- Input Descripcion -->
+      <div class="col mb-3">
+        <div class="row">
+          <label class="col-3 col-form-label">Descripcion</label>
+          <div class="col-9">
+            <textarea class="form-control" rows="3" style="resize: none;" [(ngModel)]="reasonText"></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-success" (click)="putComplaint()">Confirmar</button>
+    <button type="button" class="btn btn-danger" (click)="close()">Cancelar</button>
+  </div>
+</div>

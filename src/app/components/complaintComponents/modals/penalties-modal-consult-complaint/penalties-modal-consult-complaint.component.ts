@@ -1,81 +1,69 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintService } from '../../../../services/complaint.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-penalties-modal-consult-complaint',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './penalties-modal-consult-complaint.component.html',
   styleUrl: './penalties-modal-consult-complaint.component.scss'
 })
-export class PenaltiesModalConsultComplaintComponent {
+export class PenaltiesModalConsultComplaintComponent implements OnInit {
+  //Variables
   @Input() denunciaId!: number;
-  complaintTypes: { key: string; value: string }[] = [];
-  reactiveForm: FormGroup;
   files: File[] = [];
-  data: any;
+  complaint: any;
 
+
+  //Constructor
   constructor(
     public activeModal: NgbActiveModal,
-    private complaintService: ComplaintService,
-    private formBuilder: FormBuilder
-  ) {
-    this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
-      typeControl: new FormControl('T1'),
-      dateControl: new FormControl(this.formatDate(new Date())),
-      descriptionControl: new FormControl(''),
-      fileControl: new FormControl(null),
-    });
-   }
+    public complaintService: ComplaintService,
+  ) { }
 
+
+  //Init
   ngOnInit(): void {
-    this.getTypes();
     this.getComplaint();
+    this.addMockFile();
+    this.addMockFile();
+    this.addMockFile();
   }
 
+
+  //Boton de cierre del modal
   close() {
     this.activeModal.close()
   }
 
 
+  //Metodo para buscar la denuncia por id y cargarla en su variable
   getComplaint() {
     this.complaintService.getById(this.denunciaId).subscribe(
-      (respuesta) => {
-        console.log(respuesta);
-        this.data = respuesta
+      (response) => {
+        console.log(response);
+        this.complaint = response
       },
       (error) => {
         console.error('Error:', error);
       });
   }
 
-    //Carga de datos del service para el select (Propio del micro de multas)
-    getTypes(): void {
-      this.complaintService.getTypes().subscribe({
-        next: (data) => {
-          this.complaintTypes = Object.keys(data).map(key => ({
-            key,
-            value: data[key]
-          }));
-        },
-        error: (error) => {
-          console.error('error: ', error);
-        }
-      })
-    }
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-  //Formatea la fecha en yyyy-MM-dd para enviarla al input
-  formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
+  //Evento para actualizar el listado de files a los seleccionados actualmente
+  onFileChange(event: any) {
+    this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
   }
+
+  addMockFile() {
+    const mockImage = new File(["Contenido de la imagen"], "MockImage.png", {
+      type: "image/jpeg",
+      lastModified: Date.now()
+    });
+    this.files.push(mockImage); //Agrega la imagen simulada a la lista
+  }
+
 }

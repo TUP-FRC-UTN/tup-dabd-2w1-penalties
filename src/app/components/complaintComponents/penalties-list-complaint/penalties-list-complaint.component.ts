@@ -38,8 +38,6 @@ export class PenaltiesListComplaintComponent implements OnInit {
   //Variables
   Complaint: ComplaintDto[] = [];                 //Fuente de datos
   filterComplaint: ComplaintDto[] = [];           //Fuente de datos a mostrar
-  complaintState: String = '';                    //valor del select?
-  selectedValue: string = '';                     //valor del select?
   filterDateStart: Date = new Date();             //valor fecha inicio
   filterDateEnd: Date = new Date();               //valor fecha fin
   states: { key: string; value: string }[] = [];  //Mapa de estados para el select
@@ -255,8 +253,8 @@ export class PenaltiesListComplaintComponent implements OnInit {
 
   // Metodo para obtener el estado de la denuncia y mostrar el modal
   changeState(option: string, idComplaint: number, userId: number) {
-    this.complaintState = option;
-    this.openModal(idComplaint, userId);
+    const newState = option;
+    this.openModal(idComplaint, userId, newState);
   }
 
 
@@ -293,13 +291,13 @@ export class PenaltiesListComplaintComponent implements OnInit {
   }
 
   //Metodo para abrir modal de confirmacion de cambio de estado
-  openModal(idComplaint: number, userId: number) {
+  openModal(idComplaint: number, userId: number, complaintState: string) {
     const modal = this._modal.open(PenaltiesModalStateReasonComponent, {
       size: 'md',
       keyboard: false,
     });
     modal.componentInstance.idComplaint = idComplaint;
-    modal.componentInstance.complaintState = this.complaintState;
+    modal.componentInstance.complaintState = complaintState;
     modal.componentInstance.userId = userId;
     modal.result
       .then((result) => {

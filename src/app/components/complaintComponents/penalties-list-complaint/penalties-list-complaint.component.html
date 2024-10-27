@@ -31,8 +31,8 @@
 
       <!-- Select de estado -->
       <div class="col">
-        <select (change)="onFilter($event)" [(ngModel)]="selectedValue" class="form-select" id="estadoSelect">
-          <option value="">Seleccionar Estado</option>
+        <select (change)="onFilter($event)" class="form-select" id="estadoSelect">
+          <option value="" selected>Seleccionar Estado</option>
           @for (state of states; track $index) {
           <option [value]="state.value">{{state.value}}</option>
           }
