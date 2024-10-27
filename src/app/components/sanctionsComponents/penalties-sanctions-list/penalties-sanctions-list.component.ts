@@ -36,6 +36,21 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   //Init
   ngOnInit(): void {
     this.refreshData()
+    //Esto es para acceder al metodo desde afuera del datatable
+    const that = this; // para referenciar metodos afuera de la datatable
+    $('#sanctionsTable').on('click', 'a.dropdown-item', function(event) {
+      const action = $(this).data('action');
+      const id = $(this).data('id');
+  
+      switch(action) {
+        case 'newDisclaimer':
+          that.newDisclaimer(id);
+          break;
+        case 'seeDisclaimer':
+          that.seeDisclaimer(id);
+          break;
+      }
+    });
   }
 
 
@@ -120,20 +135,26 @@ export class PenaltiesSanctionsListComponent implements OnInit {
         },
         {
           data: null,
-          render: (data) =>
-            `<div class="text-center">
-              <div class="btn-group">
-                <div class="dropdown">
-                  <button type="button" class="btn border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" onclick="viewSanction(${data.id})">Ver más</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>`
-        },
+          render: (data) => {
+              if (data.amount === null) {
+                  return '';
+              }
+              return `
+                 <div class="btn-group gap-2">
+                      <div class="dropdown">
+                          <button type="button" class="btn btn-light border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
+                          <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
+                              <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
+                              <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
+                              ${data.hasSubmittedDisclaimer ? `<li><a class="dropdown-item" data-action="seeDisclaimer" data-id="${data.id}"">Consultar Descargo</a></li>` : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
+                          </ul>
+                      </div>
+                  </div>`;
+          }
+      },
         // {
         //   data: null,
         //   render: (data) =>
@@ -191,6 +212,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   }
   ///////////////////////////////////////////////////////////////////////////////////////
 
+  
 
   //Metodo para manejar la busqueda
   onSearch(event: any) {
