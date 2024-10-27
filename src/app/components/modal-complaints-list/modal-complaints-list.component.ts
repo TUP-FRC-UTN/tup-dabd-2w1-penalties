@@ -1,7 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MockapiService } from '../../services/mock/mockapi.service';
+import { ComplaintService } from '../../services/complaint.service';
 
 @Component({
   selector: 'app-modal-complaints-list',
@@ -15,7 +15,7 @@ export class ModalComplaintsListComponent implements OnInit {
   tooltipTitle: string = 'Las denuncias seleccionadas se anexarán al informe. Las que no estén seleccionadas se desanexarán del mismo en caso de estar anexadas.'
   @Output() selectedComplaints = new EventEmitter<any[]>();
 
-  constructor(private mockService: MockapiService) { }
+  constructor(private complaintService: ComplaintService) { }
 
   ngOnInit(): void {
     this.getComplaints();
@@ -23,7 +23,7 @@ export class ModalComplaintsListComponent implements OnInit {
 
   //trae las denuncias desde el service
   getComplaints(): void {
-    this.mockService.getAllComplaints().subscribe(res => {
+    this.complaintService.getAllComplaints().subscribe(res => {
       this.complaints = res.map(complaint => ({
         ...complaint,
         selected: complaint.complaintState === 'Anexada'

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
 import { ReportDTO } from '../../../models/reportDTO';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PenaltiesModalReportComponent } from '../modals/penalties-modal-report/penalties-modal-report.component';
@@ -22,11 +22,12 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   filterDateStart: Date = new Date();
   filterDateEnd: Date = new Date();
 
-  constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal){
+  constructor(private reportServodes: PenaltiesSanctionsServicesService,private _modal:NgbModal, private router: Router){
     //Esto es importante para llamar los funciones dentro del data table con onClick
      (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     // (window as any).selectState = (state: string, id: number, userId: number) =>
     //   this.selectState(state, id, userId);
+    (window as any).editReport = (id: number) => this.editReport(id);
   }
 
   ngOnInit(): void {
@@ -44,6 +45,22 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
         alert(error)
       }
     )
+  }
+
+  editReport(id: number) {    
+    const selectedReport = this.report.find(report => report.id === id);
+  
+    if (selectedReport) {
+      this.router.navigate(['/home/sanctions/putReport'], {
+        queryParams: {
+          id: selectedReport.id,
+          createdDate: selectedReport.createdDate,
+          reportState: selectedReport.reportState,
+          plotId: selectedReport.plotId,
+          description: selectedReport.description        
+        }
+      });
+    }
   }
 
   CreateDataTable(){
@@ -75,6 +92,11 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
                             <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
                             <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
                             <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            ${data.reportState === 'Abierto' || data.reportState === 'Nuevo' ? 
+                              `<li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>` : 
+                              ''
+                            }
                         </ul>
                     </div>
                 </div>`,

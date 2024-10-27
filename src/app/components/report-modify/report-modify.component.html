@@ -1,75 +1,68 @@
 <div class="container p-3">
     <div class="post-complaint-section p-4 border shadow-lg p-3 mb-5 bg-white rounded">
-        <h2 class="text-center">MODIFICAR INFORME</h2>
+        <h2 class="text-center mb-5">MODIFICAR REPORTE</h2>
         <form #formDenuncia="ngForm" novalidate>
-            <div class="d-flex justify-content-between w-100 mb-4">
-                <div class="input-box w-50">
-                    <label for="selectOption" class="form-label">Motivo</label>
-                    <select id="selectOption" class="form-select w-100" name="option" [(ngModel)]="selectedOption"
-                        #optionField="ngModel" required disabled>
-                        <option value="" disabled selected>Seleccione una opción</option>
-                        @for (type of complaintTypes; track $index) {
-                        <option [value]="type.key">{{type.value}}</option>
-                        }
-                    </select>
-                    @if (optionField.invalid && (optionField.dirty || optionField.touched)) {
-                    <div class="text-danger">
-                        @if (optionField.errors?.['required']) {
-                        <span>Por favor, ingrese una opción</span>
-                        }
-                    </div>
-                    }
+            <div class="row mb-4">
+                <div class="col-1">
+                    <label for="selectOption" class="col-form-label">Estado</label>
                 </div>
+                <div class="col-5">
+                    <input type="text" id="selectOption" class="form-control" name="reportState" required disabled
+                        [(ngModel)]="reportState" />
+                </div>
+                <div class="col-1">
+                    <label for="dateInput" class="col-form-label text-end">Fecha</label>
+                </div>
+                <div class="col-5">
+                    <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary" [(ngModel)]="selectedDate" disabled>
+                </div>
+            </div>
 
-                <div class="input-box">
-                    <label for="dateInput" class="form-label">Fecha</label>
-                    <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary"
-                        [(ngModel)]="maxDate" #dateField="ngModel" [max]="maxDate" required disabled>
-                    @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
-                    <div class="text-danger">
-                        @if (dateField.errors?.['required']) {
-                        <span>Por favor, seleccione una fecha.</span>
-                        } @else if (dateField.errors?.['max']) {
-                        <span>La fecha no puede ser posterior a la de hoy.</span>
+            <div class="row mb-4">
+                <div class="col-1">
+                    <label for="textareaMessage" class="col-form-label">Descripción</label>
+                </div>
+                <div class="col-11">
+                    <textarea class="form-control" name="textareaMessage" id="textareaMessage"
+                        [placeholder]="textareaPlaceholder" [(ngModel)]="description" #textArea="ngModel" required
+                        minlength="10" maxlength="500" rows="8" style="resize: none;"></textarea>
+                    @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
+                    <div class="form-text text-danger mt-1">
+                        @if (textArea.errors?.['required']) {
+                        <span>Por favor, ingrese un mensaje.</span>
+                        }
+                        @if (textArea.errors?.['minlength']) {
+                        <span>El mensaje debe tener al menos 10 caracteres.</span>
                         }
                     </div>
                     }
                 </div>
             </div>
 
-            <div class="input-box d-flex flex-column gap-2 mb-4">
-                <label for="textareaMessage" class="form-label">Descripción</label>
-                <textarea class="form-control" name="textareaMessage" id="textareaMessage"
-                    [placeholder]="textareaPlaceholder" [(ngModel)]="description" #textArea="ngModel" required
-                    minlength="10" maxlength="500" rows="8" style="resize: none;"></textarea>
-                @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
-                @if (textArea.errors?.['required']) {
-                <span class="text-danger">
-                    Por favor, ingrese un mensaje.
-                </span>
-                }
-                @if (textArea.errors?.['minlength']) {
-                <span class="text-danger">
-                    El mensaje debe tener al menos 10 caracteres.
-                </span>
-                }
-                }
-            </div>
-
-            <div class="buttons-box d-flex justify-content-between">
-                <div class="actions-box">
-                    <label for="infractorInput" class="form-label">Infractor</label>
-                    <div class="d-flex align-items-center mb-3">
+            <div class="row mb-4">
+                <div class="col-1">
+                    <label for="infractorInput" class="col-form-label">Infractor</label>
+                </div>
+                <div class="col-5">
+                    <div class="d-flex align-items-center">
                         <input type="text" id="infractorInput" class="form-control me-3" disabled
-                            placeholder="Infractor">
-                        <button class="btn btn-success" style="white-space: nowrap;">Ver más</button>
+                            [placeholder]="infractorPlaceholder" style="width: 100%;">
+                        <button class="btn btn-success" style="white-space: nowrap;" (click)="development()">Ver más</button>
                     </div>
-                    <button type="button" class="btn btn-warning" (click)="openModal()">Gestionar denuncias
-                        <i class="bi bi-file-earmark-text"></i></button>
                 </div>
             </div>
-            <div class="submit-box d-flex justify-content-end">
-                <button type="button" class="btn btn-secondary me-3" [routerLink]="'/list'">Cancelar</button>
+
+            <div class="row mb-4">
+                <div class="col-1"></div>
+                <div class="col-5">
+                    <button type="button" class="btn btn-warning" (click)="openModal()">
+                        Gestionar denuncias <i class="bi bi-file-earmark-text"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-3" [routerLink]="'../reportList'">Cancelar</button>
                 <button type="button" class="btn btn-success" [disabled]="formDenuncia.invalid"
                     (click)="updateReport()">Actualizar</button>
             </div>

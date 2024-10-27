@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
-import { ComplaintService } from '../../services/complaint.service';
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { MockapiService } from '../../services/mock/mockapi.service';
 import { ModalComplaintsListComponent } from "../modal-complaints-list/modal-complaints-list.component";
 import { PutReportDTO } from '../../models/PutReportDTO';
+import { ComplaintService } from '../../services/complaint.service';
+import { PenaltiesSanctionsServicesService } from '../../services/penalties-sanctions-services/penalties-sanctions-services.service';
 
 @Component({
   selector: 'app-report-modify',
@@ -14,43 +13,65 @@ import { PutReportDTO } from '../../models/PutReportDTO';
   templateUrl: './report-modify.component.html',
   styleUrl: './report-modify.component.scss'
 })
-export class ReportModifyComponent {
-  selectedOption = '';
+export class ReportModifyComponent implements OnInit {
+  reportId: number = 0;
+  reportState = '';
   selectedDate = '';
-  maxDate: string;
+  plotId: number = 0;
+  infractorPlaceholder: string = '';
   textareaPlaceholder = 'Ingrese su mensaje aquí...';
   description = '';
-  complaintTypes: any[] = [];
   selectedComplaints: any[] = [];
-  selectedComplaintsToDetach: any[] = [];
+  private route: ActivatedRoute;
 
-  constructor(private mockService: MockapiService, private router: Router) {
-    this.maxDate = this.setTodayDate();
+  constructor(private complaintService: ComplaintService, private reportService: PenaltiesSanctionsServicesService, private router: Router, route: ActivatedRoute) {
+    this.route = route;
   }
 
-  setTodayDate(): string {
-    const today = new Date();
-    const day = today.getDate().toString().padStart(2, '0');
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const year = today.getFullYear();
-    return `${year}-${month}-${day}`;
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if (params) {
+        this.reportId = params['id'] || '';
+        this.reportState = params['reportState'] || '';
+        this.selectedDate = this.formatDate(params['createdDate'] || '');
+        this.description = params['description'] || '';
+        this.plotId = params['plotId'] || '';
+        if (this.plotId) {
+          this.infractorPlaceholder = 'Lote ' + this.plotId;
+        }
+        console.log(params);
+      }
+    });
+  }
+
+  development(): void {
+    (window as any).Swal.fire({
+      title: 'Función en desarrollo',
+      text: 'Esta funcionalidad aún está en desarrollo.',
+      icon: 'info',
+      confirmButtonText: 'Aceptar'
+    });
+  }
+
+  formatDate(dateString: string): string {
+    if (!dateString) return '';
+    const [datePart] = dateString.split(' ');
+    return datePart;
   }
 
   handleSelectedComplaints(selectedComplaints: any[]): void {
-    console.log('Denuncias recibidas del modal:', selectedComplaints);
     this.selectedComplaints = selectedComplaints;
   }
 
   updateReport(): void {
-    const reportId = 1;
     const userId = 1;
 
     const complaintsIds = this.selectedComplaints.length > 0
       ? this.selectedComplaints.map(complaint => complaint.id)
-      : []; 
+      : [];
 
     const reportDTO: PutReportDTO = {
-      id: reportId,
+      id: this.reportId,
       userId: userId,
       description: this.description,
       complaintsIds: complaintsIds,
@@ -64,10 +85,8 @@ export class ReportModifyComponent {
       confirmButtonText: 'Sí, actualizar',
       cancelButtonText: 'No, cancelar'
     }).then((result: any) => {
-      if (result.isConfirmed) {        
-        this.mockService.updateReport(reportDTO).subscribe(res => {
-          console.log('Informe actualizado', res);
-          
+      if (result.isConfirmed) {
+        this.reportService.updateReport(reportDTO).subscribe(res => {
           (window as any).Swal.fire({
             title: '¡Actualización exitosa!',
             text: 'El informe ha sido actualizado correctamente.',
@@ -76,7 +95,7 @@ export class ReportModifyComponent {
             showConfirmButton: false
           });
         }, error => {
-          console.error('Error al actualizar el informe', error);          
+          console.error('Error al actualizar el informe', error);
           (window as any).Swal.fire({
             title: 'Error',
             text: 'No se pudo actualizar el informe. Inténtalo de nuevo.',

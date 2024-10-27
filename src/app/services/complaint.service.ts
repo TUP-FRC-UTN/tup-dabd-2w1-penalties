@@ -70,7 +70,7 @@ export class ComplaintService {
     if (Array.isArray(date)) {
       const [year, month, day] = date;
       const createdDate = new Date(year, month - 1, day);
-      return createdDate.toLocaleDateString('es-ES'); 
+      return createdDate.toLocaleDateString('es-ES');
     }
     return new Date(date).toLocaleDateString('es-ES');
   }
