@@ -6,6 +6,12 @@ import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PenaltiesModalReportComponent } from '../modals/penalties-modal-report/penalties-modal-report.component';
+// Imports de DataTable con soporte para Bootstrap 5
+import $ from 'jquery';
+import 'datatables.net-bs5'; // DataTables con Bootstrap 5
+import 'datatables.net-buttons-bs5'; // Botones con estilos de Bootstrap 5
+import 'datatables.net-buttons/js/buttons.html5';
+import 'datatables.net-buttons/js/buttons.print';
 
 @Component({
   selector: 'app-penalties-sanctions-report-list',

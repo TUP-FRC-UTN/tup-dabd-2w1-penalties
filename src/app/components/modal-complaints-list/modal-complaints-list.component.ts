@@ -23,7 +23,7 @@ export class ModalComplaintsListComponent implements OnInit {
 
   //trae las denuncias desde el service
   getComplaints(): void {
-    this.complaintService.getAllComplaints().subscribe(res => {
+    this.complaintService.getAllComplains().subscribe(res => {
       this.complaints = res.map(complaint => ({
         ...complaint,
         selected: complaint.complaintState === 'Anexada'
