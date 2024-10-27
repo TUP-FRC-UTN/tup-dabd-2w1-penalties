@@ -38,7 +38,7 @@ export class ComplaintService {
 
 
   //Obtiene todo el listado reducido de denuncias
-  getAllComplains(){
+  getAllComplaints(){
     return this.http.get<ComplaintDto[]>(this.url + `/all`)
   }
 

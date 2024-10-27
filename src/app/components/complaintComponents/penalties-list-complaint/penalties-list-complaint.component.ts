@@ -262,7 +262,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
   //Consulta del listado
   refreshData() {
-    this.complaintService.getAllComplains().subscribe((data) => {
+    this.complaintService.getAllComplaints().subscribe((data) => {
       this.Complaint = data;
       this.filterComplaint = [...data];
       this.updateDataTable();
