@@ -44,6 +44,15 @@ export class ReportModifyComponent implements OnInit {
     });
   }
 
+  development(): void {
+    (window as any).Swal.fire({
+      title: 'Función en desarrollo',
+      text: 'Esta funcionalidad aún está en desarrollo.',
+      icon: 'info',
+      confirmButtonText: 'Aceptar'
+    });
+  }
+
   formatDate(dateString: string): string {
     if (!dateString) return '';
     const [datePart] = dateString.split(' ');

@@ -14,17 +14,7 @@
                     <label for="dateInput" class="col-form-label text-end">Fecha</label>
                 </div>
                 <div class="col-5">
-                    <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary"
-                        [(ngModel)]="selectedDate" #dateField="ngModel" required disabled>
-                    @if (dateField.invalid && (dateField.dirty || dateField.touched)) {
-                    <div class="form-text text-danger mt-1">
-                        @if (dateField.errors?.['required']) {
-                        <span>Por favor, seleccione una fecha.</span>
-                        } @else if (dateField.errors?.['max']) {
-                        <span>La fecha no puede ser posterior a la de hoy.</span>
-                        }
-                    </div>
-                    }
+                    <input type="date" id="dateInput" name="dateInput" class="form-control bg-body-secondary" [(ngModel)]="selectedDate" disabled>
                 </div>
             </div>
 
@@ -57,7 +47,7 @@
                     <div class="d-flex align-items-center">
                         <input type="text" id="infractorInput" class="form-control me-3" disabled
                             [placeholder]="infractorPlaceholder" style="width: 100%;">
-                        <button class="btn btn-success" style="white-space: nowrap;">Ver más</button>
+                        <button class="btn btn-success" style="white-space: nowrap;" (click)="development()">Ver más</button>
                     </div>
                 </div>
             </div>
