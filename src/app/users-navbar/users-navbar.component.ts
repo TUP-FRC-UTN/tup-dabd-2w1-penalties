@@ -82,6 +82,12 @@ export class UsersNavbarComponent {
           title: "Descargo",
           route: "home/sanctions/postDisclaimer/:fineId1",
           roles: ["SuperAdmin", "Admin"]
+        },
+        {
+          icon: "bi-receipt",
+          title: "Crear Informe",
+          route: "home/sanctions/postReport",
+          roles: ["SuperAdmin", "Admin"]
         }
         ]
       }

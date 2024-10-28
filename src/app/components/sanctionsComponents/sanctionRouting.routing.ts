@@ -6,6 +6,7 @@ import { PenaltiesPostDisclaimerComponent } from './penalties-post-disclaimer/pe
 import { PenaltiesSanctionsListComponent } from './penalties-sanctions-list/penalties-sanctions-list.component';
 import { ReportModifyComponent } from '../report-modify/report-modify.component';
 import { PenaltiesModalFineComponent } from './modals/penalties-modal-fine/penalties-modal-fine.component';
+import { NewReportComponent } from './new-report/new-report.component';
 
 export const routes: Routes = [
     {
@@ -31,6 +32,10 @@ export const routes: Routes = [
         {
           path: 'putReport',
           component: ReportModifyComponent
+        },
+        {
+          path: 'postReport',
+          component: NewReportComponent
         }
       ]
     },
