@@ -14,11 +14,6 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 
 
-import $ from 'jquery';
-import 'datatables.net-bs5'; // DataTables con Bootstrap 5
-import 'datatables.net-buttons-bs5'; // Botones con estilos de Bootstrap 5
-import 'datatables.net-buttons/js/buttons.html5';
-import 'datatables.net-buttons/js/buttons.print';
 
 @Component({
   selector: 'app-penalties-sanctions-report-list',
@@ -101,7 +96,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
           data: 'plotId',
           className: 'align-middle',
           render: (data) =>
-            `<div>${data}</div>`
+            `<div>Nro: ${data}</div>`
         },
         {
           data: 'description',

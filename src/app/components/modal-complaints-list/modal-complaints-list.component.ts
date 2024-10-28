@@ -18,11 +18,11 @@ export class ModalComplaintsListComponent implements OnInit {
   constructor(private complaintService: ComplaintService) { }
 
   ngOnInit(): void {
-    this.getComplaints();
+    //this.getComplaints();
   }
 
   //trae las denuncias desde el service
-  getComplaints(): void {
+  /*getComplaints(): void {
     this.complaintService.getAllComplains().subscribe(res => {
       this.complaints = res.map(complaint => ({
         ...complaint,
@@ -32,7 +32,7 @@ export class ModalComplaintsListComponent implements OnInit {
     }, error => {
       console.error('Error al obtener denuncias', error);
     });
-  }
+  }*/
 
   //emite al padre (formulario) las denuncias que se seleccionan con el chk
   attachSelectedComplaintsToList(): void {
