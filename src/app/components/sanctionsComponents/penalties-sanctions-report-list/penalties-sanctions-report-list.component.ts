@@ -419,6 +419,10 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
     }
   }
 
+  redirect(path: string) {
+    this.router.navigate([path]);
+  }
+
 
 
 }

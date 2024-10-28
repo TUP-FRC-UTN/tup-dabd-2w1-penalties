@@ -55,12 +55,12 @@ export class UsersNavbarComponent {
       {
         //Sanciones
         icon: "bi-exclamation-triangle",
-        title: "Sanciones",
+        title: "Infracciones",
         roles: ["SuperAdmin", "Admin", "SanctionManager", "Owner", "Tenant"],
         childButtons: [{
           //Listado multas y advertencias
           icon: "bi-receipt",
-          title: "Multas/Advertencias",
+          title: "Listado",
           route: "home/sanctions/sanctionsList",
           roles: ["SuperAdmin", "Admin", "SanctionManager", "Owner", "Tenant"]
         },
@@ -70,24 +70,6 @@ export class UsersNavbarComponent {
           title: "Informes",
           route: "home/sanctions/reportList",
           roles: ["SuperAdmin", "Admin", "SanctionManager"]
-        },
-        {
-          icon: "bi-slash-circle",
-          title: "Infracciones",
-          route: "home",
-          roles: ["SuperAdmin", "Admin"]
-        },
-        {
-          icon: "bi-chat-text-fill",
-          title: "Descargo",
-          route: "home/sanctions/postDisclaimer/:fineId1",
-          roles: ["SuperAdmin", "Admin"]
-        },
-        {
-          icon: "bi-receipt",
-          title: "Crear Informe",
-          route: "home/sanctions/postReport",
-          roles: ["SuperAdmin", "Admin"]
         }
         ]
       }
