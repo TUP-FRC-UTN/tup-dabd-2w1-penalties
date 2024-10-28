@@ -11,6 +11,7 @@ import 'datatables.net-bs5'; // DataTables con Bootstrap 5
 import 'datatables.net-buttons-bs5'; // Botones con estilos de Bootstrap 5
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
+import { PenaltiesModalFineComponent } from '../modals/penalties-modal-fine/penalties-modal-fine.component';
 
 
 @Component({
@@ -61,7 +62,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     private sanctionService: PenaltiesSanctionsServicesService,
   ) {
     //Esto es importante para llamar los funciones dentro del data table con onClick
-    // (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
+    (window as any).viewFine = (id: number) => this.viewFine(id);
     // (window as any).selectState = (state: string, id: number, userId: number) =>
     //   this.selectState(state, id, userId);
   }
@@ -150,7 +151,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
                         <div class="dropdown">
                           <button type="button" class="btn btn-light border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
                           <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
+                            <li><a class="dropdown-item" onclick="viewFine(${data.id})">Ver más</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
                             <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
@@ -219,7 +220,32 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   }
   ///////////////////////////////////////////////////////////////////////////////////////
 
-  
+  viewFine(i:number){
+    const modal = this._modal.open(PenaltiesModalFineComponent, {
+      size: 'xl',
+      keyboard: false,
+    });
+    modal.componentInstance.fineId = i;
+    modal.result
+      .then((result) => { })
+      .catch((error) => {
+        console.log('Modal dismissed with error:', error);
+      });
+  }
+  openModal(fineId: number) {
+    const modal = this._modal.open(PenaltiesModalFineComponent, {
+      size: 'md',
+      keyboard: false,
+    });
+    modal.componentInstance.fineId = fineId;
+    modal.result
+      .then((result) => {
+        this.refreshData();
+      })
+      .catch((error) => {
+        console.log("Error con modal: " + error);
+      });
+  }
 
   //Metodo para manejar la busqueda
   onSearch(event: any) {

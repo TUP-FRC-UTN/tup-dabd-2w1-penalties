@@ -48,7 +48,7 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
     const disclaimerData = {
       userId: 10,
       fineId:this.fineIdFromList,
-      disclaimer: this.reactiveForm.value.disclaimer
+      disclaimer: this.reactiveForm.value.disclaimerControl
     };
 
     //Envio de formulario
