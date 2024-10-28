@@ -41,7 +41,7 @@ export class PenaltiesSanctionsServicesService {
   }
 
   getById(id: number) {
-    return this.http.get(this.url + "report/" + id)
+    return this.http.get<any>(this.url + "report/" + id)
   }
 
   postFine(fineData: any): Observable<any> {

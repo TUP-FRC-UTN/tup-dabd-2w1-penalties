@@ -44,6 +44,17 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   ngOnInit(): void {
     this.refreshData()
     this.getTypes()
+    const that = this; // para referenciar metodos afuera de la datatable
+    $('#reportsTable').on('click', 'a.dropdown-item', function(event) {
+      const action = $(this).data('action');
+      const id = $(this).data('id');
+  
+      switch(action) {
+        case 'newSaction':
+          that.newSanction(id);
+          break;
+      }
+    })
   }
 
 
@@ -122,6 +133,8 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
                     <li><hr class="dropdown-divider"></li>
                     ${data.reportState === 'Abierto' || data.reportState === 'Nuevo' || data.reportState === 'Pendiente' ?
                       `<li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>` : ''}
+                    <li><a class="dropdown-item" data-action="newSaction" data-id="${data.id}"">Nueva Infracción</a></li>
+
                   </ul>
                 </div>
               </div>
@@ -234,7 +247,9 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
     )
   }
 
-
+  newSanction(id: number) {
+    this.router.navigate([`/home/sanctions/postFine/${id}`])
+  }
 
 
 
@@ -281,6 +296,23 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
           reportState: selectedReport.reportState,
           plotId: selectedReport.plotId,
           description: selectedReport.description
+        }
+      });
+    }
+  }
+
+  showReport(id: number) {
+    const selectedReport = this.report.find(report => report.id === id);
+
+    if(selectedReport) {
+      this.router.navigate(['/home/sanctions/postFine'], {
+        queryParams: {
+          id: selectedReport.id,
+          reportState: selectedReport.reportState,
+          plotId: selectedReport.plotId,
+          description: selectedReport.description,
+          createdDate: selectedReport.createdDate,
+          baseAmount: selectedReport.baseAmount
         }
       });
     }

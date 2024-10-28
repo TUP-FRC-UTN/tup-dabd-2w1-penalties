@@ -18,7 +18,7 @@ export const routes: Routes = [
           component: PenaltiesSanctionsReportListComponent,
         },
         {
-          path: 'postFine',
+          path: 'postFine/:id',
           component: PenaltiesPostFineComponent,
         },
         {
