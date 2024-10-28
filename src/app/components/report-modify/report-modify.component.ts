@@ -82,8 +82,12 @@ export class ReportModifyComponent implements OnInit {
       text: "¿Deseas confirmar la actualización del informe?",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, actualizar',
-      cancelButtonText: 'No, cancelar'
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
     }).then((result: any) => {
       if (result.isConfirmed) {
         this.reportService.updateReport(reportDTO).subscribe(res => {
@@ -94,6 +98,7 @@ export class ReportModifyComponent implements OnInit {
             timer: 1500,
             showConfirmButton: false
           });
+          this.router.navigate(['/home/sanctions/reportList']);
         }, error => {
           console.error('Error al actualizar el informe', error);
           (window as any).Swal.fire({
