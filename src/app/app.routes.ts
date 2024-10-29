@@ -1,12 +1,19 @@
 import { Routes } from '@angular/router';
-import { NavbarComponent } from './users-navbar/navbar.component';
+import { UsersNavbarComponent } from './users-navbar/users-navbar.component'; 
 
 export const routes: Routes = [
-    { path: '', redirectTo: '/navbar', pathMatch: 'full' },  
-    {  path: 'navbar', component: NavbarComponent },
+    { path: '', redirectTo: '/home', pathMatch: 'full' },
     {
-        path: 'home',
-        loadChildren: () => import('./penalties.routing').then(m => m.routes)
-
-    },
+        path: 'home', component: UsersNavbarComponent,
+        children: [
+            {
+                path: 'complaints',
+                loadChildren: () => import('./components/complaintComponents/complaintRouting.routing').then(m => m.routes)
+            },
+            {
+                path: 'sanctions',
+                loadChildren: () => import('./components/sanctionsComponents/sanctionRouting.routing').then(m => m.routes)
+            },
+        ]
+    }
 ];

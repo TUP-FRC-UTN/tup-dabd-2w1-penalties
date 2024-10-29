@@ -5,7 +5,3 @@
 .nav-link:hover{
     background-color: #6c757d;
 }
-
-.animation{
-    transition: all 0.3s ease-in-out;
-}

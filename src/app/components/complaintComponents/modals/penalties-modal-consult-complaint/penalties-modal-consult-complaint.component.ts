@@ -1,55 +1,69 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ComplaintService } from '../../../../services/complaint.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-penalties-modal-consult-complaint',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './penalties-modal-consult-complaint.component.html',
   styleUrl: './penalties-modal-consult-complaint.component.scss'
 })
-export class PenaltiesModalConsultComplaintComponent {
+export class PenaltiesModalConsultComplaintComponent implements OnInit {
+  //Variables
   @Input() denunciaId!: number;
-  data:any;
-  formattedDate:any;
-  private service = inject(ComplaintService)
+  files: File[] = [];
+  complaint: any;
 
-  constructor(public activeModal: NgbActiveModal){}
 
+  //Constructor
+  constructor(
+    public activeModal: NgbActiveModal,
+    public complaintService: ComplaintService,
+  ) { }
+
+
+  //Init
   ngOnInit(): void {
-      console.log('Consiltar denuncia',this.denunciaId)
-      this.getComplaint()
-      
-    //  console.log(this.setDate())
+    this.getComplaint();
+    this.addMockFile();
+    this.addMockFile();
+    this.addMockFile();
   }
-  save(){
-    this.activeModal.close()//aca podes agregar lo que se pasa
-  }
-  close(){
+
+
+  //Boton de cierre del modal
+  close() {
     this.activeModal.close()
   }
-  setDate(){
-    const dateArray :number[] = []
-    for (let index = 0; index <this.data.createdDate.length; index++) {
-      dateArray.push(this.data.createdDate[index])
-    }
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2], dateArray[3], dateArray[4], dateArray[5]);
-     this.formattedDate = date.toISOString().split('T')[0];
 
-  }
-  getComplaint(){
-    this.service.getById(this.denunciaId)
-    .subscribe(
-      (respuesta) => {
-        console.log(respuesta); 
-        this.data = respuesta
-        this.setDate()
+
+  //Metodo para buscar la denuncia por id y cargarla en su variable
+  getComplaint() {
+    this.complaintService.getById(this.denunciaId).subscribe(
+      (response) => {
+        console.log(response);
+        this.complaint = response
       },
       (error) => {
         console.error('Error:', error);
       });
+  }
+
+
+  //Evento para actualizar el listado de files a los seleccionados actualmente
+  onFileChange(event: any) {
+    this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
+  }
+
+  addMockFile() {
+    const mockImage = new File(["Contenido de la imagen"], "MockImage.png", {
+      type: "image/jpeg",
+      lastModified: Date.now()
+    });
+    this.files.push(mockImage); //Agrega la imagen simulada a la lista
   }
 
 }
