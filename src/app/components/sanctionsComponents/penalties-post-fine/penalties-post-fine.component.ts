@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router,RouterLink } from '@angular/router';
 import { ReportDTO, plotOwner } from '../../../models/reportDTO';
-import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
+import { PenaltiesSanctionsServicesService } from '../../../services/sanctionsService/sanctions.service';
 
 @Component({
   selector: 'app-penalties-post-fine',
