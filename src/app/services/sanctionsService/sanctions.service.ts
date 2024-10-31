@@ -68,4 +68,8 @@ export class PenaltiesSanctionsServicesService {
     return this.http.put(this.url + 'report', reportDTO);
   }
 
+  putStateFine(data:any){
+    return this.http.put(this.url + 'sanction/fine', data);
+  }
+
 }

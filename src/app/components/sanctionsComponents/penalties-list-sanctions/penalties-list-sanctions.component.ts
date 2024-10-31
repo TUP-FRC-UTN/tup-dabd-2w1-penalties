@@ -12,6 +12,7 @@ import 'datatables.net-buttons-bs5'; // Botones con estilos de Bootstrap 5
 import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 import { PenaltiesModalFineComponent } from '../modals/penalties-get-fine-modal/penalties-get-fine-modal.component';
+import { PenaltiesUpdateStateReasonModalComponent } from '../modals/penalties-update-state-reason-modal/penalties-update-state-reason-modal.component';
 
 
 @Component({
@@ -42,13 +43,14 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     $('#sanctionsTable').on('click', 'a.dropdown-item', function(event) {
       const action = $(this).data('action');
       const id = $(this).data('id');
+      const state = $(this).data('state');
   
       switch(action) {
         case 'newDisclaimer':
           that.newDisclaimer(id);
           break;
-        case 'seeDisclaimer':
-          that.seeDisclaimer(id);
+        case 'changeState':
+          that.changeState(id, state);
           break;
       }
     });
@@ -153,9 +155,8 @@ export class PenaltiesSanctionsListComponent implements OnInit {
                           <ul class="dropdown-menu">
                             <li><a class="dropdown-item" onclick="viewFine(${data.id})">Ver más</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" onclick="selectState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
-                            <li><a class="dropdown-item" onclick="selectState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
-                            <li><a class="dropdown-item" onclick="selectState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
+                            <li><a class="dropdown-item" data-action="changeState" data-id="${data.id}" data-state="PENDING">Marcar como Pendiente</a></li>
+                            <li><a class="dropdown-item" data-action="changeState" data-id="${data.id}" data-state="PAYED">Marcar como Pagada</a></li>
                             ${data.hasSubmittedDisclaimer ? `` : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
                           </ul>
                         </div>
@@ -322,15 +323,27 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     this.router.navigate([`/home/sanctions/postDisclaimer/${id}`])
   }
 
-  seeDisclaimer(id: number) {
-    alert('No implementado!')
+  changeState(id: number, state:string) {
+    this.openModalStateReason(id, state);
   }
 
- 
-
-
-
-
+  
+  openModalStateReason(id: number, state:string) {
+    const modal = this._modal.open(PenaltiesUpdateStateReasonModalComponent, {
+      size: 'md',
+      keyboard: false,
+    });
+    modal.componentInstance.id = id;
+    modal.componentInstance.fineState = state;
+    modal.result
+      .then((result) => {
+        this.refreshData();
+      })
+      .catch((error) => {
+        console.log("Error con modal: " + error);
+      });
+  }
+  
   getTypes(): void {
     this.sanctionService.getState().subscribe({
       next: (data) => {
