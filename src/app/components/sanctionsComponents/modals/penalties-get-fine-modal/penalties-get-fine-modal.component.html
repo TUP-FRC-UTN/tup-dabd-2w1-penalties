@@ -51,23 +51,31 @@
               </div>
             </div>
         </div>
-        <div class="buttons-box d-flex justify-content-end">
-          <p>Aca deberia hacer put y pasarla a Absuelta o Pendiente de Pago</p>
-          <div class="submit-box">
-            <button
-              type="button"
-              class="btn btn-secondary me-3"
-            >
-              Rechazar
-            </button>
-            <button
-              type="submit"
-              class="btn btn-success"
-            >
-              Aceptar
-            </button>
+
+        <!--Si la multa esta apelada muestra la opcion de aceptar o rechazar el mismo-->
+        @if(fine.fineState == "Apelada"){
+          <div class="col-lg-12 mb-3">
+          <div class="buttons-box d-flex justify-content-end">
+            <div class="submit-box">
+              <button
+                type="button"
+                class="btn btn-secondary me-3"
+                (click)="changeState('ACQUITTED')"
+              >
+                Rechazar
+              </button>
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="changeState('PAYMENT_PAYMENT')"
+              >
+                Aceptar
+              </button>
+            </div>
           </div>
         </div>
+        }
+        
   
   
 

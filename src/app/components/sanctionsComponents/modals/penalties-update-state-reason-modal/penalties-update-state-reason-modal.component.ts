@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { PenaltiesSanctionsServicesService } from '../../../../services/sanctionsService/sanctions.service';
@@ -12,7 +12,7 @@ import { PenaltiesSanctionsServicesService } from '../../../../services/sanction
 })
 export class PenaltiesUpdateStateReasonModalComponent {
   reasonText:String = ""
-  @Input() id:number=0
+  @Input() id:number=1
   @Input() fineState: string = ""
   userId: number = 1;
   
@@ -30,15 +30,15 @@ export class PenaltiesUpdateStateReasonModalComponent {
   putFine(){
     const fineDto:any = {
       id: this.id,
-      userId: this.userId,
-      complaintState: this.fineState,
-      stateReason: this.reasonText
+      fineState: this.fineState,
+      stateReason: this.reasonText,
+      userId: this.userId
     }
     this.sanctionService.putStateFine(fineDto).subscribe({
       next: (response) => {
         alert('El estado de la multa fue actualizado con éxito');
+        this.sanctionService.triggerRefresh();
         this.close()
-        
       },
       error: (error) => {
         alert('El estado de la multa no pudo ser actualizado');

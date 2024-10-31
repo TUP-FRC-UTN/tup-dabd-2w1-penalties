@@ -4,6 +4,7 @@ import { ReportDTO } from '../../models/reportDTO';
 import { Observable } from 'rxjs/internal/Observable';
 import { SanctionsDTO } from '../../models/SanctionsDTO';
 import { PutReportDTO } from '../../models/PutReportDTO';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -69,7 +70,16 @@ export class PenaltiesSanctionsServicesService {
   }
 
   putStateFine(data:any){
-    return this.http.put(this.url + 'sanction/fine', data);
+    return this.http.put(this.url + 'sanction/changeStateFine', data);
+  }
+
+  //Metodo para hacer refresh desde dos modales adentro de una lista
+  private refreshSubject = new Subject<void>();
+
+  refreshTable$ = this.refreshSubject.asObservable();
+
+  triggerRefresh() {
+    this.refreshSubject.next();
   }
 
 }

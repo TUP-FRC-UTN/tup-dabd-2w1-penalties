@@ -13,6 +13,7 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.print';
 import { PenaltiesModalFineComponent } from '../modals/penalties-get-fine-modal/penalties-get-fine-modal.component';
 import { PenaltiesUpdateStateReasonModalComponent } from '../modals/penalties-update-state-reason-modal/penalties-update-state-reason-modal.component';
+import { REACTIVE_NODE } from '@angular/core/primitives/signals';
 
 
 @Component({
@@ -37,6 +38,12 @@ export class PenaltiesSanctionsListComponent implements OnInit {
 
   //Init
   ngOnInit(): void {
+    //Metodo para recargar la datatable desde dentro de un modal en el modal
+    this.sanctionService.refreshTable$.subscribe(() => {
+      this.refreshData();
+    });
+
+    
     this.refreshData()
     //Esto es para acceder al metodo desde afuera del datatable
     const that = this; // para referenciar metodos afuera de la datatable
@@ -155,8 +162,8 @@ export class PenaltiesSanctionsListComponent implements OnInit {
                           <ul class="dropdown-menu">
                             <li><a class="dropdown-item" onclick="viewFine(${data.id})">Ver más</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" data-action="changeState" data-id="${data.id}" data-state="PENDING">Marcar como Pendiente</a></li>
-                            <li><a class="dropdown-item" data-action="changeState" data-id="${data.id}" data-state="PAYED">Marcar como Pagada</a></li>
+                            <li><a class="dropdown-item" data-action="changeState" data-id="${data.id}" data-state='PENDING'>Marcar como Pendiente</a></li>
+                            <li><a class="dropdown-item" data-action="changeState" data-id="${data.id}" data-state='PAYED'>Marcar como Pagada</a></li>
                             ${data.hasSubmittedDisclaimer ? `` : `<li><a class="dropdown-item" data-action="newDisclaimer" data-id="${data.id}"">Realizar Descargo</a></li>`}
                           </ul>
                         </div>
@@ -337,7 +344,9 @@ export class PenaltiesSanctionsListComponent implements OnInit {
     modal.componentInstance.fineState = state;
     modal.result
       .then((result) => {
-        this.refreshData();
+        if(result.stateUpdated){
+          this.refreshData();
+        }
       })
       .catch((error) => {
         console.log("Error con modal: " + error);
