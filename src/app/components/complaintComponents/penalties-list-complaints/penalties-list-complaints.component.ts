@@ -238,11 +238,11 @@ export class PenaltiesListComplaintComponent implements OnInit {
   getStatusClass(estado: string): string {
     switch (estado) {
       case 'Anexada':
-        return 'text-bg-secondary';
+        return 'text-bg-primary';
       case 'Nueva':
-        return 'text-bg-success';
+        return 'text-bg-info';
       case 'Pendiente':
-        return 'text-bg-warning text-white';
+        return 'text-bg-secondary';
       case 'Rechazada':
         return 'text-bg-danger';
       default:
