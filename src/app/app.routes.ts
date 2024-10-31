@@ -1,10 +1,11 @@
 import { Routes } from '@angular/router';
-import { UsersNavbarComponent } from './users-navbar/users-navbar.component'; 
+import { UsersNavbarComponent } from './components/users-components/users-navbar/users-navbar.component'; 
+import { AppComponent } from './app.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: 'full' },
     {
-        path: 'home', component: UsersNavbarComponent,
+        path: 'home', component: AppComponent,
         children: [
             {
                 path: 'complaints',

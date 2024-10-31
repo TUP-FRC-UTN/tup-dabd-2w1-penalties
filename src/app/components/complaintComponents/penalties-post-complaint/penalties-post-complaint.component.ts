@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { ComplaintService } from '../../../services/complaint.service';
+import { ComplaintService } from '../../../services/complaintsService/complaints.service';
 import { Router, RouterModule } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PenaltiesFileUploadButtonComponent } from '../helpers/penalties-file-upload-button/penalties-file-upload-button.component';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-penalties-post-complaint',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, PenaltiesFileUploadButtonComponent, RouterModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, RouterModule],
   templateUrl: './penalties-post-complaint.component.html',
   styleUrl: './penalties-post-complaint.component.scss'
 })
