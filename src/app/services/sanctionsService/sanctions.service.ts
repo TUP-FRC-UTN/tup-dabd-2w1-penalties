@@ -73,6 +73,11 @@ export class PenaltiesSanctionsServicesService {
     return this.http.put(this.url + 'sanction/changeStateFine', data);
   }
 
+  //Revisar este metodo con el endpoint
+  updateFine(fineData: any): Observable<any> {
+    return this.http.put(this.url + 'sanction/fine', fineData);
+  }
+
   //Metodo para hacer refresh desde dos modales adentro de una lista
   private refreshSubject = new Subject<void>();
 
