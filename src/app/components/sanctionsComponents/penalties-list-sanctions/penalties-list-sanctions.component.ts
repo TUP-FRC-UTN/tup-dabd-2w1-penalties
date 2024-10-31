@@ -296,17 +296,17 @@ export class PenaltiesSanctionsListComponent implements OnInit {
   getStatusClass(estado: string): string {
     switch (estado) {
       case 'Pendiente':
-        return 'text-bg-warning';
+        return 'text-bg-secondary';
       case 'Apelada':
-        return 'text-bg-danger';
+        return 'text-bg-info';
       case 'Pendiente de pago':
         return 'text-bg-primary';
       case 'Absuelta':
-        return 'text-bg-secondary';
+        return 'text-bg-danger';
       case 'Pagada':
         return 'text-bg-success';
       case 'Advertencia':
-        return 'text-bg-dark';
+        return 'text-bg-warning';
       default:
         return '';
     }
