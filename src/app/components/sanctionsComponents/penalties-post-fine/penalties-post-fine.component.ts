@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router,RouterLink } from '@angular/router';
+import { ActivatedRoute, Router,RouterLink } from '@angular/router';
 import { ReportDTO, plotOwner } from '../../../models/reportDTO';
-import { PenaltiesSanctionsServicesService } from '../../../services/penalties-sanctions-services/penalties-sanctions-services.service';
+import { PenaltiesSanctionsServicesService } from '../../../services/sanctionsService/sanctions.service';
 
 @Component({
   selector: 'app-penalties-post-fine',
@@ -15,9 +15,11 @@ import { PenaltiesSanctionsServicesService } from '../../../services/penalties-s
 export class PenaltiesPostFineComponent implements OnInit {
 
 
+  report:any
+
 
   //tengo que llamar al microservicio de usuario para traer el plot usando el plot Id
-  @Input() report:ReportDTO={
+  @Input() reportDto:ReportDTO={
     id: 0,
     reportState: '',
     plotId: 0,
@@ -31,13 +33,29 @@ export class PenaltiesPostFineComponent implements OnInit {
   selectedDate:string =""
   newFine:boolean=false
   newAmount: number=0
+  reportId: number=0;
 
-  constructor(private router: Router, private penaltiesService: PenaltiesSanctionsServicesService) { }
+  constructor(private router: Router, private penaltiesService: PenaltiesSanctionsServicesService,private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.setTodayDate()
     //this.getPlotOwner()
-    this.newAmount = this.report.baseAmount
+    this.newAmount = 0
+    this.route.paramMap.subscribe(params => {
+      this.reportId = + params.get('id')!;
+      this.getReport(this.reportId);
+    });
+  }
+  getReport(reportId: number) {
+    this.penaltiesService.getById(reportId)
+    .subscribe(
+      (response) => {
+        //console.log(response); 
+        this.report = response
+      },
+      (error) => {
+        console.error('Error:', error);
+      });
   }
   setTodayDate() {
     const today = new Date();
@@ -61,7 +79,7 @@ export class PenaltiesPostFineComponent implements OnInit {
     if(this.newFine){
 
       const fineData = {
-        reportId: this.report.id,
+        reportId: 1,
         amount: this.newAmount,
         createdUser: 1
       };
@@ -70,7 +88,7 @@ export class PenaltiesPostFineComponent implements OnInit {
         next: (response) => {
           
           console.log('Multa enviada correctamente', response);
-          this.router.navigate(['home/reportList']);
+          this.router.navigate(['home/sanctions/sanctionsList']);
         },
         error: (error) => {
           console.error('Error al enviar la Multa', error);
@@ -80,7 +98,7 @@ export class PenaltiesPostFineComponent implements OnInit {
     else{
 
       const warningData = {
-        reportId: this.report.id,
+        reportId: 1,
         createdUser: 1
       };
 
@@ -88,7 +106,7 @@ export class PenaltiesPostFineComponent implements OnInit {
         next: (response) => {
           
           console.log('Advertencia enviada correctamente', response);
-          this.router.navigate(['home/reportList']);
+          this.router.navigate(['home/sanctions/sanctionsList']);
         },
         error: (error) => {
           console.error('Error al enviar la Advertencia', error);

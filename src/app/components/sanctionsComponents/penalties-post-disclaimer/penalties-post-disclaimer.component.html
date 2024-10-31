@@ -1,92 +1,103 @@
-<div class="container">
-  <div class="row p-4 border shadow-lg p-3 mb-5 bg-white rounded">
-    <h2 class="text-center">NUEVO DESCARGO</h2>
-
-    <h3 class="">Infracción</h3>
-    <div class="d-flex justify-content-between w-100 mb-4">
-      <div class="input-box w-50">
-        <label for="selectOption" class="form-label">Motivo</label>
-        <select
-          id="selectOption"
-          class="form-select w-100"
-          name="option"
-          disabled
-        >
-          <option value="" disabled selected>
-            {{ selectedOption }}
-          </option>
-        </select>
-      </div>
-
-      <div class="input-box">
-        <label for="dateInput" class="form-label">Fecha</label>
-        <input
-          type="date"
-          id="dateInput"
-          name="dateInput"
-          class="form-control bg-body-secondary"
-          value="{{ selectedDate | date : 'yyyy-MM-dd' }}"
-          disabled
-        />
-      </div>
-    </div>
-
-    <div class="input-box d-flex flex-column gap-2 mb-4">
-      <label for="textareaMessage" class="form-label">Descripcion</label>
-      <textarea
-        class="form-control"
-        name="textareaMessage"
-        id="textareaMessage"
-        rows="7"
-        disabled
-        >{{ description }}</textarea
-      >
-    </div>
-
-    <form #formDescargo="ngForm" (ngSubmit)="onSubmit()" novalidate>
-      <div class="input-box d-flex flex-column gap-2 mb-4">
-        <h4 class="">Motivo de Descargo</h4>
-        <textarea
-          class="form-control"
-          name="textareaMessage2"
-          id="textareaMessage2"
-          [(ngModel)]="disclaimer"
-          #textArea2="ngModel"
-          required
-          minlength="50"
-          maxlength="700"
-          rows="7"
-          [placeholder]="textareaPlaceholder"
-        >
-        </textarea>
-
-        @if (textArea2.invalid && (textArea2.dirty || textArea2.touched)) { @if
-        (textArea2.errors?.['required']) {
-        <span class="text-danger"> Por favor, ingrese un mensaje. </span>
-        } @if (textArea2.errors?.['minlength']) {
-        <span class="text-danger">
-          El mensaje debe tener al menos 50 caracteres.
-        </span>
-        } }
-      </div>
-      <div class="buttons-box d-flex justify-content-end">
-        <div class="submit-box">
-          <button
-            type="button"
-            class="btn btn-secondary me-3"
-            [routerLink]="'/home'"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            class="btn btn-success"
-            [disabled]="formDescargo.invalid"
-          >
-            Enviar
-          </button>
+<section class="py-5">
+  <div class="container p-3 border border-2 rounded shadow-lg">
+    <!-- Datos de la multa -->
+    <div class="row mb-3">
+      <h4>Datos de la multa</h4>
+      
+      <!-- Select Motivo -->
+      <div class="col-lg-6 mb-3">
+        <div class="row">
+          <label class="col-2 col-form-label">Motivo</label>
+          <div class="col-10">
+            <select class="form-select" disabled>
+              <option value="" selected>
+                {{ fine?.report.reportReason.reportReason }}
+              </option>
+            </select>
+          </div>
         </div>
       </div>
-    </form>
+
+      <!-- Input fecha -->
+      <div class="col-lg-6 mb-3">
+        <div class="row">
+          <label class="col-2 col-form-label">Fecha</label>
+          <div class="col-10">
+            <input
+              type="datetime-local"
+              class="form-control"
+              [value]="fine?.createdDate"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Input Descripcion -->
+      <div class="col-lg-12 mb-3">
+        <div class="row">
+          <label class="col-2 col-lg-1 col-form-label">Descripcion</label>
+          <div class="col-10 col-lg-11">
+            <textarea
+              class="form-control"
+              rows="8"
+              style="resize: none"
+              [value]="fine?.report.description"
+              disabled
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    
+
+    <div class="row">
+    
+      <h4>Descargo</h4>
+      
+      <form (ngSubmit)="onSubmit()" [formGroup]="reactiveForm">
+        <div class="row">
+          <div class="col-lg-12 mb-3">
+            <div class="row">
+              <label class="col-2 col-lg-1 col-form-label">Motivo</label>
+              <div class="col-10 col-lg-11">
+                <textarea
+                  class="form-control"
+                  name="textarea"
+                  id="textarea"
+                  rows="8"
+                  formControlName="disclaimerControl"
+                  style="resize: none"
+                  [ngClass]="onValidate('disclaimerControl')"
+                ></textarea>
+                <div class="invalid-feedback">
+                  {{ showError("disclaimerControl") }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="buttons-box d-flex justify-content-end">
+          <div class="submit-box">
+            <button
+              type="button"
+              class="btn btn-secondary me-3"
+              [routerLink]="'/home/sanctions/sanctionsList'"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="reactiveForm.invalid"
+            >
+              Enviar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+</section>

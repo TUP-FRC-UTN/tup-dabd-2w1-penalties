@@ -18,6 +18,7 @@
                   <input
                     type="text"
                     class="form-control bg-body-secondary"
+                    [value]="report?.plotId"
                     disabled
                     
                   />
@@ -46,6 +47,7 @@
                     required
                     #date="ngModel"
                     [ngClass]="{ 'is-invalid': date.invalid && date.touched }"
+                    disabled
                   />
                   <div *ngIf="date.invalid && date.touched" class="invalid-feedback">
                     La fecha es requerida.
@@ -64,16 +66,15 @@
                 type="text"
                 class="form-control ms-2"
                 name="reportState"
-                [(ngModel)]="report.reportState"
+                [value]="report?.reportReason.reportReason"
                 required
                 minlength="5"
-                #reportState="ngModel"
-                [ngClass]="{ 'is-invalid': reportState.invalid && reportState.touched }"
+                disabled
               />
-              <div *ngIf="reportState.invalid && reportState.touched" class="invalid-feedback">
+              <!-- <div *ngIf="reportState.invalid && reportState.touched" class="invalid-feedback">
                 <div *ngIf="reportState.errors?.['required']">El motivo es requerido.</div>
                 <div *ngIf="reportState.errors?.['minlength']">Debe tener al menos 5 caracteres.</div>
-              </div>
+              </div> -->
             </div>
           </div>
     
@@ -120,16 +121,15 @@
               id="description"
               class="form-control"
               name="description"
-              [(ngModel)]="report.description"
+              [value]="report?.description"
               required
               minlength="10"
-              #description="ngModel"
-              [ngClass]="{ 'is-invalid': description.invalid && description.touched }"
+              disabled
             ></textarea>
-            <div *ngIf="description.invalid && description.touched" class="invalid-feedback">
+            <!-- <div *ngIf="description.invalid && description.touched" class="invalid-feedback">
               <div *ngIf="description.errors?.['required']">La descripción es requerida.</div>
               <div *ngIf="description.errors?.['minlength']">Debe tener al menos 10 caracteres.</div>
-            </div>
+            </div> -->
           </div>
         </div>
     

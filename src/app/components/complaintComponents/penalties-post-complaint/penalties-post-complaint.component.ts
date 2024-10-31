@@ -1,52 +1,119 @@
-import { Component } from '@angular/core';
-import { ComplaintService } from '../../../services/complaint.service';
+import { Component, OnInit } from '@angular/core';
+import { ComplaintService } from '../../../services/complaintsService/complaints.service';
 import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
-import { PenaltiesFileUploadButtonComponent } from '../helpers/penalties-file-upload-button/penalties-file-upload-button.component';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-penalties-post-complaint',
   standalone: true,
-  imports: [FormsModule, PenaltiesFileUploadButtonComponent, RouterModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, RouterModule],
   templateUrl: './penalties-post-complaint.component.html',
   styleUrl: './penalties-post-complaint.component.scss'
 })
-export class PenaltiesPostComplaintComponent {
-  selectedOption: string;
-  selectedDate: string;
-  maxDate: string;
-  textareaContent: string;
-  textareaPlaceholder: string;
+export class PenaltiesPostComplaintComponent implements OnInit {
+  //Variables
   complaintTypes: { key: string; value: string }[] = [];
-  files?: File[];
+  reactiveForm: FormGroup;
+  files: File[] = [];
 
-  constructor(private complaintService: ComplaintService, private router: Router) {
-    this.selectedOption = '';
-    this.maxDate = '';
-    this.textareaContent = '';
-    this.textareaPlaceholder = 'Ingrese su mensaje aquí...';
-    this.selectedDate = '';
-    this.setTodayDate();
-    this.files = [];
+
+  //Constructor
+  constructor(
+    private complaintService: ComplaintService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) { 
+    this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
+      typeControl: new FormControl('', [Validators.required]),
+      descriptionControl: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]),
+      fileControl: new FormControl(null),
+    });
   }
 
+
+  //Init
   ngOnInit(): void {
     this.getTypes();
   }
 
-  getFiles(files: File[]) {
-    this.files = files;
+
+  //Submit del form
+  onSubmit(): void {
+    if (this.reactiveForm.valid) {
+      let formData = this.reactiveForm.value;
+      let data = {
+        userId: 1,
+        complaintType: formData.typeControl,
+        description: formData.descriptionControl,
+        pictures: this.files
+      }
+
+      this.complaintService.add(data).subscribe({
+        next: (response) => {
+          //Redireccion a otra ruta
+          console.log('Denuncia enviada correctamente', response);
+          this.router.navigate(['home/complaints/listComplaint']);
+        },
+        error: (error) => {
+          console.error('Error al enviar la denuncia', error);
+        }
+      });
+    }
   }
 
-  setTodayDate() {
-    const today = new Date();
-    const day = today.getDate().toString().padStart(2, '0');
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const year = today.getFullYear();
 
-    this.selectedDate = `${year}-${month}-${day}`;
+  //Retorna una clase para poner el input en verde o rojo dependiendo si esta validado
+  onValidate(controlName: string) {
+    const control = this.reactiveForm.get(controlName);
+    return {
+      'is-invalid': control?.invalid && (control?.dirty || control?.touched),
+      'is-valid': control?.valid
+    }
   }
 
+
+  //Retorna el primer error encontrado para el input dentro de los posibles
+  showError(controlName: string) {
+    const control = this.reactiveForm.get(controlName);
+    //Si encuentra un error retorna un mensaje describiendolo
+    if (control && control.errors) {
+      const errorKey = Object.keys(control!.errors!)[0];
+      switch (errorKey) {
+        case 'required':
+          return 'Este campo no puede estar vacío.';
+        case 'email':
+          return 'Formato de correo electrónico inválido.';
+        case 'minlength':
+          return `El valor ingresado es demasiado corto. Mínimo ${control.errors['minlength'].requiredLength} caracteres.`;
+        case 'maxlength':
+          return `El valor ingresado es demasiado largo. Máximo ${control.errors['maxlength'].requiredLength} caracteres.`;
+        case 'pattern':
+          return 'El formato ingresado no es válido.';
+        case 'min':
+          return `El valor es menor que el mínimo permitido (${control.errors['min'].min}).`;
+        case 'max':
+          return `El valor es mayor que el máximo permitido (${control.errors['max'].max}).`;
+        case 'requiredTrue':
+          return 'Debe aceptar el campo requerido para continuar.';
+        case 'date':
+          return 'La fecha ingresada es inválida.';
+        case 'url':
+          return 'El formato de URL ingresado no es válido.';
+        case 'number':
+          return 'Este campo solo acepta números.';
+        case 'customError':
+          return 'Error personalizado: verifique el dato ingresado.';
+        default:
+          return 'Error no identificado en el campo.';
+      }
+    }
+    //Si no se cumplen ninguno de los anteriores retorna vacio
+    return '';
+  }
+
+
+  //Carga de datos del service para el select (Propio del micro de multas)
   getTypes(): void {
     this.complaintService.getTypes().subscribe({
       next: (data) => {
@@ -61,26 +128,20 @@ export class PenaltiesPostComplaintComponent {
     })
   }
 
-  onSubmit(): void {
-    if (this.selectedOption && this.selectedDate && this.textareaContent) {
-      const denunciaData = {
-        userId: 1,
-        complaintType: this.selectedOption,
-        description: this.textareaContent,
-        pictures: this.files
-      };
-      
-      this.complaintService.add(denunciaData).subscribe({
-        next: (response) => {
-          
-          console.log('Denuncia enviada correctamente', response);
-          this.router.navigate(['home/complaints/listComplaint']);
-        },
-        error: (error) => {
-          console.error('Error al enviar la denuncia', error);
-        }
-      });
-    }
+
+  //Formatea la fecha en yyyy-MM-dd para enviarla al input
+  formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+
+  //Evento para actualizar el listado de files a los seleccionados actualmente
+  onFileChange(event: any) {
+    this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
   }
 
 }
