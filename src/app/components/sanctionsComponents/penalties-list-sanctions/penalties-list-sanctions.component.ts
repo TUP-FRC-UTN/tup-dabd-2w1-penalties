@@ -136,7 +136,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
           render: (data) => {
             //Si es advertencia
             const amountValue = data != null ? '$' + data : '';
-            return `<div class="text-start">${amountValue}</div>`;
+            return `<div class="text-end">${amountValue}</div>`;
           }
         },
         {
