@@ -95,9 +95,7 @@ export class NewReportComponent {
           console.error('Error al enviar la denuncia', error);
         }
       });
-    }
-
-    else {
+    } else {
       console.log("Los campos no estab validados")
     }
 
