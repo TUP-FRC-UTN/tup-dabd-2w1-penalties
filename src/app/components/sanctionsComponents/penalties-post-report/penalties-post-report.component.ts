@@ -126,4 +126,16 @@ export class NewReportComponent {
     }
   }
 
+  development(): void {
+    (window as any).Swal.fire({
+      title: 'Función en desarrollo',
+      text: 'Esta funcionalidad aún está en desarrollo.',
+      icon: 'info',
+      confirmButtonText: 'Aceptar',
+      customClass: {
+        confirmButton: 'btn btn-success'
+      }
+    });
+  }
+
 }
