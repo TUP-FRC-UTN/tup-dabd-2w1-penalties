@@ -50,29 +50,33 @@
       </div>
     </div>
 
-    <div class="row">
+    
       <form (ngSubmit)="onSubmit()" [formGroup]="reactiveForm">
-        <div class="clearfix mt-2">
-          <div class="float-end d-flex">
-            <label for="" class="me-2 mt-3">Importe:</label>
-            <div class="input-group mt-2 mb-3">
-              <span class="input-group-text" id="basic-addon1">$</span>
-              <input
-                type="number"
-                class="form-control text-end"
-                name="amount"
-                [value]="fine?.amount"
-                style="max-width: 220px"
-                formControlName="amountControl"
-                [ngClass]="onValidate('amountControl')"
-                required
-              />
-              <div class="invalid-feedback">
-                {{ showError("amountControl") }}
+        <div class="row">
+          
+          <div class="row col-3 offset-9 justify-content-end">
+            <div class="clearfix mt-2">
+              <div class="float-end d-flex">
+                <label for="" class="me-2 mt-3">Importe:</label>
+                <div class="input-group mt-2 mb-3">
+                  <span class="input-group-text" id="basic-addon1">$</span>
+                  <input
+                    type="number"
+                    class="form-control text-end"
+                    name="amount"
+                    [value]="fine?.amount"
+                    formControlName="amountControl"
+                    [ngClass]="onValidate('amountControl')"
+                    required
+                  />
+                  <div class="invalid-feedback">
+                    {{ showError("amountControl") }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        
         <div class="buttons-box d-flex justify-content-end">
           <div class="submit-box">
             <button
@@ -91,8 +95,8 @@
             </button>
           </div>
         </div>
+      </div>
       </form>
-    </div>
   </div>
 </section>
 
