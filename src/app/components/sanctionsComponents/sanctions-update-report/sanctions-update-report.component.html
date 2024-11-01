@@ -1,6 +1,6 @@
 <div class="container p-3">
     <div class="post-complaint-section p-4 border shadow-lg p-3 mb-5 bg-white rounded">
-        <h2 class="text-center mb-5">MODIFICAR REPORTE</h2>
+        <h2 class="text-center mb-5">MODIFICAR INFORME</h2>
         <form #formDenuncia="ngForm" novalidate>
             <div class="row mb-4">
                 <div class="col-1">
@@ -70,4 +70,4 @@
     </div>
 </div>
 
-<app-modal-complaints-list (selectedComplaints)="handleSelectedComplaints($event)"></app-modal-complaints-list>
+<app-modal-complaints-list (selectedComplaints)="handleSelectedComplaints($event)" [reportId]="reportId"></app-modal-complaints-list>
