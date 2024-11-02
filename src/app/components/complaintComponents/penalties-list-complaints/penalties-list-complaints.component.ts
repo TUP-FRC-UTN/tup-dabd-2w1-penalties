@@ -111,7 +111,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
         {
           data: 'description',
           className: 'align-middle',
-          render: (data) => 
+          render: (data) =>
             `<div>${data}</div>`
         },
         {
@@ -131,10 +131,9 @@ export class PenaltiesListComplaintComponent implements OnInit {
                   <button type="button" class="btn border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" onclick="changeState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
-                    <li><a class="dropdown-item" onclick="changeState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
-                    <li><a class="dropdown-item" onclick="changeState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
+                    ${data.complaintState == "Pendiente" ? `
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" onclick="changeState('REJECTED', ${data.id}, ${data.userId})">Rechazar</a></li>` : ``}
                   </ul>
                 </div>
               </div>
@@ -238,11 +237,11 @@ export class PenaltiesListComplaintComponent implements OnInit {
   getStatusClass(estado: string): string {
     switch (estado) {
       case 'Anexada':
-        return 'text-bg-secondary';
+        return 'text-bg-primary';
       case 'Nueva':
-        return 'text-bg-success';
+        return 'text-bg-info';
       case 'Pendiente':
-        return 'text-bg-warning text-white';
+        return 'text-bg-secondary';
       case 'Rechazada':
         return 'text-bg-danger';
       default:
@@ -316,7 +315,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
     });
     modal.componentInstance.denunciaId = i;
     modal.result
-      .then((result) => { })
+      .then((result) => { this.refreshData() })
       .catch((error) => {
         console.log('Modal dismissed with error:', error);
       });
