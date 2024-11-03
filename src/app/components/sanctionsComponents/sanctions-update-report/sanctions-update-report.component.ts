@@ -49,7 +49,10 @@ export class ReportModifyComponent implements OnInit {
       title: 'Función en desarrollo',
       text: 'Esta funcionalidad aún está en desarrollo.',
       icon: 'info',
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      customClass: {
+        confirmButton: 'btn btn-success'
+      }
     });
   }
 

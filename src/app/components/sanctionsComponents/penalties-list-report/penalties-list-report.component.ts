@@ -127,10 +127,6 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" onclick="changeState('ATTACHED', ${data.id}, ${data.userId})">Marcar como Anexada</a></li>
-                    <li><a class="dropdown-item" onclick="changeState('REJECTED', ${data.id}, ${data.userId})">Marcar como Rechazada</a></li>
-                    <li><a class="dropdown-item" onclick="changeState('PENDING', ${data.id}, ${data.userId})">Marcar como Pendiente</a></li>
-                    <li><hr class="dropdown-divider"></li>
                     ${data.reportState === 'Abierto' || data.reportState === 'Nuevo' || data.reportState === 'Pendiente' ?
                       `<li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>` : ''}
                     <li><a class="dropdown-item" data-action="newSaction" data-id="${data.id}"">Nueva Infracción</a></li>

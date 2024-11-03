@@ -95,9 +95,7 @@ export class NewReportComponent {
           console.error('Error al enviar la denuncia', error);
         }
       });
-    }
-
-    else {
+    } else {
       console.log("Los campos no estab validados")
     }
 
@@ -126,6 +124,18 @@ export class NewReportComponent {
       const modal = new (window as any).bootstrap.Modal(modalElement);
       modal.show();
     }
+  }
+
+  development(): void {
+    (window as any).Swal.fire({
+      title: 'Función en desarrollo',
+      text: 'Esta funcionalidad aún está en desarrollo.',
+      icon: 'info',
+      confirmButtonText: 'Aceptar',
+      customClass: {
+        confirmButton: 'btn btn-success'
+      }
+    });
   }
 
 }
