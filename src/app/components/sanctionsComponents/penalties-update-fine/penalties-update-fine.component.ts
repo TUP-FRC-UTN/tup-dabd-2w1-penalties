@@ -46,9 +46,10 @@ export class PenaltiesUpdateFineComponent implements OnInit {
 
   onSubmit(){
     const fineData = {
-      userId: 10,
-      fineId:this.fineIdFromList,
-      amount: this.reactiveForm.value.amountControl
+      id:this.fineIdFromList,
+      amount: this.reactiveForm.value.amountControl,
+      userId: 10
+      
     };
 
     //Envio de formulario
