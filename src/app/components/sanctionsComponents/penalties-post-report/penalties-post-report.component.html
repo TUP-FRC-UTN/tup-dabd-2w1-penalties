@@ -6,20 +6,20 @@
                     <div class="row">
                         <label class="col-2 col-form-label" for="selectOption">Motivo</label>
                         <div class="col-10">
-                            <select class="form-select" id="selectOption" name="option" [(ngModel)]="selectedReasonId"
+                            <select
+                                [class.is-invalid]="optionField.invalid && (optionField.dirty || optionField.touched)"
+                                class="form-select" id="selectOption" name="option" [(ngModel)]="selectedReasonId"
                                 #optionField="ngModel" required>
                                 <option value="" selected disabled="disabled">Seleccione una opción</option>
                                 @for (reason of reportReasons; track $index) {
                                 <option [value]="reason.id">{{reason.reportReason}}</option>
                                 }
                             </select>
-                            @if (optionField.invalid && (optionField.dirty || optionField.touched)) {
-                            <div class="text-danger">
+                            <div class="invalid-feedback">
                                 @if (optionField.errors?.['required']) {
                                 <span>Por favor, ingrese una opción</span>
                                 }
                             </div>
-                            }
                         </div>
                     </div>
                 </div>
@@ -38,24 +38,18 @@
                     <div class="row">
                         <label for="textareaMessage" class="col-2 col-lg-1 col-form-label">Descripcion</label>
                         <div class="col-10 col-lg-11">
-                            <textarea name="textareaMessage" id="textareaMessage" rows="8" class="form-control"
+                            <textarea [class.is-invalid]="textArea.invalid && (textArea.dirty || textArea.touched)"
+                                name="textareaMessage" id="textareaMessage" rows="8" class="form-control"
                                 style="resize: none" [placeholder]="textareaPlaceholder" [(ngModel)]="description"
                                 #textArea="ngModel" required minlength="10" maxlength="500"></textarea>
-                            @if (textArea.invalid && (textArea.dirty || textArea.touched)) {
-
-                            @if (textArea.errors?.['required']) {
-                            <span class="text-danger">
-                                Por favor, ingrese una descripción.
-                            </span>
-                            }
-
-                            @if (textArea.errors?.['minlength']) {
-                            <span class="text-danger">
-                                El mensaje debe tener al menos 10 caracteres.
-                            </span>
-                            }
-
-                            }
+                            <div class="invalid-feedback">
+                                @if (textArea.errors?.['required']) {
+                                <span>Por favor, ingrese una descripción.</span>
+                                }
+                                @if (textArea.errors?.['minlength']) {
+                                <span>El mensaje debe tener al menos 10 caracteres.</span>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -74,11 +68,10 @@
                         <button type="button" class="btn btn-info" (click)="development()">Ver más</button>
                     </div>
                 </div>
-                <!-- Nuevo botón Gestionar denuncias -->
+
                 <div class="col-lg-6 mb-3">
                     <div class="row">
                         <div class="col-2">
-                            <!-- Espacio vacío para alinear con el input de arriba -->
                         </div>
                         <div class="col-10">
                             <button type="button" class="btn btn-warning" (click)="openSelectComplaints()">Gestionar
