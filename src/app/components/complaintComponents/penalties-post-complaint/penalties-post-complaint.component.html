@@ -63,7 +63,7 @@
             <!-- Botones de Enviar / Cancelar -->
             <div class="row">
                 <div class="col d-flex justify-content-end gap-3">
-                    <button type="button" class="btn btn-secondary">Cancelar
+                    <button type="button" class="btn btn-secondary" [routerLink]="'../listComplaint'">Cancelar
                     </button>
                     <button type="submit" class="btn btn-success" disabled
                         [disabled]="reactiveForm.invalid">Enviar</button>
