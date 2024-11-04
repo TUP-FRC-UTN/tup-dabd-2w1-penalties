@@ -61,6 +61,9 @@
                     <button type="button" class="btn btn-warning" (click)="openModal()">
                         Gestionar denuncias <i class="bi bi-file-earmark-text"></i>
                     </button>
+                    @if (selectedComplaints.length > 0) {
+                        <p> Se seleccionaron {{selectedComplaints.length}} denuncia(s)</p>
+                    }
                 </div>
             </div>
 

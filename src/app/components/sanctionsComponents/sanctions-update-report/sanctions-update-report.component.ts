@@ -93,27 +93,37 @@ export class ReportModifyComponent implements OnInit {
       },
     }).then((result: any) => {
       if (result.isConfirmed) {
-        this.reportService.updateReport(reportDTO).subscribe(res => {
-          (window as any).Swal.fire({
-            title: '¡Actualización exitosa!',
-            text: 'El informe ha sido actualizado correctamente.',
-            icon: 'success',
-            timer: 1500,
-            showConfirmButton: false
-          });
-          this.router.navigate(['/home/sanctions/reportList']);
-        }, error => {
-          console.error('Error al actualizar el informe', error);
-          (window as any).Swal.fire({
-            title: 'Error',
-            text: 'No se pudo actualizar el informe. Inténtalo de nuevo.',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-          });
-        });
+        this.reportService.updateReport(reportDTO).subscribe(
+          res => {
+            const selectedCount = this.selectedComplaints.length;
+            const message = selectedCount > 0
+              ? `El informe ha sido actualizado correctamente con ${selectedCount} denuncia(s) seleccionada(s).`
+              : 'El informe ha sido actualizado correctamente.';
+
+            (window as any).Swal.fire({
+              title: '¡Actualización exitosa!',
+              text: message,
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+
+            this.router.navigate(['/home/sanctions/reportList']);
+          },
+          error => {
+            console.error('Error al actualizar el informe', error);
+            (window as any).Swal.fire({
+              title: 'Error',
+              text: 'No se pudo actualizar el informe. Inténtalo de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          }
+        );
       }
     });
   }
+
 
   openModal(): void {
     const modalElement = document.getElementById('complaintModal');

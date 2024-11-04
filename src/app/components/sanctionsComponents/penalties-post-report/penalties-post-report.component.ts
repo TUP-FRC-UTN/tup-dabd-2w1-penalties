@@ -82,13 +82,19 @@ export class NewReportComponent {
       console.log(reportDTO);
       this.reportService.postReport(reportDTO).subscribe({
         next: (response) => {
+          const selectedCount = this.complaintsList.length;
+          const message = selectedCount > 0
+            ? `El informe ha sido creado correctamente con ${selectedCount} denuncia(s) anexada(s).`
+            : 'El informe ha sido creado correctamente.';
+
           (window as any).Swal.fire({
             title: '¡Informe creado!',
-            text: 'El informe ha sido creado correctamente.',
+            text: message,
             icon: 'success',
             timer: 1500,
             showConfirmButton: false
           });
+
           this.router.navigate(["home/sanctions/reportList"]);
         },
         error: (error) => {
@@ -96,9 +102,8 @@ export class NewReportComponent {
         }
       });
     } else {
-      console.log("Los campos no estab validados")
+      console.log("Los campos no están validados");
     }
-
   }
 
   validateParams(): boolean {
