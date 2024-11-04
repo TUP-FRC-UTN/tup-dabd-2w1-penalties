@@ -108,8 +108,8 @@ export class PenaltiesSanctionsListComponent implements OnInit {
       ordering: true,
       lengthChange: true,
       order: [0, 'asc'],
-      lengthMenu: [10, 25, 50],
-      pageLength: 10,
+      lengthMenu: [5,10, 25, 50],
+      pageLength: 5,
       data: this.sanctionsfilter, //Fuente de datos
       //Columnas de la tabla
       columns: [
@@ -189,6 +189,7 @@ export class PenaltiesSanctionsListComponent implements OnInit {
       language: {
         lengthMenu:
           `<select class="form-select">
+            <option value="5">5</option>
             <option value="10">10</option>
             <option value="25">25</option>
             <option value="50">50</option>
