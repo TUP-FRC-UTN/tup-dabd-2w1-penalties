@@ -52,17 +52,42 @@ export class PenaltiesUpdateFineComponent implements OnInit {
       
     };
 
-    //Envio de formulario
-    //Deberia ir al endpoint de putFine
-    this.penaltiesService.updateFine(fineData).subscribe({
-      next: (response) => {
-        console.log('Multa actualizada correctamente', response);
-        this.router.navigate(['/home/sanctions/sanctionsList']);
+    (window as any).Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Deseas confirmar la actualización de la multa?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
       },
-      error: (error) => {
-        console.error('Error al enviar la multa', error);
-      }
-    });
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        // Envío de formulario solo después de la confirmación
+        this.penaltiesService.updateFine(fineData).subscribe( res => {
+            (window as any).Swal.fire({
+              title: '¡Multa actualizada!',
+              text: 'La multa  ha sido actualizada correctamente.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            this.router.navigate(['/home/sanctions/sanctionsList']);
+          }, error => {
+            console.error('Error al actualizar la multa', error);
+            (window as any).Swal.fire({
+              title: 'Error',
+              text: 'No se pudo actualizar la multa. Inténtalo de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          })
+        };
+      });
+
+
   }
 
   //Retorna una clase para poner el input en verde o rojo dependiendo si esta validado
