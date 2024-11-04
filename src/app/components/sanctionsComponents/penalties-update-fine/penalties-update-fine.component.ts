@@ -1,17 +1,17 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { PenaltiesSanctionsServicesService } from '../../../services/sanctionsService/sanctions.service';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-penalties-post-disclaimer',
+  selector: 'app-penalties-update-fine',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterModule, FormsModule],
-  templateUrl: './penalties-post-disclaimer.component.html',
-  styleUrl: './penalties-post-disclaimer.component.scss'
+  imports: [ReactiveFormsModule, CommonModule, RouterModule],
+  templateUrl: './penalties-update-fine.component.html',
+  styleUrl: './penalties-update-fine.component.scss'
 })
-export class PenaltiesPostDisclaimerComponent implements OnInit {
+export class PenaltiesUpdateFineComponent implements OnInit {
   userId:number;
   fineIdFromList: number;
   fine: any;
@@ -21,7 +21,7 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
     this.userId = 1;
     this.fineIdFromList = 0; //Esto deberia venir del listado
     this.reactiveForm = formBuilder.group({
-      disclaimerControl: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(800)])
+      amountControl: new FormControl('', [Validators.required, Validators.min(1.00)])
     })
   }
 
@@ -45,50 +45,50 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
   }
 
   onSubmit(){
-    const disclaimerData = {
-      userId: 10,
-      fineId:this.fineIdFromList,
-      disclaimer: this.reactiveForm.value.disclaimerControl
+    const fineData = {
+      id:this.fineIdFromList,
+      amount: this.reactiveForm.value.amountControl,
+      userId: 10
+      
     };
 
+    (window as any).Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¿Deseas confirmar la actualización de la multa?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-success',
+        cancelButton: 'btn btn-danger'
+      },
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        // Envío de formulario solo después de la confirmación
+        this.penaltiesService.updateFine(fineData).subscribe( res => {
+            (window as any).Swal.fire({
+              title: '¡Multa actualizada!',
+              text: 'La multa  ha sido actualizada correctamente.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            this.router.navigate(['/home/sanctions/sanctionsList']);
+          }, error => {
+            console.error('Error al actualizar la multa', error);
+            (window as any).Swal.fire({
+              title: 'Error',
+              text: 'No se pudo actualizar la multa. Inténtalo de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          })
+        };
+      });
 
-// Confirmación antes de enviar el formulario
-(window as any).Swal.fire({
-  title: '¿Estás seguro?',
-  text: "¿Deseas confirmar el envío del descargo?",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonText: 'Confirmar',
-  cancelButtonText: 'Cancelar',
-  customClass: {
-    confirmButton: 'btn btn-success',
-    cancelButton: 'btn btn-danger'
-  },
-}).then((result: any) => {
-  if (result.isConfirmed) {
-    // Envío de formulario solo después de la confirmación
-    this.penaltiesService.addDisclaimer(disclaimerData).subscribe( res => {
-        (window as any).Swal.fire({
-          title: '¡Descargo enviado!',
-          text: 'El descargo ha sido enviado correctamente.',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false
-        });
-        this.router.navigate(['/home/sanctions/sanctionsList']);
-      }, error => {
-        console.error('Error al enviar el descargo', error);
-        (window as any).Swal.fire({
-          title: 'Error',
-          text: 'No se pudo enviar el descargo. Inténtalo de nuevo.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
-      })
-    };
-  });
-};
 
+  }
 
   //Retorna una clase para poner el input en verde o rojo dependiendo si esta validado
   onValidate(controlName: string) {
@@ -138,5 +138,6 @@ export class PenaltiesPostDisclaimerComponent implements OnInit {
     //Si no se cumplen ninguno de los anteriores retorna vacio
     return '';
   }
+
 
 }

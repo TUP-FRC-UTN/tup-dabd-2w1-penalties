@@ -29,6 +29,7 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
   //Init
   ngOnInit(): void {
     this.getComplaint();
+    this.loadComplaintFiles();
   }
 
 
@@ -59,18 +60,88 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
       });
   }
 
-
-  //Evento para actualizar el listado de files a los seleccionados actualmente
   onFileChange(event: any) {
-    this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
+    this.files = Array.from(FileList = event.target.files);
   }
-
+  //Deprecated, comentar
   addMockFile() {
     const mockImage = new File(["Contenido de la imagen"], "MockImage.png", {
       type: "image/jpeg",
       lastModified: Date.now()
     });
-    this.files.push(mockImage); //Agrega la imagen simulada a la lista
+    this.files.push(mockImage);
   }
+  //Acá llamo al servicio que me trae los archivos de la denuncia
+  loadComplaintFiles() {
+    this.complaintService.getFilesById(this.denunciaId).subscribe(
+      (response: any) => {
+        console.log('Respuesta de la API:', response);
+        console.log('Tipo de respuesta:', typeof response);
+        
+        if (response && typeof response === 'object') {
+          this.files = this.base64ToFile(response);
+        } else {
+          console.error('La respuesta está mal:', response);
+        }
+      },
+      (error) => {
+        console.error('Error:', error);
+      }
+    );
+}
 
+//Acá lo que hago es convertir el base64 a un archivo
+base64ToFile(response: Record<string, string>): File[] {
+  const files: File[] = [];
+
+  for (const base64String in response) {
+    if (response.hasOwnProperty(base64String)) {
+      const fileName = response[base64String].trim(); 
+      const trimmedBase64String = base64String.trim(); 
+      console.log(`Base64 Key: ${base64String}, File Name: ${fileName}`);
+      
+      if (trimmedBase64String.startsWith("data:")) {
+        
+        const [mimeTypePart, base64Data] = trimmedBase64String.split(',');
+        const mimeType = mimeTypePart.split(':')[1].split(';')[0]; 
+        
+        if (base64Data) {
+          try {
+            const byteCharacters = atob(base64Data);
+            const byteNumbers = new Uint8Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+
+            const blob = new Blob([byteNumbers], { type: mimeType });
+            const file = new File([blob], fileName, { type: mimeType });
+            files.push(file);
+          } catch (error) {
+            console.error(`Error decoding base64 for ${base64String}:`, error);
+          }
+        } else {
+          console.error(`Base64 data is empty for ${base64String}`);
+        }
+      } else {
+        console.warn(`Base64 string does not start with expected prefix for ${base64String}: ${trimmedBase64String}`);
+      }
+    }
+  }
+  return files; 
+}
+
+  trackByFile(index: number, file: any): number {
+    return file.id;
+  }
+//Acá creo el link de descarga automático
+  downloadFile(file: File) {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
 }

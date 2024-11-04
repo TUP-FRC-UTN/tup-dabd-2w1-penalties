@@ -84,16 +84,43 @@ export class PenaltiesPostFineComponent implements OnInit {
         createdUser: 1
       };
 
-      this.penaltiesService.postFine(fineData).subscribe({
-        next: (response) => {
-          
-          console.log('Multa enviada correctamente', response);
-          this.router.navigate(['home/sanctions/sanctionsList']);
+
+      (window as any).Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¿Deseas confirmar el envío de la multa?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger'
         },
-        error: (error) => {
-          console.error('Error al enviar la Multa', error);
-        }
-      });
+      }).then((result: any) => {
+        if (result.isConfirmed) {
+          // Envío de formulario solo después de la confirmación
+          this.penaltiesService.postFine(fineData).subscribe( res => {
+              (window as any).Swal.fire({
+                title: '¡Multa enviada!',
+                text: 'La multa ha sido enviada correctamente.',
+                icon: 'success',
+                timer: 1500,
+                showConfirmButton: false
+              });
+              this.router.navigate(['/home/sanctions/sanctionsList']);
+            }, error => {
+              console.error('Error al actualizar la multa', error);
+              (window as any).Swal.fire({
+                title: 'Error',
+                text: 'No se pudo actualizar la multa. Inténtalo de nuevo.',
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+              });
+            })
+          };
+        });
+
+
     }
     else{
 
