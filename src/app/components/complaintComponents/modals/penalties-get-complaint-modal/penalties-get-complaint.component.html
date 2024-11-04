@@ -5,77 +5,26 @@
   </div>
   <div class="modal-body">
 
-    <div class="row">
-
-      <!-- Select Motivo -->
-      <div class="col-lg-6 mb-3">
-        <div class="row">
-          <label class="col-2 col-form-label">Motivo</label>
-          <div class="col-10">
-            <select class="form-select" disabled>
-              <option value="" selected>{{complaint?.complaintType}}</option>
-            </select>
+    <h5>Información de la Denuncia</h5>
+      <div class="row mb-3">
+          <div class="col-md-6">
+              <p><strong>Motivo:</strong> {{ complaint?.complaintType || 'N/A' }}</p>
+              <p><strong>Fecha:</strong> {{ complaint?.createdDate || 'N/A' }}</p>
           </div>
-        </div>
+      
+          <div class="col-md-6">
+              <p><strong>Descripcion:</strong> {{ complaint?.description || 'N/A' }}</p>
+              <p><strong>Denunciante:</strong> {{ complaint?.userId || 'N/A' }}</p>
+          </div>
       </div>
+      <hr>
 
-
-      <!-- Input fecha -->
-      <div class="col-lg-6 mb-3">
-        <div class="row">
-          <label class="col-2 col-form-label">Fecha</label>
-          <div class="col-10">
-            <input type="datetime-local" class="form-control" [value]="complaint?.createdDate" disabled>
+      <h5>Estado de la Denuncia</h5>
+      <div class="row mb-3">
+          <div class="col-md-6">
+              <p><strong>Estado:</strong> {{ complaint?.complaintState || 'N/A' }}</p>
+              <p><strong>Razon</strong> {{ complaint?.stateReason || 'N/A' }}</p>
           </div>
-        </div>
-      </div>
-
-
-      <!-- Input Descripcion -->
-      <div class="col-lg-12 mb-3">
-        <div class="row">
-          <label class="col-2 col-lg-1 col-form-label">Descripcion</label>
-          <div class="col-10 col-lg-11">
-            <textarea class="form-control" rows="8" style="resize: none;" [value]="complaint?.description"
-              disabled></textarea>
-          </div>
-        </div>
-      </div>
-
-
-
-      <!-- Select Estado -->
-      <div class="col-lg-6 mb-3">
-        <div class="row">
-          <label class="col-2 col-form-label">Estado</label>
-          <div class="col-10">
-            <select class="form-select" disabled>
-              <option value="" disabled selected>{{complaint?.complaintState}}</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Input Motivo del estado -->
-      <div class="col-lg-6 mb-3">
-        <div class="row">
-          <label class="col-2 col-form-label">Razon</label>
-          <div class="col-10">
-            <input type="text" class="form-control" [value]="complaint?.stateReason" disabled>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Input del denunciante -->
-      <div class="col-lg-6 mb-3">
-        <div class="row">
-          <label class="col-2 col-form-label">Denunciante</label>
-          <div class="col-10">
-            <input type="text" class="form-control" [value]="complaint?.userId" disabled>
-          </div>
-        </div>
       </div>
 
       <!-- Archivos Adjuntos -->
@@ -96,7 +45,6 @@
       </div>
     </div>
 
-  </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
   </div>
