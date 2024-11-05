@@ -26,7 +26,15 @@ export class PenaltiesModalStateReasonComponent {
     this.activeModal.close(); 
   }
 
-  //metodo para enviar
+
+  //This method is used to update
+  //the state of a complaint.
+
+  //Returns an alert if the 
+  //state was updated or not.
+
+  //Throws an error if the 
+  //state could not be updated.
   putComplaint(){
     const ComplaintDto:PutStateComplaintDto = {
       id: this.idComplaint,
