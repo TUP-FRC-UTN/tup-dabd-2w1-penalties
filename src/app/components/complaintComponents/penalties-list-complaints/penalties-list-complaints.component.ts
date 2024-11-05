@@ -38,18 +38,34 @@ export class PenaltiesListComplaintComponent implements OnInit {
   //Variables
   Complaint: ComplaintDto[] = [];                 //Fuente de datos
   filterComplaint: ComplaintDto[] = [];           //Fuente de datos a mostrar
-  filterDateStart: Date = new Date();             //valor fecha inicio
-  filterDateEnd: Date = new Date();               //valor fecha fin
+  // filterDateStart: Date = new Date();             //valor fecha inicio
+  // filterDateEnd: Date = new Date();               //valor fecha fin
   states: { key: string; value: string }[] = [];  //Mapa de estados para el select
   table: any;                                     //Tabla base
   searchTerm: string = '';                        //Valor de la barra de busqueda
+
+  filterDateStart: string='';
+filterDateEnd: string ='';
 
 
   //Init
   ngOnInit(): void {
     this.refreshData();
     this.getTypes()
+
+     const today = new Date();
+    this.filterDateEnd = this.formatDateToString(today);
+
+    const previousMonthDate = new Date();
+    previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
+    this.filterDateStart = this.formatDateToString(previousMonthDate);
   }
+
+  // Función para convertir la fecha al formato `YYYY-MM-DD`
+  private formatDateToString(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+ 
 
 
   //Constructor
@@ -61,21 +77,6 @@ export class PenaltiesListComplaintComponent implements OnInit {
     (window as any).viewComplaint = (id: number) => this.viewComplaint(id);
     (window as any).changeState = (state: string, id: number, userId: number) =>
       this.changeState(state, id, userId);
-  }
-
-
-  //Combo de filtrado de estado
-  onFilter(event: Event) {
-    const selectedValue = (event.target as HTMLSelectElement).value;
-
-    this.filterComplaint = this.Complaint.filter(
-      (c) => c.complaintState == selectedValue
-    );
-    if (selectedValue == '') {
-      this.filterComplaint = this.Complaint;
-    }
-
-    this.updateDataTable();
   }
 
   //Manejo del Datatable
@@ -235,7 +236,21 @@ export class PenaltiesListComplaintComponent implements OnInit {
 
     this.updateDataTable();
   }
+      //Combo de filtrado de estado
+    onFilter(event: Event) {
+      const selectedValue = (event.target as HTMLSelectElement).value;
 
+      this.filterComplaint = this.filterComplaint.filter(
+        (c) => c.complaintState == selectedValue
+      );
+      if (selectedValue == '') {
+        this.filterComplaint = this.Complaint;
+      }
+
+      this.updateDataTable();
+    }
+
+  
   //Switch para manejar el estilo de los estados
   getStatusClass(estado: string): string {
     switch (estado) {
@@ -268,6 +283,7 @@ export class PenaltiesListComplaintComponent implements OnInit {
       this.Complaint = data;
       this.filterComplaint = [...data];
       this.updateDataTable();
+      this.filterDate()
     });
   }
 
