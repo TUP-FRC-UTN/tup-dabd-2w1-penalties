@@ -42,6 +42,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
 
   //Init
   ngOnInit(): void {
+    this.filterDateStart.setDate(this.filterDateStart.getDate() - 30);
     this.refreshData()
 
     this.getTypes()
@@ -138,11 +139,10 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
                   <button type="button" class="btn border border-2 bi-three-dots-vertical" data-bs-toggle="dropdown"></button>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" onclick="viewComplaint(${data.id})">Ver más</a></li>
-                    <li><hr class="dropdown-divider"></li>
                     ${data.reportState === 'Abierto' || data.reportState === 'Nuevo' || data.reportState === 'Pendiente' ?
-                      `<li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>` : ''}
-                    <li><a class="dropdown-item" data-action="newSaction" data-id="${data.id}"">Nueva Infracción</a></li>
-
+                      `<li><hr class="dropdown-divider"></li> <li><a class="dropdown-item" onclick="editReport(${data.id})">Modificar informe</a></li>` : ''}
+                      ${data.reportState === 'Abierto' || data.reportState === 'Pendiente' ?
+                        `<li><a class="dropdown-item" data-action="newSaction" data-id="${data.id}"">Nueva Infracción</a></li>` : ''}
                   </ul>
                 </div>
               </div>
@@ -235,44 +235,56 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   //Method to filter the table
   //based on the 2 dates.
 
-  //Returns true only if the complaint
-  //date is between the 2 dates.
-  filterDate() {
-    const startDate = this.filterDateStart ? new Date(this.filterDateStart) : null;
-    const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
+// Modifica el método filterDate()
+filterDate() {
+  const startDate = this.filterDateStart ? new Date(this.filterDateStart) : null;
+  const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
 
-    this.reportfilter = this.report.filter(item => {
-      const date = new Date(item.createdDate);
-
-      if (isNaN(date.getTime())) {
-        console.warn(`Fecha no valida: ${item.createdDate}`);
-        return false;
-      }
-
-      //Checks if the date is between the start and end date.
-      const afterStartDate = !startDate || date >= startDate;
-      const beforeEndDate = !endDate || date <= endDate;
-
-      return afterStartDate && beforeEndDate; //Returns true only if both conditions are met.
-    });
-
-    this.updateDataTable();
+  // Si no hay fechas seleccionadas, mantener todos los registros
+  if (!startDate && !endDate) {
+    this.reportfilter = this.report;
+    return;
   }
 
+  this.reportfilter = this.report.filter(item => {
+    const date = new Date(item.createdDate);
 
-  //This method is used to 
-  //refresh the data in the table.
+    if (isNaN(date.getTime())) {
+      console.warn(`Fecha no válida: ${item.createdDate}`);
+      return false;
+    }
+
+    //Checks if the date is between the start and end date.
+    const afterStartDate = !startDate || date >= startDate;
+    const beforeEndDate = !endDate || date <= endDate;
+
+    return afterStartDate && beforeEndDate;
+  });
+
+  // Solo actualizamos la tabla si ya está inicializada
+  if ($.fn.dataTable.isDataTable('#reportsTable')) {
+    this.updateDataTable();
+  }
+}
+
+
+  // Modifica el método refreshData()
   refreshData() {
-    this.reportServodes.getAllReports().subscribe(
-      response => {
+    this.reportServodes.getAllReports().subscribe({
+      next: (response) => {
         this.report = response;
         this.reportfilter = this.report;
+        // Primero aplicamos el filtro de fecha si hay fechas seleccionadas
+        if (this.filterDateStart || this.filterDateEnd) {
+          this.filterDate();
+        }
+        // Luego actualizamos la tabla con los datos ya filtrados
         this.updateDataTable();
-        this.filterDate();
-      }, error => {
-        alert(error)
+      },
+      error: (error) => {
+        alert(error);
       }
-    )
+    });
   }
   selectedState: string = '';
   //This method is used to return the 
@@ -465,7 +477,6 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
           value: data[key]
 
         }));
-        console.log(this.states)
       },
       error: (error) => {
         console.error('error: ', error);
