@@ -33,17 +33,45 @@ export class PenaltiesUpdateStateReasonModalComponent {
       fineState: this.fineState,
       stateReason: this.reasonText,
       userId: this.userId
-    }
-    this.sanctionService.putStateFine(fineDto).subscribe({
-      next: (response) => {
-        alert('El estado de la multa fue actualizado con éxito');
-        this.sanctionService.triggerRefresh();
-        this.close()
-      },
-      error: (error) => {
-        alert('El estado de la multa no pudo ser actualizado');
-        this.close()
-      }
-    });
+    };
+
+// Confirmación antes de enviar el formulario
+(window as any).Swal.fire({
+  title: '¿Estás seguro?',
+  text: "¿Deseas confirmar la actualización de la multa?",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Confirmar',
+  cancelButtonText: 'Cancelar',
+  customClass: {
+    confirmButton: 'btn btn-success',
+    cancelButton: 'btn btn-danger'
+  },
+}).then((result: any) => {
+  if (result.isConfirmed) {
+    // Envío de formulario solo después de la confirmación
+    this.sanctionService.putStateFine(fineDto).subscribe( res => {
+        (window as any).Swal.fire({
+          title: 'Multa actualizada!',
+          text: 'El estado de la multa fue actualizado con éxito',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false
+          
+        });
+        this.close();
+      }, error => {
+        console.error('Error al enviar la multa', error);
+        (window as any).Swal.fire({
+          title: 'Error',
+          text: 'No se pudo enviar la multa. Inténtalo de nuevo.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      })
+    };
+  });
+
+    
   }
 }
