@@ -362,6 +362,9 @@ export class PenaltiesSanctionsListComponent implements OnInit {
       });
   }
   
+
+  
+  // Loads the list of report states for selection.
   getTypes(): void {
     this.sanctionService.getState().subscribe({
       next: (data) => {

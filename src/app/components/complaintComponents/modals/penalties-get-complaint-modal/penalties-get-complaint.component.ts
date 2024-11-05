@@ -39,7 +39,11 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
   }
 
 
-  //Metodo para buscar la denuncia por id y cargarla en su variable
+  // This method fetches the complaint 
+  // details using the provided ID
+  // and loads it in its variable.
+  // If the complaint is new, it updates
+  // the state to PENDING.
   getComplaint() {
     this.complaintService.getById(this.denunciaId).subscribe(
       (response) => {
@@ -63,7 +67,7 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
   onFileChange(event: any) {
     this.files = Array.from(FileList = event.target.files);
   }
-  //Deprecated, comentar
+  //Deprecated, to comment.
   addMockFile() {
     const mockImage = new File(["Contenido de la imagen"], "MockImage.png", {
       type: "image/jpeg",
@@ -71,7 +75,8 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
     });
     this.files.push(mockImage);
   }
-  //Acá llamo al servicio que me trae los archivos de la denuncia
+  // This method calls the service to 
+  // get the files of the complaint.
   loadComplaintFiles() {
     this.complaintService.getFilesById(this.denunciaId).subscribe(
       (response: any) => {
@@ -90,7 +95,13 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
     );
 }
 
-//Acá lo que hago es convertir el base64 a un archivo
+// This method converts a Record/Map of 
+// base64 strings and the filename no File objects.
+
+// Param 'response' The response object 
+// containing the base64 strings and filenames.
+
+// Returns an array of File objects.
 base64ToFile(response: Record<string, string>): File[] {
   const files: File[] = [];
 
@@ -133,7 +144,12 @@ base64ToFile(response: Record<string, string>): File[] {
   trackByFile(index: number, file: any): number {
     return file.id;
   }
-//Acá creo el link de descarga automático
+// This method creates a URL 
+// for the file and downloads it.
+
+// Param 'file' The file to be downloaded.
+
+// Returns a download prompt for the file.
   downloadFile(file: File) {
     const url = URL.createObjectURL(file);
     const a = document.createElement('a');

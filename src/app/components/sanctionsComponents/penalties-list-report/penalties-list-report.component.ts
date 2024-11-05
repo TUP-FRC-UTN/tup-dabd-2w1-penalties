@@ -43,8 +43,12 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   //Init
   ngOnInit(): void {
     this.refreshData()
+
     this.getTypes()
+
     const that = this; // para referenciar metodos afuera de la datatable
+
+    // Sets up event listeners for the DataTable.
     $('#reportsTable').on('click', 'a.dropdown-item', function(event) {
       const action = $(this).data('action');
       const id = $(this).data('id');
@@ -58,29 +62,37 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   }
 
 
-  //Combo de filtrado de estado
+  // Filters reports based on the selected state.
+  // 
+  // Param 'event' - The event triggered by selecting a new state.
   onFilter(event: Event) {
     const selectedValue = (event.target as HTMLSelectElement).value;
 
+    // Filters the reports based on the selected state.
     this.reportfilter = this.report.filter(
       (c) => c.reportState == selectedValue
     );
+
+    // Resets the filter if no value is selected.
     if (selectedValue == '') {
       this.reportfilter = this.report;
     }
 
+    // Updates the DataTable with the filtered data.
     this.updateDataTable();
   }
 
 
-  //Manejo del Datatable
+  // Configures the DataTable display properties and loads data.
   updateDataTable() {
+    // Clears existing DataTable if it is already initialized.
     if ($.fn.dataTable.isDataTable('#reportsTable')) {
       $('#reportsTable').DataTable().clear().destroy();
     }
 
+    // Initializes DataTable with specific settings.
     let table = this.table = $('#reportsTable').DataTable({
-      //Atributos de la tabla
+      // DataTable settings
       paging: true,
       searching: true,
       ordering: true,
@@ -88,8 +100,8 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
       order: [0, 'asc'],
       lengthMenu: [5,10, 25, 50],
       pageLength: 5,
-      data: this.reportfilter, //Fuente de datos
-      //Columnas de la tabla
+      data: this.reportfilter, // Data Source
+      //Table columns
       columns: [
         {
           data: 'createdDate',
@@ -118,7 +130,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
         {
           data: null,
           className: 'align-middle',
-          searchable: false, //Marquen esto en falso si no quieren que se intente filtrar por esta columna tambien
+          searchable: false, //This is to avoid searching in this column.
           render: (data) =>
             `<div class="text-center">
               <div class="btn-group">
@@ -146,8 +158,8 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
         // },
       ],
       dom:
-        '<"mb-3"t>' +                           //Tabla
-        '<"d-flex justify-content-between"lp>', //Paginacion
+        '<"mb-3"t>' +                           //Table
+        '<"d-flex justify-content-between"lp>', //Pagination
       language: {
         lengthMenu:
           `<select class="form-select">
@@ -168,7 +180,7 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
           className: 'btn btn-success export-excel-btn',
           title: 'Listado de Denuncias',
           exportOptions: {
-            columns: [0, 1, 2, 3], //Esto indica las columnas que se van a exportar a excel
+            columns: [0, 1, 2, 3], //This indicates the columns that will be exported to excel.
           },
         },
         {
@@ -177,14 +189,20 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
           className: 'btn btn-danger export-pdf-btn',
           title: 'Listado de denuncias',
           exportOptions: {
-            columns: [0, 1, 2, 3], //Esto indica las columnas que se van a exportar a pdf
+            columns: [0, 1, 2, 3], //This indicates the columns that will be exported to pdf.
           },
         }
       ]
     });
 
+    //These methods are used to export 
+    //the table data to Excel and PDF.
 
-    //Triggers para los botones de exportacion
+    //They are activated by
+    //clicks in the buttons.
+
+    //Returns the table data exported 
+    //to the desired format.
     $('#exportExcelBtn').on('click', function () {
       table.button('.buttons-excel').trigger();
     });
@@ -194,11 +212,18 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
     });
   }
 
-  //Metodo para manejar la busqueda
+  //Method to search in the table
+  //based on the search term.
+
+  //Param 'event' is the event 
+  //that triggers the method.
+
+  //Returns the table filtered.
   onSearch(event: any) {
     const searchValue = event.target.value;
 
-    //Comprobacion de 3 o mas caracteres (No me gusta pero a Santoro si :c)
+    
+    //Checks if the search term has 3 or more characters.
     if (searchValue.length >= 3) {
       this.table.search(searchValue).draw();
     } else if (searchValue.length === 0) {
@@ -207,7 +232,11 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   }
 
 
-  //Metodo para filtrar la tabla en base a las 2 fechas
+  //Method to filter the table
+  //based on the 2 dates.
+
+  //Returns true only if the complaint
+  //date is between the 2 dates.
   filterDate() {
     const startDate = this.filterDateStart ? new Date(this.filterDateStart) : null;
     const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
@@ -220,30 +249,41 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
         return false;
       }
 
-      //Comprobar limites de fecha
+      //Checks if the date is between the start and end date.
       const afterStartDate = !startDate || date >= startDate;
       const beforeEndDate = !endDate || date <= endDate;
 
-      return afterStartDate && beforeEndDate; //Retorna verdadero solo si ambas condiciones se cumplen
+      return afterStartDate && beforeEndDate; //Returns true only if both conditions are met.
     });
 
     this.updateDataTable();
   }
 
 
-  //
+  //This method is used to 
+  //refresh the data in the table.
   refreshData() {
     this.reportServodes.getAllReports().subscribe(
       response => {
         this.report = response;
         this.reportfilter = this.report;
-        this.updateDataTable()
+        this.updateDataTable();
+        this.filterDate();
       }, error => {
         alert(error)
       }
     )
   }
-
+  selectedState: string = '';
+  //This method is used to return the 
+  //filters to their default values.
+  eraseFilters(){
+    this.refreshData();
+    this.selectedState = '';
+    this.searchTerm = '';
+  }
+  
+  // Navigates to the new sanction page for the selected report.
   newSanction(id: number) {
     this.router.navigate([`/home/sanctions/postFine/${id}`])
   }
@@ -281,7 +321,8 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-  //Metodo para cambiar de pagina al update
+  // Navigates to the report 
+  // editing page.
   editReport(id: number) {
     const selectedReport = this.report.find(report => report.id === id);
 
@@ -414,6 +455,8 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
 
 
 
+  // Loads the list of report 
+  // states for selection.
   getTypes(): void {
     this.reportServodes.getState().subscribe({
       next: (data) => {
@@ -431,6 +474,8 @@ export class PenaltiesSanctionsReportListComponent implements OnInit {
   }
 
 
+  // Assigns a color class to a report 
+  // status based on its value.
   getStatusClass(estado: string): string {
     switch (estado) {
       case 'Pendiente':

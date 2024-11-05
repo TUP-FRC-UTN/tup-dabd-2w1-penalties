@@ -55,7 +55,13 @@ export class ReportModifyComponent implements OnInit {
       }
     });
   }
+  // This method formats the date
 
+  // Param 'dateString' is a string that contains 
+  // the date and time.
+
+  // Returns the date part of the
+  // string.
   formatDate(dateString: string): string {
     if (!dateString) return '';
     const [datePart] = dateString.split(' ');
@@ -66,6 +72,18 @@ export class ReportModifyComponent implements OnInit {
     this.selectedComplaints = selectedComplaints;
   }
 
+
+  // This method updates the report.
+
+  // It creates a DTO with the necessary
+  // information and calls the service to
+  // update the report.
+
+  // If the report is updated correctly,
+  // it will show a success message.
+
+  // If the report is not updated correctly,
+  // it will show an error message.
   updateReport(): void {
     const userId = 1;
 
@@ -115,6 +133,8 @@ export class ReportModifyComponent implements OnInit {
     });
   }
 
+
+  // This method opens the Complaint modal.
   openModal(): void {
     const modalElement = document.getElementById('complaintModal');
     if (modalElement) {

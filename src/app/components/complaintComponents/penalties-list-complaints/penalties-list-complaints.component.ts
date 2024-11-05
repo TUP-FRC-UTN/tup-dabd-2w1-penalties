@@ -36,16 +36,17 @@ import { ComplaintDto } from '../../../models/complaint';
 })
 export class PenaltiesListComplaintComponent implements OnInit {
   //Variables
-  Complaint: ComplaintDto[] = [];                 //Fuente de datos
-  filterComplaint: ComplaintDto[] = [];           //Fuente de datos a mostrar
-  // filterDateStart: Date = new Date();             //valor fecha inicio
-  // filterDateEnd: Date = new Date();               //valor fecha fin
-  states: { key: string; value: string }[] = [];  //Mapa de estados para el select
-  table: any;                                     //Tabla base
-  searchTerm: string = '';                        //Valor de la barra de busqueda
+  Complaint: ComplaintDto[] = [];                 //Data Souce
+  filterComplaint: ComplaintDto[] = [];           //Data Source to show (filtered)
+  // filterDateStart: Date = new Date();             //Start Date value
+  // filterDateEnd: Date = new Date();               //End Date value
+  states: { key: string; value: string }[] = [];  //States array for the select
+  table: any;                                     //Base table
+  searchTerm: string = '';                        //Search bar value
 
-  filterDateStart: string='';
-filterDateEnd: string ='';
+  filterDateStart: string=''; //Start Date value
+
+filterDateEnd: string =''; //End Date value
 
 
   //Init
@@ -61,7 +62,13 @@ filterDateEnd: string ='';
     this.filterDateStart = this.formatDateToString(previousMonthDate);
   }
 
-  // Función para convertir la fecha al formato `YYYY-MM-DD`
+  // This method is used to convert
+  //a date to a formatted string.
+
+  //Param 'date' is the date to convert.
+  
+  //Returns the date in this 
+  //string format: `YYYY-MM-DD`.
   private formatDateToString(date: Date): string {
     return date.toISOString().split('T')[0];
   }
@@ -79,14 +86,19 @@ filterDateEnd: string ='';
       this.changeState(state, id, userId);
   }
 
-  //Manejo del Datatable
+  //This method is used to 
+  //update the table.
+
+  //If the table is already created, it 
+  //is destroyed and created again.
   updateDataTable() {
     if ($.fn.dataTable.isDataTable('#complaintsTable')) {
       $('#complaintsTable').DataTable().clear().destroy();
     }
 
     let table = this.table = $('#complaintsTable').DataTable({
-      //Atributos de la tabla
+      //These are the 
+      //table attributes.
       paging: true,
       searching: true,
       ordering: true,
@@ -94,8 +106,9 @@ filterDateEnd: string ='';
       order: [0, 'asc'],
       lengthMenu: [5,10, 25, 50],
       pageLength: 5,
-      data: this.filterComplaint, //Fuente de datos
-      //Columnas de la tabla
+      data: this.filterComplaint, //Data source
+
+      //Table columns
       columns: [
         {
           data: 'createdDate',
@@ -124,8 +137,8 @@ filterDateEnd: string ='';
         {
           data: null,
           className: 'align-middle',
-          searchable: false, //Marquen esto en falso si no quieren que se intente filtrar por esta columna tambien
-          render: (data) =>
+          searchable: false, //This is false to indicate 
+          render: (data) =>  //that this column is not searchable.
             `<div class="text-center">
               <div class="btn-group">
                 <div class="dropdown">
@@ -152,8 +165,8 @@ filterDateEnd: string ='';
         // },
       ],
       dom:
-        '<"mb-3"t>' +                           //Tabla
-        '<"d-flex justify-content-between"lp>', //Paginacion
+        '<"mb-3"t>' +                           //Table
+        '<"d-flex justify-content-between"lp>', //Pagination
       language: {
         lengthMenu:
           `<select class="form-select">
@@ -166,7 +179,8 @@ filterDateEnd: string ='';
         loadingRecords: "Cargando...",
         processing: "Procesando...",
       },
-      //Uso de botones para exportar
+      //This sets the buttons to export 
+      //the table data to Excel and PDF.
       buttons: [
         {
           extend: 'excel',
@@ -174,7 +188,7 @@ filterDateEnd: string ='';
           className: 'btn btn-success export-excel-btn',
           title: 'Listado de Denuncias',
           exportOptions: {
-            columns: [0, 1, 2, 3], //Esto indica las columnas que se van a exportar a excel
+            columns: [0, 1, 2, 3], //This indicates the columns that will be exported to Excel.
           },
         },
         {
@@ -183,14 +197,21 @@ filterDateEnd: string ='';
           className: 'btn btn-danger export-pdf-btn',
           title: 'Listado de denuncias',
           exportOptions: {
-            columns: [0, 1, 2, 3], //Esto indica las columnas que se van a exportar a pdf
+            columns: [0, 1, 2, 3], //This indicates the columns that will be exported to PDF.
           },
         }
       ]
     });
 
 
-    //Triggers para los botones de exportacion
+    //These methods are used to export 
+    //the table data to Excel and PDF.
+
+    //They are activated by
+    //clicks in the buttons.
+
+    //Returns the table data exported 
+    //to the desired format.
     $('#exportExcelBtn').on('click', function () {
       table.button('.buttons-excel').trigger();
     });
@@ -201,11 +222,17 @@ filterDateEnd: string ='';
   }
 
 
-  //Metodo para manejar la busqueda
+  //Method to search in the table
+  //based on the search term.
+
+  //Param 'event' is the event 
+  //that triggers the method.
+
+  //Returns the table filtered.
   onSearch(event: any) {
     const searchValue = event.target.value;
 
-    //Comprobacion de 3 o mas caracteres (No me gusta pero a Santoro si :c)
+    //Checks if the search term has 3 or more characters.
     if (searchValue.length >= 3) {
       this.table.search(searchValue).draw();
     } else if (searchValue.length === 0) {
@@ -214,7 +241,11 @@ filterDateEnd: string ='';
   }
 
 
-  //Metodo para filtrar la tabla en base a las 2 fechas
+  //Method to filter the table
+  //based on the 2 dates.
+
+  //Returns true only if the complaint
+  //date is between the 2 dates.
   filterDate() {
     const startDate = this.filterDateStart ? new Date(this.filterDateStart) : null;
     const endDate = this.filterDateEnd ? new Date(this.filterDateEnd) : null;
@@ -227,16 +258,22 @@ filterDateEnd: string ='';
         return false;
       }
 
-      //Comprobar limites de fecha
+      //Checks if the date is between the start and end date.
       const afterStartDate = !startDate || date >= startDate;
       const beforeEndDate = !endDate || date <= endDate;
 
-      return afterStartDate && beforeEndDate; //Retorna verdadero solo si ambas condiciones se cumplen
+      return afterStartDate && beforeEndDate; //Returns true only if both conditions are met.
     });
 
     this.updateDataTable();
   }
-      //Combo de filtrado de estado
+      //This method filters the table 
+      //by the complaint state.
+
+      //Param 'event' is the event 
+      //that triggers the method.
+
+      //Updates the table using the filters.
     onFilter(event: Event) {
       const selectedValue = (event.target as HTMLSelectElement).value;
 
@@ -251,7 +288,13 @@ filterDateEnd: string ='';
     }
 
   
-  //Switch para manejar el estilo de los estados
+  //This method is used to get
+  //styles based on the complaint state.
+
+  //Param 'estado' is the 
+  //complaint state.
+
+  //Returns the class for the state.
   getStatusClass(estado: string): string {
     switch (estado) {
       case 'Anexada':
@@ -268,7 +311,16 @@ filterDateEnd: string ='';
   }
 
 
-  // Metodo para obtener el estado de la denuncia y mostrar el modal
+  // Method to get the complaint 
+  // state and show the modal.
+
+  // Param 'option' is the new state that the complaint is
+  // being changed to (e.g., "ATTACHED", "REJECTED", "PENDING").
+  // Param 'idComplaint' is the complaint id.
+  // Param 'userId' is the user id 
+  // associated with the complaint.
+
+  //Returns the modal to change the state.
   changeState(option: string, idComplaint: number, userId: number) {
     const newState = option;
     this.openModal(idComplaint, userId, newState);
@@ -277,7 +329,9 @@ filterDateEnd: string ='';
 
   //Metodos propios de nuestro micro:
   ////////////////////////////////////////////////////////////////////////////////////////////////////////
-  //Consulta del listado
+  //List queries.
+  //This method is used to 
+  //refresh the data in the table.
   refreshData() {
     this.complaintService.getAllComplaints().subscribe((data) => {
       this.Complaint = data;
@@ -286,7 +340,10 @@ filterDateEnd: string ='';
       this.filterDate()
     });
   }
+
   selectedState: string = '';
+  //This method is used to return the 
+  //filters to their default values.
   eraseFilters(){
     this.refreshData();
     this.selectedState = '';
@@ -294,6 +351,8 @@ filterDateEnd: string ='';
     this.resetDates();
   }
 
+
+  //Resets the date filters.
   resetDates(){
     const today = new Date();
     this.filterDateEnd = this.formatDateToString(today);
@@ -304,7 +363,8 @@ filterDateEnd: string ='';
   }
 
 
-  //Carga del combo de estados para el filtro
+  //Loads the 'states' array with 
+  //the complaint states for the filter.
   getTypes(): void {
     this.complaintService.getState().subscribe({
       next: (data) => {
@@ -319,12 +379,27 @@ filterDateEnd: string ='';
     })
   }
 
-  //Metodo para redireccionar a otra ruta
+
+  //Method to redirect 
+  //to another route.
+
+  //Param 'path' is the 
+  //route to redirect to.
   redirect(path: string) {
     this.router.navigate([path]);
   }
 
-  //Metodo para abrir modal de confirmacion de cambio de estado
+
+  //Opens the modal to change 
+  //the complaint state.
+
+  //Param 'idComplaint' is the id of the complaint
+  //that's going to be visualized in the modal.
+  //Param 'userId' is the user id 
+  //which the complaint belongs to.
+  //Param 'complaintState' is the 
+  //current state of the complaint.
+
   openModal(idComplaint: number, userId: number, complaintState: string) {
     const modal = this._modal.open(PenaltiesModalStateReasonComponent, {
       size: 'md',
@@ -342,7 +417,11 @@ filterDateEnd: string ='';
       });
   }
 
-  //Metodo para abrir el modal getById
+  //Opens the modal to 
+  //get the complaint by id.
+
+  //Param 'i' is the 
+  //complaint id.
   viewComplaint(i: number) {
     const modal = this._modal.open(PenaltiesModalConsultComplaintComponent, {
       size: 'xl',
