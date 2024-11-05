@@ -26,7 +26,16 @@ export class PenaltiesUpdateStateReasonModalComponent {
     this.activeModal.close(); 
   }
 
-  //metodo para enviar
+  // Sends the updated fine state to the server
+  //
+  // Builds a `fineDto` object with:
+  // - id: Fine ID to update
+  // - fineState: New state to be set
+  // - stateReason: Reason entered by user for the update
+  // - userId: ID of the user making the change
+  //
+  // If successful, refreshes the fine list and closes the modal.
+  // Shows an alert based on the response.
   putFine(){
     const fineDto:any = {
       id: this.id,

@@ -204,7 +204,7 @@ filterDateEnd: string =''; //End Date value
     });
 
 
-    //This method is used to export 
+    //These methods are used to export 
     //the table data to Excel and PDF.
 
     //They are activated by
@@ -262,7 +262,7 @@ filterDateEnd: string =''; //End Date value
       const afterStartDate = !startDate || date >= startDate;
       const beforeEndDate = !endDate || date <= endDate;
 
-      return afterStartDate && beforeEndDate; //Retorna verdadero solo si ambas condiciones se cumplen
+      return afterStartDate && beforeEndDate; //Returns true only if both conditions are met.
     });
 
     this.updateDataTable();
