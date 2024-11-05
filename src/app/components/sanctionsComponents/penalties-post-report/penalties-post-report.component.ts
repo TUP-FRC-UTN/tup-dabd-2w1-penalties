@@ -63,13 +63,23 @@ export class NewReportComponent {
   }
 
   onSubmit(): void {
-    console.log("Submit");
+    // Verificar si no hay denuncias seleccionadas
+    if (this.complaintsList.length === 0) {
+      (window as any).Swal.fire({
+        title: 'Denuncias no seleccionadas',
+        text: 'Debe seleccionar al menos una denuncia para crear el informe.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar',
+        customClass: {
+          confirmButton: 'btn btn-warning'
+        }
+      });
+      return; // Detener el envío si no hay denuncias seleccionadas
+    }
+
     const userId = 1;
     const plotId = 1;
-
-    const complaintsIds = this.complaintsList.length > 0
-      ? this.complaintsList.map(complaint => complaint.id)
-      : [];
+    const complaintsIds = this.complaintsList.map(complaint => complaint.id);
 
     if (this.validateParams()) {
       const reportDTO: PostReportDTO = {
@@ -80,25 +90,29 @@ export class NewReportComponent {
         userId: userId,
       };
       console.log(reportDTO);
+
       this.reportService.postReport(reportDTO).subscribe({
-        next: (response) => {
+        next: response => {
+          const selectedCount = this.complaintsList.length;
+          const message = `El informe ha sido creado correctamente con ${selectedCount} denuncia(s) anexada(s).`;
+
           (window as any).Swal.fire({
             title: '¡Informe creado!',
-            text: 'El informe ha sido creado correctamente.',
+            text: message,
             icon: 'success',
             timer: 1500,
             showConfirmButton: false
           });
-          this.router.navigate(["home/sanctions/reportList"]);
+
+          this.router.navigate(['home/sanctions/reportList']);
         },
-        error: (error) => {
+        error: error => {
           console.error('Error al enviar la denuncia', error);
         }
       });
     } else {
-      console.log("Los campos no estab validados")
+      console.log('Los campos no están validados');
     }
-
   }
 
   validateParams(): boolean {

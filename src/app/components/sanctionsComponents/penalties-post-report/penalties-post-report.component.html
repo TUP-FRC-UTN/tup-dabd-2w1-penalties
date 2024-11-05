@@ -76,6 +76,9 @@
                         <div class="col-10">
                             <button type="button" class="btn btn-warning" (click)="openSelectComplaints()">Gestionar
                                 denuncias <i class="bi bi-file-earmark-text"></i></button>
+                            @if (complaintsList.length > 0) {
+                                <p> Se seleccionaron {{complaintsList.length}} denuncia(s)</p>
+                            }
                         </div>
                     </div>
                 </div>
