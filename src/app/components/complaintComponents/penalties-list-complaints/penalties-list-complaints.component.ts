@@ -286,6 +286,22 @@ filterDateEnd: string ='';
       this.filterDate()
     });
   }
+  selectedState: string = '';
+  eraseFilters(){
+    this.refreshData();
+    this.selectedState = '';
+    this.searchTerm = '';
+    this.resetDates();
+  }
+
+  resetDates(){
+    const today = new Date();
+    this.filterDateEnd = this.formatDateToString(today);
+
+    const previousMonthDate = new Date();
+    previousMonthDate.setMonth(previousMonthDate.getMonth() - 1);
+    this.filterDateStart = this.formatDateToString(previousMonthDate);
+  }
 
 
   //Carga del combo de estados para el filtro
