@@ -161,22 +161,15 @@
           </div>
         </div>
 
-        <div class="clearfix mt-1">
-          <button
-            type="button"
-            class="btn btn-danger float-start"
-            [routerLink]="'../../reportList'"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            class="btn btn-success float-end"
-            [disabled]="formPostFine.invalid"
-          >
-            Aceptar
-          </button>
-        </div>
+        <div class="row">
+          <div class="col d-flex justify-content-end gap-3">
+              <button type="button" class="btn btn-secondary me-3"
+                  [routerLink]="'../../reportList'">Cancelar</button>
+              <button type="submit" class="btn btn-success" [disabled]="formPostFine.invalid">Registrar</button>
+          </div>
+      </div>
+
+        
       </div>
     </form>
   </div>
