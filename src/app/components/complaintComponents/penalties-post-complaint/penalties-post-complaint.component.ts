@@ -3,6 +3,7 @@ import { ComplaintService } from '../../../services/complaintsService/complaints
 import { Router, RouterModule } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReportReasonDto } from '../../../models/ReportReasonDTO';
 
 @Component({
   selector: 'app-penalties-post-complaint',
@@ -13,9 +14,11 @@ import { CommonModule } from '@angular/common';
 })
 export class PenaltiesPostComplaintComponent implements OnInit {
   //Variables
-  complaintTypes: { key: string; value: string }[] = [];
+  complaintTypes: string[] = [];
   reactiveForm: FormGroup;
   files: File[] = [];
+  otroSelected: boolean = false;
+
 
 
   //Constructor
@@ -23,9 +26,10 @@ export class PenaltiesPostComplaintComponent implements OnInit {
     private complaintService: ComplaintService,
     private router: Router,
     private formBuilder: FormBuilder
-  ) { 
+  ) {
     this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
-      typeControl: new FormControl('', [Validators.required]),
+      complaintReason: new FormControl('', [Validators.required]),
+      anotherReason: new FormControl(''),
       descriptionControl: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]),
       fileControl: new FormControl(null),
     });
@@ -44,7 +48,8 @@ export class PenaltiesPostComplaintComponent implements OnInit {
       let formData = this.reactiveForm.value;
       let data = {
         userId: 1,
-        complaintType: formData.typeControl,
+        complaintReason: formData.complaintReason,
+        anotherReason: formData.anotherReason,
         description: formData.descriptionControl,
         pictures: this.files
       };
@@ -61,28 +66,29 @@ export class PenaltiesPostComplaintComponent implements OnInit {
           cancelButton: 'btn btn-danger'
         },
       }).then((result: any) => {
+        console.log(data)
         if (result.isConfirmed) {
           // Envío de formulario solo después de la confirmación
-          this.complaintService.add(data).subscribe( res => {
-              (window as any).Swal.fire({
-                title: '¡Denuncia enviada!',
-                text: 'La denuncia ha sido enviada correctamente.',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-              });
-              this.router.navigate(['/home/complaints/listComplaint']);
-            }, error => {
-              console.error('Error al enviar la denuncia', error);
-              (window as any).Swal.fire({
-                title: 'Error',
-                text: 'No se pudo enviar la denuncia. Inténtalo de nuevo.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-              });
-            })
-          };
-        });
+          this.complaintService.add(data).subscribe(res => {
+            (window as any).Swal.fire({
+              title: '¡Denuncia enviada!',
+              text: 'La denuncia ha sido enviada correctamente.',
+              icon: 'success',
+              timer: 1500,
+              showConfirmButton: false
+            });
+            this.router.navigate(['/home/complaints/listComplaint']);
+          }, error => {
+            console.error('Error al enviar la denuncia', error);
+            (window as any).Swal.fire({
+              title: 'Error',
+              text: 'No se pudo enviar la denuncia. Inténtalo de nuevo.',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+          })
+        };
+      });
 
     }
   }
@@ -96,6 +102,7 @@ export class PenaltiesPostComplaintComponent implements OnInit {
       'is-valid': control?.valid
     }
   }
+
 
 
   //Retorna el primer error encontrado para el input dentro de los posibles
@@ -139,20 +146,31 @@ export class PenaltiesPostComplaintComponent implements OnInit {
 
 
   //Carga de datos del service para el select (Propio del micro de multas)
+
+  // getTypes(): void {
+  //   this.complaintService.getTypes().subscribe({
+  //     next: (data) => {
+  //       this.complaintTypes = Object.keys(data).map(key => ({
+  //         key,
+  //         value: data[key]
+  //       }));
+  //     },
+  //     error: (error) => {
+  //       console.error('error: ', error);
+  //     }
+  //   })
+  // }
+
   getTypes(): void {
-    this.complaintService.getTypes().subscribe({
-      next: (data) => {
-        this.complaintTypes = Object.keys(data).map(key => ({
-          key,
-          value: data[key]
-        }));
+    this.complaintService.getAllReportReasons().subscribe(
+      (reasons: ReportReasonDto[]) => {
+        reasons.forEach((reason) => this.complaintTypes.push(reason.reportReason))
       },
-      error: (error) => {
+      (error) => {
         console.error('error: ', error);
       }
-    })
+    );
   }
-
 
   //Formatea la fecha en yyyy-MM-dd para enviarla al input
   formatDate(date: Date): string {
