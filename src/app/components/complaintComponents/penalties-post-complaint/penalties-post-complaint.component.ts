@@ -3,6 +3,7 @@ import { ComplaintService } from '../../../services/complaintsService/complaints
 import { Router, RouterModule } from '@angular/router';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ReportReasonDto } from '../../../models/ReportReasonDTO';
 
 @Component({
   selector: 'app-penalties-post-complaint',
@@ -13,9 +14,11 @@ import { CommonModule } from '@angular/common';
 })
 export class PenaltiesPostComplaintComponent implements OnInit {
   //Variables
-  complaintTypes: { key: string; value: string }[] = [];
+  complaintTypes: string[] = [];
   reactiveForm: FormGroup;
   files: File[] = [];
+  otroSelected: boolean = false;
+
 
 
   //Constructor
@@ -23,9 +26,10 @@ export class PenaltiesPostComplaintComponent implements OnInit {
     private complaintService: ComplaintService,
     private router: Router,
     private formBuilder: FormBuilder
-  ) { 
+  ) {
     this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
-      typeControl: new FormControl('', [Validators.required]),
+      complaintReason: new FormControl('', [Validators.required]),
+      anotherReason: new FormControl(''),
       descriptionControl: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]),
       fileControl: new FormControl(null),
     });
@@ -44,7 +48,8 @@ export class PenaltiesPostComplaintComponent implements OnInit {
       let formData = this.reactiveForm.value;
       let data = {
         userId: 1,
-        complaintType: formData.typeControl,
+        complaintReason: formData.complaintReason,
+        anotherReason: formData.anotherReason,
         description: formData.descriptionControl,
         pictures: this.files
       };
@@ -61,7 +66,9 @@ export class PenaltiesPostComplaintComponent implements OnInit {
           cancelButton: 'btn btn-danger'
         },
       }).then((result: any) => {
+        console.log(data)
         if (result.isConfirmed) {
+
           // This method sends the 
           // complaint to the service.
 
@@ -91,6 +98,7 @@ export class PenaltiesPostComplaintComponent implements OnInit {
           };
         });
 
+
     }
   }
 
@@ -113,6 +121,7 @@ export class PenaltiesPostComplaintComponent implements OnInit {
   }
 
 
+
   //This method checks if there is an error in the input.
 
   // Param 'controlName' The 
@@ -122,6 +131,7 @@ export class PenaltiesPostComplaintComponent implements OnInit {
   // based on the first found error.
   // If no error is found, it 
   // returns an empty string.
+
   showError(controlName: string) {
     const control = this.reactiveForm.get(controlName);
     
@@ -161,6 +171,7 @@ export class PenaltiesPostComplaintComponent implements OnInit {
 
 
 
+
   // This method loads the data from the service
   // for the select (Own of the fines microservice).
 
@@ -169,19 +180,18 @@ export class PenaltiesPostComplaintComponent implements OnInit {
 
   // If the data is not loaded correctly, 
   // it will return an error.
+
   getTypes(): void {
-    this.complaintService.getTypes().subscribe({
-      next: (data) => {
-        this.complaintTypes = Object.keys(data).map(key => ({
-          key,
-          value: data[key]
-        }));
+    this.complaintService.getAllReportReasons().subscribe(
+      (reasons: ReportReasonDto[]) => {
+        reasons.forEach((reason) => this.complaintTypes.push(reason.reportReason))
       },
-      error: (error) => {
+      (error) => {
         console.error('error: ', error);
       }
-    })
+    );
   }
+
 
 
   // This method formats a date
@@ -190,6 +200,7 @@ export class PenaltiesPostComplaintComponent implements OnInit {
   // Param 'date' The date to be formatted.
 
   // Returns the date as a string in the format "yyyy-MM-dd".
+
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
