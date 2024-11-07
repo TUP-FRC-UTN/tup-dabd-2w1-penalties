@@ -21,14 +21,27 @@ export class PenaltiesModalReportComponent implements OnInit{
   constructor(public activeModal: NgbActiveModal){
 
   }
+
+
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
     this.getReport()
     //alert(this.data.createdDate) 
   }
+
+
   close(){
     this.activeModal.close()
   }
+
+
+  // Fetches the report details using the provided ID.
+  
+  // This method calls `getById()` on the injected service with the specified ID
+  // and subscribes to handle the response. On success, it assigns the response to `report`
+  // and formats the date using the service's `formatDate()` method.
+  
+  // In case of an error, it logs an error message in the console.
   getReport(){
     this.service.getById(this.id)
     .subscribe(
@@ -36,6 +49,7 @@ export class PenaltiesModalReportComponent implements OnInit{
         console.log(respuesta); 
         this.report = respuesta
         console.log(this.report)
+        // Format the report creation date to a readable format.
         this.formattedDate = new Date(this.service.formatDate(this.report.createdDate))
       },
       (error) => {

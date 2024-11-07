@@ -76,6 +76,9 @@
                         <div class="col-10">
                             <button type="button" class="btn btn-warning" (click)="openSelectComplaints()">Gestionar
                                 denuncias <i class="bi bi-file-earmark-text"></i></button>
+                            @if (complaintsList.length > 0) {
+                                <p> Se seleccionaron {{complaintsList.length}} denuncia(s)</p>
+                            }
                         </div>
                     </div>
                 </div>
@@ -84,7 +87,7 @@
                     <div class="col d-flex justify-content-end gap-3">
                         <button type="button" class="btn btn-secondary me-3"
                             [routerLink]="'../reportList'">Cancelar</button>
-                        <button type="submit" class="btn btn-success" [disabled]="formDenuncia.invalid">Crear</button>
+                        <button type="submit" class="btn btn-success" [disabled]="formDenuncia.invalid">Registrar</button>
                     </div>
                 </div>
 
