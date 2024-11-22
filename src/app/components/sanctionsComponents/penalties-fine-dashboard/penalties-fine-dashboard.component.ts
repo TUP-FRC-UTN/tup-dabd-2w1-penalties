@@ -8,7 +8,7 @@ import { textShadow } from 'html2canvas/dist/types/css/property-descriptors/text
 import { ReportReasonDto } from '../../../models/ReportReasonDTO';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PenaltiesModalFineComponent } from '../modals/penalties-get-fine-modal/penalties-get-fine-modal.component';
-import { CustomKpiComponent} from '../../../../common/components/custom-kpi/custom-kpi.component';
+import { CustomKpiComponent } from '../../../common/custom-kpi/custom-kpi.component';
 import { fontWeight } from 'html2canvas/dist/types/css/property-descriptors/font-weight';
 
 
