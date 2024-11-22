@@ -1,100 +1,96 @@
-<section class="py-5">
-    <div class="container p-3 border border-2 rounded shadow-lg">
-        <form #formDenuncia="ngForm" (ngSubmit)="onSubmit()" novalidate>
-            <div class="row mb-3">
+<div class="container p-3">
+    <div class="post-complaint-section p-4 border shadow-lg p-3 mb-5 bg-white rounded">
+        <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <!-- Ejemplo select -->
                 <div class="col-lg-6 mb-3">
                     <div class="row">
-                        <label class="col-2 col-form-label" for="selectOption">Motivo</label>
+                        <label class="col-2 col-form-label">Motivo</label>
                         <div class="col-10">
-                            <select
-                                [class.is-invalid]="optionField.invalid && (optionField.dirty || optionField.touched)"
-                                class="form-select" id="selectOption" name="option" [(ngModel)]="selectedReasonId"
-                                #optionField="ngModel" required>
-                                <option value="" selected disabled="disabled">Seleccione una opción</option>
-                                @for (reason of reportReasons; track $index) {
-                                <option [value]="reason.id">{{reason.reportReason}}</option>
-                                }
-                            </select>
-                            <div class="invalid-feedback">
-                                @if (optionField.errors?.['required']) {
-                                <span>Por favor, ingrese una opción</span>
-                                }
-                            </div>
+                            <app-custom-select [options]="options"
+                                [selectedOptions]="reactiveForm.get('reportReason')?.value"
+                                (selectedOptionsChange)="updateSelect($event)"
+                                [validations]="reactiveForm.get('reportReason')?.validator">
+                            </app-custom-select>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-6 mb-3">
-                    <div class="row">
-                        <label for="dateInput" class="col-2 col-form-label">Fecha</label>
-                        <div class="col-10">
-                            <input type="date" id="dateInput" name="dateInput" class="form-control"
-                                [(ngModel)]="dateView" #dateField="ngModel" disabled>
-                        </div>
-                    </div>
-                </div>
-
+                <!-- Textarea descripcion -->
                 <div class="col-lg-12 mb-3">
                     <div class="row">
-                        <label for="textareaMessage" class="col-2 col-lg-1 col-form-label">Descripcion</label>
+                        <label class="col-2 col-lg-1 col-form-label">Descripción</label>
                         <div class="col-10 col-lg-11">
-                            <textarea [class.is-invalid]="textArea.invalid && (textArea.dirty || textArea.touched)"
-                                name="textareaMessage" id="textareaMessage" rows="8" class="form-control"
-                                style="resize: none" [placeholder]="textareaPlaceholder" [(ngModel)]="description"
-                                #textArea="ngModel" required minlength="10" maxlength="500"></textarea>
-                            <div class="invalid-feedback">
-                                @if (textArea.errors?.['required']) {
-                                <span>Por favor, ingrese una descripción.</span>
-                                }
-                                @if (textArea.errors?.['minlength']) {
-                                <span>El mensaje debe tener al menos 10 caracteres.</span>
-                                }
-                            </div>
+                            <textarea class="form-control" rows="4" formControlName="descriptionControl"
+                                style="resize: none;" [ngClass]="onValidate('descriptionControl')"></textarea>
+                            <div class="invalid-feedback">{{showError('descriptionControl')}}</div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Select Infractor -->
                 <div class="col-lg-6 mb-3">
                     <div class="row">
-                        <label class="col-2 col-form-label" for="infractorInput">Infractor</label>
+                        <label class="col-2 col-form-label">Lote</label>
                         <div class="col-10">
-                            <input type="text" id="infractorInput" class="form-control" placeholder="Infractor"
-                                disabled>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-3">
-                    <div class="col-12">
-                        <button type="button" class="btn btn-info" (click)="development()">Ver más</button>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 mb-3">
-                    <div class="row">
-                        <div class="col-2">
-                        </div>
-                        <div class="col-10">
-                            <button type="button" class="btn btn-warning" (click)="openSelectComplaints()">Gestionar
-                                denuncias <i class="bi bi-file-earmark-text"></i></button>
-                            @if (complaintsList.length > 0) {
-                                <p> Se seleccionaron {{complaintsList.length}} denuncia(s)</p>
-                            }
+                            <app-custom-select [options]="optionsplot"
+                                [multiple]="true"
+                                [selectedOptions]="reactiveForm.get('plotIds')?.value"
+                                (selectedOptionsChange)="updateSelectplot($event)"
+                                [validations]="reactiveForm.get('plotIds')?.validator">
+                            </app-custom-select>
                         </div>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col d-flex justify-content-end gap-3">
-                        <button type="button" class="btn btn-secondary me-3"
-                            [routerLink]="'../reportList'">Cancelar</button>
-                        <button type="submit" class="btn btn-success" [disabled]="formDenuncia.invalid">Registrar</button>
+                <!-- Modal adjuntar -->
+                 @if(!shouldHideButton()){
+                    <div class="col">
+                        <button type="button" class="btn btn-warning" (click)="openSelectComplaints()">
+                            <i class="bi bi-paperclip"></i>
+                            Adjuntar Denuncias
+                            <span class=" ms-1 badge text-bg-danger">{{ selectedComplaintsCount }}</span>
+                        </button>
                     </div>
-                </div>
+                 }
+            </div>
 
+            <div class="submit-box d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-3" (click)="cancel()">Cancelar</button>
+                <button type="submit" class="btn btn-success" [disabled]="reactiveForm.invalid">Registrar</button>
             </div>
         </form>
     </div>
-</section>
+</div>
 
 <app-modal-complaints-list (selectedComplaints)="handleSelectedComplaints($event)"
     [formType]="'add'"></app-modal-complaints-list>
+
+
+
+<!-- Modal de info -->
+<div class="modal fade" id="infoModal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Informe</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- body con tus inputs -->
+        <p>
+            Aquí se puede realizar el alta de un informe con sus datos correspondientes. En el mismo se puede tener ninguna, una o varias denuncias anexadas al momento de crearlo. El informe incluye la siguiente información:
+          </p>
+          <ul>
+            <li><b>Motivo: </b>El motivo por el cuál se creará el informe, que debe corresponder con el de las denuncias anexadas.</li>
+            <li><b>Descripción: </b>Aquí podrá describir el por qué realiza el alta del informe con ese motivo.</li>
+            <li><b>Lote: </b>Aquí puede elegir hacia qué Bloque y Lote irá dirigido el informe.</li>
+            <li><b>Adjuntar Denuncias: </b>Este botón abrirá una ventana donde podra visualizar y seleccionar denuncias que estén en estado "Pendiente" para anexar al informe. En caso de confirmar la modificación del informe, las denuncias seleccionadas pasarán al estado "Anexada".</li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,8 +1,9 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { PenaltiesSanctionsServicesService } from '../../../../services/sanctionsService/sanctions.service';
+import { SanctionService } from '../../../../services/sanctions.service';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { SanctionsDTO } from '../../../../models/SanctionsDTO';
 
 @Component({
   selector: 'app-penalties-modal-report',
@@ -15,14 +16,13 @@ export class PenaltiesModalReportComponent implements OnInit{
 
 
   formattedDate:any;
-  public service = inject(PenaltiesSanctionsServicesService)
+  public service = inject(SanctionService)
   @Input() id:number = 0
   report: any;
-  constructor(public activeModal: NgbActiveModal){
+  advetencias : SanctionsDTO[] = [];
+  constructor(public activeModal: NgbActiveModal, private reportServices: SanctionService) {
 
   }
-
-
   ngOnInit(): void {
     //throw new Error('Method not implemented.');
     this.getReport()
@@ -49,12 +49,20 @@ export class PenaltiesModalReportComponent implements OnInit{
         console.log(respuesta); 
         this.report = respuesta
         console.log(this.report)
-        // Format the report creation date to a readable format.
         this.formattedDate = new Date(this.service.formatDate(this.report.createdDate))
       },
       (error) => {
         console.error('Error:', error);
       });
+      
+      this.reportServices.getAllSactions().subscribe(
+        response => {
+          this.advetencias = response.filter((a)=>a.reportId==this.id && a.fineState==null);
+
+        }, error => {
+          alert(error)
+        }
+      )
   }
   
 

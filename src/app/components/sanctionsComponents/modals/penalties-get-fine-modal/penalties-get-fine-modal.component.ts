@@ -1,17 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { PenaltiesSanctionsServicesService } from '../../../../services/sanctionsService/sanctions.service';
+import { SanctionService } from '../../../../services/sanctions.service';
 import { PenaltiesUpdateStateReasonModalComponent } from '../penalties-update-state-reason-modal/penalties-update-state-reason-modal.component';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../../users/users-servicies/auth.service';
 
 @Component({
   selector: 'app-penalties-modal-fine',
   standalone: true,
-  imports: [NgbModule],
+  imports: [NgbModule, CommonModule],
   templateUrl: './penalties-get-fine-modal.component.html',
   styleUrl: './penalties-get-fine-modal.component.scss'
 })
 export class PenaltiesModalFineComponent implements OnInit {
   //Variables
+  tooltipTitle: string = 'Se podrá consultar el descargo del propietario y, con base en ello, aceptarlo o rechazarlo.'
   @Input() fineId!: number;
   files: File[] = [];
   fine: any;
@@ -22,7 +25,8 @@ export class PenaltiesModalFineComponent implements OnInit {
   constructor(
     public activeModal: NgbActiveModal,
     private _modal: NgbModal,
-    public sanctionsService: PenaltiesSanctionsServicesService,
+    public sanctionsService: SanctionService,
+    private authService: AuthService
   ) { }
 
 
@@ -58,6 +62,13 @@ export class PenaltiesModalFineComponent implements OnInit {
       });
   }
 
+  ngAfterViewInit(): void {
+    const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach((tooltipTriggerEl) => {
+      new (window as any).bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  }
+
   // Initiates the process of changing the fine's state.
   
   // Parameters:
@@ -68,6 +79,15 @@ export class PenaltiesModalFineComponent implements OnInit {
   // provide a reason for the state change.
   changeState(state:string) {
     this.openModalStateReason(state);
+  }
+
+  permisionToEdit : boolean = false
+  getPermisionsToEdit(){
+    if(this.authService.getActualRole() === 'SuperAdmin' || 
+    this.authService.getActualRole() === 'Gerente multas'){
+      this.permisionToEdit = true
+    }
+    return this.permisionToEdit;
   }
 
   
@@ -87,6 +107,7 @@ export class PenaltiesModalFineComponent implements OnInit {
     });
     modal.componentInstance.id = this.fine.id;
     modal.componentInstance.fineState = state;
+    modal.componentInstance.fine = this.fine;
     modal.result
       .then((result) => {
         this.close()

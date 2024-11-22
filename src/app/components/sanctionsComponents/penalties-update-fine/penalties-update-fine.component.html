@@ -2,7 +2,6 @@
   <div class="container p-3 border border-2 rounded shadow-lg">
     <!-- Datos de la multa -->
     <div class="row mb-3">
-      <h4>Datos de la multa</h4>
 
       <!-- Select Motivo -->
       <div class="col-lg-6 mb-3">
@@ -23,12 +22,7 @@
         <div class="row">
           <label class="col-2 col-form-label">Fecha</label>
           <div class="col-10">
-            <input
-              type="datetime-local"
-              class="form-control"
-              [value]="fine?.createdDate"
-              disabled
-            />
+            <input type="datetime-local" class="form-control" [value]="fine?.createdDate" disabled />
           </div>
         </div>
       </div>
@@ -38,65 +32,37 @@
         <div class="row">
           <label class="col-2 col-lg-1 col-form-label">Descripcion</label>
           <div class="col-10 col-lg-11">
-            <textarea
-              class="form-control"
-              rows="8"
-              style="resize: none"
-              [value]="fine?.report.description"
-              disabled
-            ></textarea>
+            <textarea class="form-control" rows="8" style="resize: none" [value]="fine?.report.description"
+              disabled></textarea>
           </div>
         </div>
       </div>
     </div>
 
     
-      <form (ngSubmit)="onSubmit()" [formGroup]="reactiveForm">
-        <div class="row">
-          
-          <div class="row col-3 offset-9 justify-content-end">
-            <div class="clearfix mt-2">
-              <div class="float-end d-flex">
-                <label for="" class="me-2 mt-3">Importe:</label>
-                <div class="input-group mt-2 mb-3">
-                  <span class="input-group-text" id="basic-addon1">$</span>
-                  <input
-                    type="number"
-                    class="form-control text-end"
-                    name="amount"
-                    [value]="fine?.amount"
-                    formControlName="amountControl"
-                    [ngClass]="onValidate('amountControl')"
-                    required
-                  />
-                  <div class="invalid-feedback">
-                    {{ showError("amountControl") }}
-                  </div>
-                </div>
-              </div>
+    <form (ngSubmit)="onSubmit()" [formGroup]="reactiveForm">
+      <div class="row flex-row-reverse">
+
+        <!-- Importe -->
+        <div class="col-lg-6 mb-3">
+          <div class="row">
+            <label class="col-2 col-form-label">Importe $</label>
+            <div class="col-10">
+              <input type="number" class="form-control text-end" formControlName="amountControl"
+                [ngClass]="onValidate('amountControl')" />
+              <div class="text-danger">{{ showError("amountControl") }}</div>
             </div>
           </div>
-        
+        </div>
+
         <div class="buttons-box d-flex justify-content-end">
           <div class="submit-box">
-            <button
-              type="button"
-              class="btn btn-secondary me-3"
-              [routerLink]="'/home/sanctions/sanctionsList'"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              class="btn btn-success"
-              [disabled]="reactiveForm.invalid"
-            >
-              Enviar
-            </button>
+            <button type="button" class="btn btn-secondary me-3" (click)="cancel()">Cancelar</button>
+            <button type="submit" class="btn btn-success" [disabled]="reactiveForm.invalid">Guardar</button>
           </div>
         </div>
       </div>
-      </form>
+    </form>
   </div>
 </section>
 
@@ -108,27 +74,26 @@
         <h5 class="modal-title" id="exampleModalLabel">
           Actualizar Precio Multa
         </h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-        ></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <!-- body con tus inputs -->
         <p>
-          En este apartado podrá modificar el valor relacionado con la multa
-          seleccionada.
+          Aquí se puede realizar la modificación del importe de una multa. La multa incluye la siguiente información:
         </p>
+        <ul>
+          <li><b>Motivo: </b>Motivo por el cuál se registró la multa. El campo no se puede modificar.</li>
+          <li><b>Fecha: </b>Fecha en la cuál se registró la multa. El campo no se puede modificar.</li>
+          <li><b>Descripción: </b>Descripción que acompaña a la razón de la multa. El campo no se puede modificar.</li>
+          <li><b>Importe: </b>Aquí estará el importe con el cuál se creó la multa. El mismo puede ser modificado en base a la multa correspondiente.</li>
+        </ul>
         <p>
-          Recuerde que cambiar el precio no es una decisión menor; asegúrese de
+          Recuerde que cambiar el importe no es una decisión menor; asegúrese de
           estar seguro antes de realizar el cambio.
         </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
-          Aceptar
-        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
       </div>
     </div>
   </div>

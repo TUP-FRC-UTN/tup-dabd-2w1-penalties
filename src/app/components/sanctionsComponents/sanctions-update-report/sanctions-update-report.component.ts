@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { PutReportDTO } from '../../../models/PutReportDTO';
-import { ComplaintService } from '../../../services/complaintsService/complaints.service';
-import { PenaltiesSanctionsServicesService } from '../../../services/sanctionsService/sanctions.service';
+import { ComplaintService } from '../../../services/complaints.service';
+import { SanctionService } from '../../../services/sanctions.service';
 import { ModalComplaintsListComponent } from '../../complaintComponents/modals/penalties-list-complaints-modal/penalties-list-complaints-modal.component';
+import { RoutingService } from '../../../../common/services/routing.service';
+import Swal from 'sweetalert2';
+import { PlotService } from '../../../../users/users-servicies/plot.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-report-modify',
@@ -14,6 +18,10 @@ import { ModalComplaintsListComponent } from '../../complaintComponents/modals/p
   styleUrl: './sanctions-update-report.component.scss'
 })
 export class ReportModifyComponent implements OnInit {
+  url = 'https://my-json-server.typicode.com/405786MoroBenjamin/users-responses/plots';
+  private readonly plotService = inject(PlotService);
+  private readonly mockPlotService = inject(HttpClient);
+  
   reportId: number = 0;
   reportState = '';
   selectedDate = '';
@@ -23,8 +31,14 @@ export class ReportModifyComponent implements OnInit {
   description = '';
   selectedComplaints: any[] = [];
   private route: ActivatedRoute;
+  modalInstance: any;
+  formType = 'modify';
 
-  constructor(private complaintService: ComplaintService, private reportService: PenaltiesSanctionsServicesService, private router: Router, route: ActivatedRoute) {
+  constructor(private complaintService: ComplaintService,
+     private reportService: SanctionService,
+       route: ActivatedRoute,
+       private routingService: RoutingService
+      ) {
     this.route = route;
   }
 
@@ -37,10 +51,21 @@ export class ReportModifyComponent implements OnInit {
         this.description = params['description'] || '';
         this.plotId = params['plotId'] || '';
         if (this.plotId) {
-          this.infractorPlaceholder = 'Lote ' + this.plotId;
+          this.plotService.getPlotById(this.plotId).subscribe(plot => {
+            this.infractorPlaceholder = `Bloque ${plot.block_number}, Lote ${plot.plot_number}`;
+          });
+        }
+        if (this.reportId) {
+          this.loadSelectedComplaints(this.reportId);
         }
         console.log(params);
       }
+    });
+  }
+
+  loadSelectedComplaints(reportId: number): void {
+    this.reportService.getById(reportId).subscribe(report => {
+      this.selectedComplaints = report.complaints || [];
     });
   }
 
@@ -49,19 +74,10 @@ export class ReportModifyComponent implements OnInit {
       title: 'Función en desarrollo',
       text: 'Esta funcionalidad aún está en desarrollo.',
       icon: 'info',
-      confirmButtonText: 'Aceptar',
-      customClass: {
-        confirmButton: 'btn btn-success'
-      }
+      confirmButtonText: 'Aceptar'
     });
   }
-  // This method formats the date
 
-  // Param 'dateString' is a string that contains 
-  // the date and time.
-
-  // Returns the date part of the
-  // string.
   formatDate(dateString: string): string {
     if (!dateString) return '';
     const [datePart] = dateString.split(' ');
@@ -72,83 +88,59 @@ export class ReportModifyComponent implements OnInit {
     this.selectedComplaints = selectedComplaints;
   }
 
-
-  // This method updates the report.
-
-  // It creates a DTO with the necessary
-  // information and calls the service to
-  // update the report.
-
-  // If the report is updated correctly,
-  // it will show a success message.
-
-  // If the report is not updated correctly,
-  // it will show an error message.
   updateReport(): void {
-    const userId = 1;
+    
+        const userId = 1;
 
-    const complaintsIds = this.selectedComplaints.length > 0
-      ? this.selectedComplaints.map(complaint => complaint.id)
-      : [];
+        const complaintsIds = this.selectedComplaints.length > 0
+          ? this.selectedComplaints.map(complaint => complaint.id)
+          : [];
 
-    const reportDTO: PutReportDTO = {
-      id: this.reportId,
-      userId: userId,
-      description: this.description,
-      complaintsIds: complaintsIds,
-    };
+        const reportDTO: PutReportDTO = {
+          id: this.reportId,
+          userId: userId,
+          description: this.description,
+          complaintsIds: complaintsIds,
+        };
 
-    (window as any).Swal.fire({
-      title: '¿Estás seguro?',
-      text: "¿Deseas confirmar la actualización del informe?",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar',
-      customClass: {
-        confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger'
-      },
-    }).then((result: any) => {
-      if (result.isConfirmed) {
-        this.reportService.updateReport(reportDTO).subscribe(
-          res => {
-            const selectedCount = this.selectedComplaints.length;
-            const message = selectedCount > 0
-              ? `El informe ha sido actualizado correctamente con ${selectedCount} denuncia(s) seleccionada(s).`
-              : 'El informe ha sido actualizado correctamente.';
-
-            (window as any).Swal.fire({
-              title: '¡Actualización exitosa!',
-              text: message,
-              icon: 'success',
-              timer: 1500,
-              showConfirmButton: false
-            });
-
-            this.router.navigate(['/home/sanctions/reportList']);
-          },
-          error => {
-            console.error('Error al actualizar el informe', error);
-            (window as any).Swal.fire({
-              title: 'Error',
-              text: 'No se pudo actualizar el informe. Inténtalo de nuevo.',
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
-            });
-          }
-        );
+        this.reportService.updateReport(reportDTO).subscribe(res => {
+          Swal.fire({
+            title: '¡Actualización exitosa!',
+            text: 'El informe ha sido actualizado correctamente.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+          this.routingService.redirect("main/sanctions/report-list", "Listado de Informes")
+        }, error => {
+          console.error('Error al actualizar el informe', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo actualizar el informe. Inténtalo de nuevo.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        });
       }
-    });
+ 
+
+  cancel(){
+    this.routingService.redirect("main/sanctions/report-list", "Listado de Informes")
   }
 
-
-  // This method opens the Complaint modal.
   openModal(): void {
     const modalElement = document.getElementById('complaintModal');
     if (modalElement) {
-      const modal = new (window as any).bootstrap.Modal(modalElement);
-      modal.show();
+      this.modalInstance = new (window as any).bootstrap.Modal(modalElement);
+      modalElement.addEventListener('shown.bs.modal', () => {
+        const modalComponent = (modalElement as any).componentInstance;
+        if (modalComponent) {
+          modalComponent.selectedComplaints = [...this.selectedComplaints];
+          modalComponent.updateCheckboxes();
+          modalComponent.reportId = this.reportId;
+        }
+      });
+      this.modalInstance.show();
     }
   }
 }

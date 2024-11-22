@@ -1,66 +1,68 @@
 <div class="modal-content border border-2">
-    <div class="modal-header">
-      <h1 class="modal-title fs-5" id="complaintModal">Multa</h1>
-      <button type="button" class="btn-close" (click)="close()"></button>
-    </div>
-    <div class="modal-body">
-  
-      <h5>Información de la Multa</h5>
-      <div class="row mb-3">
-          <div class="col-md-6">
-              <p><strong>Motivo:</strong> {{ fine?.report.reportReason.reportReason || 'N/A' }}</p>
-              <p><strong>Fecha:</strong> {{ fine?.createdDate || 'N/A' }}</p>
-          </div>
-      
-          <div class="col-md-6">
-              <p><strong>Descripcion:</strong> {{ fine?.report.description || 'N/A' }}</p>
-          </div>
-      </div>
-      <hr>
-      <h5>Descargo</h5>
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <p><strong>Motivo:</strong> {{ fine?.disclaimer || 'N/A' }}</p>
-            </div>
-            <div class="col-md-6">
-                <!--Si la multa esta apelada muestra la opcion de aceptar o rechazar el mismo-->
-        @if(fine.fineState == "Apelada"){
-          <div class="col-lg-12 mb-3">
-          <div class="buttons-box d-flex justify-content-end">
-            <div class="submit-box">
-              <button
-                type="button"
-                class="btn btn-secondary me-3"
-                (click)="changeState('PAYMENT_PAYMENT')"
-              >
-                Rechazar
-              </button>
-              <button
-                type="button"
-                class="btn btn-success"
-                (click)="changeState('ACQUITTED')"
-              >
-                Aceptar
-              </button>
-            </div>
-          </div>
-        </div>
-        }
-            </div>
-        </div>
-
-        <hr>
-        <h5>Estado de la Multa</h5>
-      <div class="row mb-3">
-          <div class="col-md-6">
-              <p><strong>Estado:</strong> {{ fine?.fineState || 'N/A' }}</p>
-              <p><strong>Razon</strong> {{ fine?.stateReason || 'N/A' }}</p>
-          </div>
-      </div>
-      
-  
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
-    </div>
+  <div class="modal-header">
+    <h1 class="modal-title fs-5" id="complaintModal">Multa <i
+      class="bi bi-question-circle ms-2" data-bs-toggle="tooltip" data-bs-placement="right"
+      [title]="tooltipTitle"></i> </h1>
+    <button type="button" class="btn-close" (click)="close()"></button>
   </div>
+  <div class="modal-body">
+
+    <h5>Información de la Multa</h5>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <p><strong>Motivo</strong> {{ fine?.report.reportReason.reportReason || 'N/A' }}</p>
+            <p><strong>Fecha</strong> {{ fine?.createdDate | date:"dd/MM/yyyy" }}</p>
+        </div>
+    
+        <div class="col-md-6">
+            <p><strong>Descripción</strong> {{ fine?.report.description || 'N/A' }}</p>
+        </div>
+    </div>
+    <hr>
+    <h5>Descargo</h5>
+      <div class="row mb-3">
+          <div class="col-md-6">
+              <p><strong>Motivo</strong> {{ fine?.disclaimer || 'N/A' }}</p>
+          </div>
+          <div class="col-md-6">
+              <!--Si la multa esta apelada muestra la opcion de aceptar o rechazar el mismo-->
+      @if(fine.fineState == "Apelada" && getPermisionsToEdit()){
+        <div class="col-lg-12 mb-3">
+        <div class="buttons-box d-flex justify-content-end">
+          <div class="submit-box">
+            <button
+              type="button"
+              class="btn btn-secondary me-3"
+              (click)="changeState('PAYMENT_PAYMENT')"
+            >
+              Rechazar
+            </button>
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="changeState('ACQUITTED')"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+      }
+          </div>
+      </div>
+
+      <hr>
+      <h5>Estado de la Multa</h5>
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <p><strong>Estado</strong> {{ fine?.fineState || 'N/A' }}</p>
+            <p><strong>Razón</strong> {{ fine?.stateReason || 'N/A' }}</p>
+        </div>
+    </div>
+    
+
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+  </div>
+</div>
