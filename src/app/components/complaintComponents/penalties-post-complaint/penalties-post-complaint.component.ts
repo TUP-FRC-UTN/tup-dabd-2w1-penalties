@@ -12,7 +12,7 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
-import { RoutingService } from '../../../../common/services/routing.service';
+import { RoutingService } from '../../../services/routing.service';
 import { ReportReasonDto } from '../../../models/ReportReasonDTO';
 import { CustomSelectComponent } from '../../../../common/components/custom-select/custom-select.component';
 import { AuthService } from '../../../../users/users-servicies/auth.service';

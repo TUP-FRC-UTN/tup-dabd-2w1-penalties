@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { PenaltyHomeComponent } from './penalty-home/penalty-home.component';
-import { PenaltiesSanctionsReportListComponent } from './components/sanctionsComponents/penalties-list-report/penalties-list-report.component';
-import { PenaltiesPostFineComponent } from './components/sanctionsComponents/penalties-post-fine/penalties-post-fine.component';
-import { PenaltiesPostDisclaimerComponent } from './components/sanctionsComponents/penalties-post-disclaimer/penalties-post-disclaimer.component';
-import { PenaltiesSanctionsListComponent } from './components/sanctionsComponents/penalties-list-sanctions/penalties-list-sanctions.component';
-import { ReportModifyComponent } from './components/sanctionsComponents/sanctions-update-report/sanctions-update-report.component';
-import { NewReportComponent } from './components/sanctionsComponents/penalties-post-report/penalties-post-report.component';
-import { PenaltiesUpdateFineComponent } from './components/sanctionsComponents/penalties-update-fine/penalties-update-fine.component';
-import { PenaltiesFineDashboardComponent } from './components/sanctionsComponents/penalties-fine-dashboard/penalties-fine-dashboard.component';
+import { PenaltyHomeComponent } from '../penalty-home/penalty-home.component';
+import { PenaltiesSanctionsReportListComponent } from './penalties-list-report/penalties-list-report.component';
+import { PenaltiesPostFineComponent } from './penalties-post-fine/penalties-post-fine.component';
+import { PenaltiesPostDisclaimerComponent } from './penalties-post-disclaimer/penalties-post-disclaimer.component';
+import { PenaltiesSanctionsListComponent } from './penalties-list-sanctions/penalties-list-sanctions.component';
+import { ReportModifyComponent } from './sanctions-update-report/sanctions-update-report.component';
+import { NewReportComponent } from '../penalties-post-report/penalties-post-report.component';
+import { PenaltiesUpdateFineComponent } from './penalties-update-fine/penalties-update-fine.component';
+import { PenaltiesFineDashboardComponent } from './penalties-fine-dashboard/penalties-fine-dashboard.component';
 
 export const SANCTION_ROUTES: Routes = [
   { path: 'report-list', component: PenaltiesSanctionsReportListComponent },
