@@ -1,9 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { PutStateComplaintDto } from '../../../../models/complaint';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ComplaintService } from '../../../../services/complaintsService/complaints.service';
+import { ComplaintService } from '../../../../services/complaints.service';
 import { FormsModule } from '@angular/forms';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-penalties-modal-state-reason',
   standalone: true,
@@ -42,24 +42,9 @@ export class PenaltiesModalStateReasonComponent {
       complaintState: this.complaintState,
       stateReason: this.reasonText
     };
-
-    // Confirmación antes de enviar el formulario
-(window as any).Swal.fire({
-  title: '¿Estás seguro?',
-  text: "¿Deseas confirmar la actualización de la denuncia?",
-  icon: 'warning',
-  showCancelButton: true,
-  confirmButtonText: 'Confirmar',
-  cancelButtonText: 'Cancelar',
-  customClass: {
-    confirmButton: 'btn btn-success',
-    cancelButton: 'btn btn-danger'
-  },
-}).then((result: any) => {
-  if (result.isConfirmed) {
-    // Envío de formulario solo después de la confirmación
+    // Sends the form only after confirmation.
     this.complaintService.putStateComplaint(this.idComplaint, ComplaintDto).subscribe( res => {
-        (window as any).Swal.fire({
+        Swal.fire({
           title: '¡Denuncia actualizada!',
           text: 'El estado de la denuncia fue actualizado con éxito',
           icon: 'success',
@@ -70,27 +55,14 @@ export class PenaltiesModalStateReasonComponent {
         this.close();
       }, error => {
         console.error('Error al enviar la denuncia', error);
-        (window as any).Swal.fire({
+        Swal.fire({
           title: 'Error',
           text: 'No se pudo enviar la denuncia. Inténtalo de nuevo.',
           icon: 'error',
           confirmButtonText: 'Aceptar'
         });
       })
-    };
-  });
-    
-    this.complaintService.putStateComplaint(this.idComplaint,ComplaintDto).subscribe({
-      next: (response) => {
-        alert('El estado de la denuncia fue actualizado con éxito');
-        this.close()
-        
-      },
-      error: (error) => {
-        alert('El estado de la denuncia no pudo ser actualizado');
-        this.close()
-      }
-    });
-  }
 
+
+}
 }

@@ -1,14 +1,15 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ComplaintService } from '../../../../services/complaintsService/complaints.service';
-import { CommonModule } from '@angular/common';
+import { ComplaintService } from '../../../../services/complaints.service';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PutStateComplaintDto } from '../../../../models/complaint';
+import { UserService } from '../../../../../users/users-servicies/user.service';
 
 @Component({
   selector: 'app-penalties-modal-consult-complaint',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, DatePipe],
   templateUrl: './penalties-get-complaint.component.html',
   styleUrl: './penalties-get-complaint.component.scss'
 })
@@ -18,6 +19,7 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
   files: File[] = [];
   complaint: any;
   loggedUserId: number = 1;
+  private readonly userService = inject(UserService);
 
   //Constructor
   constructor(
@@ -33,7 +35,7 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
   }
 
 
-  //Boton de cierre del modal
+  //Button to close the modal
   close() {
     this.activeModal.close()
   }
@@ -42,12 +44,11 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
   // This method fetches the complaint 
   // details using the provided ID
   // and loads it in its variable.
-  // If the complaint is new, it updates
-  // the state to PENDING.
+  
+  
   getComplaint() {
     this.complaintService.getById(this.denunciaId).subscribe(
       (response) => {
-        console.log(response);
         this.complaint = response
         if (this.complaint.complaintState == "Nueva") {
           const updatedComplaint: PutStateComplaintDto = {
@@ -58,23 +59,34 @@ export class PenaltiesModalConsultComplaintComponent implements OnInit {
           }
           this.complaintService.putStateComplaint(this.complaint.id, updatedComplaint).subscribe()
         }
+        this.userService.getUserById(this.complaint.userId).subscribe(
+          (response) => {
+            this.complaint.user = response.name + ' ' + response.lastname
+          });
       },
       (error) => {
         console.error('Error:', error);
       });
   }
 
+
+  // Event to update the file list 
+  // to the currently selected ones.
   onFileChange(event: any) {
-    this.files = Array.from(FileList = event.target.files);
+    this.files = Array.from(FileList = event.target.files); //Convert FileList to Array
   }
+
+
   //Deprecated, to comment.
-  addMockFile() {
+  /*addMockFile() {
     const mockImage = new File(["Contenido de la imagen"], "MockImage.png", {
       type: "image/jpeg",
       lastModified: Date.now()
     });
-    this.files.push(mockImage);
-  }
+    this.files.push(mockImage); //Agrega la imagen simulada a la lista
+  }*/
+
+  
   // This method calls the service to 
   // get the files of the complaint.
   loadComplaintFiles() {
@@ -141,9 +153,15 @@ base64ToFile(response: Record<string, string>): File[] {
   return files; 
 }
 
+
+
+// This method tracks the files by their id.
   trackByFile(index: number, file: any): number {
     return file.id;
   }
+
+
+
 // This method creates a URL 
 // for the file and downloads it.
 
@@ -160,4 +178,6 @@ base64ToFile(response: Record<string, string>): File[] {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
+
+
 }

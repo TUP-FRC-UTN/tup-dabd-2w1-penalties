@@ -1,16 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { ComplaintService } from '../../../services/complaintsService/complaints.service';
+import { ComplaintService } from '../../../services/complaints.service';
 import { Router, RouterModule } from '@angular/router';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
+import { RoutingService } from '../../../../common/services/routing.service';
 import { ReportReasonDto } from '../../../models/ReportReasonDTO';
+import { CustomSelectComponent } from '../../../../common/components/custom-select/custom-select.component';
+import { AuthService } from '../../../../users/users-servicies/auth.service';
 
 @Component({
   selector: 'app-penalties-post-complaint',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, RouterModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    CustomSelectComponent,
+  ],
   templateUrl: './penalties-post-complaint.component.html',
-  styleUrl: './penalties-post-complaint.component.scss'
+  styleUrl: './penalties-post-complaint.component.scss',
 })
 export class PenaltiesPostComplaintComponent implements OnInit {
   //Variables
@@ -18,29 +36,56 @@ export class PenaltiesPostComplaintComponent implements OnInit {
   reactiveForm: FormGroup;
   files: File[] = [];
   otroSelected: boolean = false;
-
-
+  options: { name: string; value: any }[] = [];
 
   //Constructor
   constructor(
     private complaintService: ComplaintService,
-    private router: Router,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private routingService: RoutingService,
+    private authService: AuthService
   ) {
-    this.reactiveForm = this.formBuilder.group({  //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
-      complaintReason: new FormControl('', [Validators.required]),
+    this.reactiveForm = this.formBuilder.group({
+      //Usen las validaciones que necesiten, todo lo de aca esta puesto a modo de ejemplo
+      complaintReason: new FormControl([], [Validators.required]),
       anotherReason: new FormControl(''),
-      descriptionControl: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(255)]),
+      descriptionControl: new FormControl('', [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(255),
+      ]),
       fileControl: new FormControl(null),
     });
   }
 
+  updateSelect(data: any) {
+    this.reactiveForm.get('complaintReason')?.setValue(data);
+  }
 
   //Init
   ngOnInit(): void {
     this.getTypes();
-  }
 
+    // Escuchar cambios en 'complaintReason' para activar o desactivar la validación
+    this.reactiveForm
+      .get('complaintReason')
+      ?.valueChanges.subscribe((value) => {
+        const anotherReasonControl = this.reactiveForm.get('anotherReason');
+
+        if (value === 'Otro') {
+          anotherReasonControl?.setValidators([
+            Validators.required,
+            Validators.minLength(10),
+            Validators.maxLength(48),
+          ]);
+        } else {
+          anotherReasonControl?.clearValidators();
+        }
+
+        // Actualizar el estado de validación de 'anotherReason'
+        anotherReasonControl?.updateValueAndValidity();
+      });
+  }
 
   //Submit del form
   onSubmit(): void {
@@ -51,140 +96,119 @@ export class PenaltiesPostComplaintComponent implements OnInit {
         complaintReason: formData.complaintReason,
         anotherReason: formData.anotherReason,
         description: formData.descriptionControl,
-        pictures: this.files
+        pictures: this.files,
       };
 
-      (window as any).Swal.fire({
-        title: '¿Estás seguro?',
-        text: "¿Deseas confirmar el envío de la denuncia?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-          confirmButton: 'btn btn-success',
-          cancelButton: 'btn btn-danger'
+      this.complaintService.add(data).subscribe(
+        (res) => {
+          Swal.fire({
+            title: '¡Denuncia enviada!',
+            text: 'La denuncia ha sido enviada correctamente.',
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false,
+          });
+          if (this.getPermisionsToSeeList()) {
+            this.routingService.redirect(
+              'main/complaints/list-complaint',
+              'Listado de Denuncias'
+            );
+          } else {
+            this.routingService.redirect('/main/home', 'Página Principal');
+          }
         },
-      }).then((result: any) => {
-        console.log(data)
-        if (result.isConfirmed) {
-
-          // This method sends the 
-          // complaint to the service.
-
-          // If the complaint is sent correctly, 
-          // it will show a success message.
-          
-          // If the complaint is not sent correctly, 
-          // it will show an error message.
-          this.complaintService.add(data).subscribe( res => {
-              (window as any).Swal.fire({
-                title: '¡Denuncia enviada!',
-                text: 'La denuncia ha sido enviada correctamente.',
-                icon: 'success',
-                timer: 1500,
-                showConfirmButton: false
-              });
-              this.router.navigate(['/home/complaints/listComplaint']);
-            }, error => {
-              console.error('Error al enviar la denuncia', error);
-              (window as any).Swal.fire({
-                title: 'Error',
-                text: 'No se pudo enviar la denuncia. Inténtalo de nuevo.',
-                icon: 'error',
-                confirmButtonText: 'Aceptar'
-              });
-            })
-          };
-        });
-
-
+        (error) => {
+          console.error('Error al enviar la denuncia', error);
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo enviar la denuncia. Inténtalo de nuevo.',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+          });
+        }
+      );
     }
   }
 
+  //
+  cancel() {
+    if (this.getPermisionsToSeeList()) {
+      this.routingService.redirect(
+        'main/complaints/list-complaint',
+        'Listado de Denuncias'
+      );
+    } else {
+      this.routingService.redirect('/main/home', 'Página Principal');
+    }
+  }
 
-  //This method returns a class for the input.
-
-  // Param 'controlName'
-  // The name of the control.
-  // Param 'isValid' Whether the
-  // control is valid or not.
-
-  // Return The class to be applied 
-  // to the input (Green or red).
+  //
   onValidate(controlName: string) {
     const control = this.reactiveForm.get(controlName);
     return {
       'is-invalid': control?.invalid && (control?.dirty || control?.touched),
-      'is-valid': control?.valid
-    }
+      'is-valid': control?.valid,
+    };
   }
 
+  show() {
+    console.log('Formulario:', this.reactiveForm.value);
+  }
 
-
-  //This method checks if there is an error in the input.
-
-  // Param 'controlName' The 
-  // name of the control.
-
-  // Returns an error message 
-  // based on the first found error.
-  // If no error is found, it 
-  // returns an empty string.
-
-  showError(controlName: string) {
+  //
+  showError(controlName: string): string {
     const control = this.reactiveForm.get(controlName);
-    
-    if (control && control.errors) {
-      const errorKey = Object.keys(control!.errors!)[0];
-      switch (errorKey) {
-        case 'required':
-          return 'Este campo no puede estar vacío.';
-        case 'email':
-          return 'Formato de correo electrónico inválido.';
-        case 'minlength':
-          return `El valor ingresado es demasiado corto. Mínimo ${control.errors['minlength'].requiredLength} caracteres.`;
-        case 'maxlength':
-          return `El valor ingresado es demasiado largo. Máximo ${control.errors['maxlength'].requiredLength} caracteres.`;
-        case 'pattern':
-          return 'El formato ingresado no es válido.';
-        case 'min':
-          return `El valor es menor que el mínimo permitido (${control.errors['min'].min}).`;
-        case 'max':
-          return `El valor es mayor que el máximo permitido (${control.errors['max'].max}).`;
-        case 'requiredTrue':
-          return 'Debe aceptar el campo requerido para continuar.';
-        case 'date':
-          return 'La fecha ingresada es inválida.';
-        case 'url':
-          return 'El formato de URL ingresado no es válido.';
-        case 'number':
-          return 'Este campo solo acepta números.';
-        case 'customError':
-          return 'Error personalizado: verifique el dato ingresado.';
-        default:
-          return 'Error no identificado en el campo.';
-      }
+
+    if (
+      control?.errors &&
+      control.invalid &&
+      (control.dirty || control.touched)
+    ) {
+      const errorKey = Object.keys(control.errors)[0];
+      return this.getErrorMessage(errorKey, control.errors[errorKey]);
     }
     return '';
   }
 
+  private getErrorMessage(errorKey: string, errorValue: any): string {
+    const errorMessages: { [key: string]: (error: any) => string } = {
+      required: () => 'Este campo no puede estar vacío.',
+      email: () => 'Formato de correo electrónico inválido.',
+      minlength: (error) =>
+        `El valor ingresado es demasiado corto. Mínimo ${error.requiredLength} caracteres.`,
+      maxlength: (error) =>
+        `El valor ingresado es demasiado largo. Máximo ${error.requiredLength} caracteres.`,
+      pattern: () => 'El formato ingresado no es válido.',
+      min: (error) =>
+        `El valor es menor que el mínimo permitido (${error.min}).`,
+      max: (error) =>
+        `El valor es mayor que el máximo permitido (${error.max}).`,
+      requiredTrue: () => 'Debe aceptar el campo requerido para continuar.',
+      date: () => 'La fecha ingresada es inválida.',
+      url: () => 'El formato de URL ingresado no es válido.',
+      number: () => 'Este campo solo acepta números.',
+      customError: () => 'Error personalizado: verifique el dato ingresado.',
+    };
 
+    return (
+      errorMessages[errorKey]?.(errorValue) ??
+      'Error no identificado en el campo.'
+    );
+  }
 
-
-  // This method loads the data from the service
-  // for the select (Own of the fines microservice).
-
-  // If the data is loaded correctly, it will fill 
-  // the select with the data.
-
-  // If the data is not loaded correctly, 
-  // it will return an error.
-
+  //Trae los tipos de la base de datos
   getTypes(): void {
     this.complaintService.getAllReportReasons().subscribe(
       (reasons: ReportReasonDto[]) => {
-        reasons.forEach((reason) => this.complaintTypes.push(reason.reportReason))
+        reasons.push({ id: 0, reportReason: 'Otro', baseAmount: 0 });
+        reasons.forEach((reason) =>
+          this.complaintTypes.push(reason.reportReason)
+        );
+
+        this.options = this.complaintTypes.map((opt) => ({
+          name: opt,
+          value: opt,
+        }));
       },
       (error) => {
         console.error('error: ', error);
@@ -192,15 +216,10 @@ export class PenaltiesPostComplaintComponent implements OnInit {
     );
   }
 
-
-
   // This method formats a date
   // to send it to the input.
-
   // Param 'date' The date to be formatted.
-
   // Returns the date as a string in the format "yyyy-MM-dd".
-
   formatDate(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -209,12 +228,22 @@ export class PenaltiesPostComplaintComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-
-  
-  // This method updates the list of 
+  // This method updates the list of
   // files to the currently selected ones.
   onFileChange(event: any) {
-    this.files = Array.from(FileList = event.target.files); //Convertir FileList a Array
+    this.files = Array.from((FileList = event.target.files)); //Convertir FileList a Array
   }
 
+  permisionToEdit: boolean = false;
+  getPermisionsToSeeList() {
+    console.log(this.authService.getActualRole());
+
+    if (
+      this.authService.getActualRole() === 'SuperAdmin' ||
+      this.authService.getActualRole() === 'Gerente multas'
+    ) {
+      this.permisionToEdit = true;
+    }
+    return this.permisionToEdit;
+  }
 }
