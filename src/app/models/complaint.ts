@@ -2,8 +2,8 @@ export interface Complaint {
     id: number;
     nombre: string
     detalle: string
-    tipo: TipoDenuncia;
-    estado: EstadoDenuncia;
+    tipo:TipoDenuncia
+    estado:EstadoDenuncia
     fecha: Date;
 }
 
@@ -37,6 +37,7 @@ export interface ComplaintDto {
     complaintState: string;
     description: string;
     createdDate: Date;
+    lastUpdatedDate: Date;
     fileQuantity: number;
 }
 
