@@ -2,7 +2,10 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { provideHttpClient } from '@angular/common/http';
-import { Complaint, ComplaintDto, PutStateComplaintDto } from '../../models/complaint';
+import { Complaint, ComplaintDto, PutStateComplaintDto } from '../models/complaint';
+import { ReportReasonDto } from '../models/ReportReasonDTO';
+import { AuthService } from '../../users/users-servicies/auth.service';
+import { environment } from '../../common/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,15 +13,21 @@ import { Complaint, ComplaintDto, PutStateComplaintDto } from '../../models/comp
 export class ComplaintService {
 
   private readonly http: HttpClient = inject(HttpClient);
-  private readonly url = 'http://localhost:8040/api/complaint';
+  private readonly authService = inject(AuthService);
+  private readonly url = environment.services.complaints + '/api/complaint';
+  private readonly reportReasonUrl = environment.services.sanctions + '/api/report-reason';
+
 
 
   //Envia una nueva denuncia
   add(complaintData: any): Observable<any> {
     const complaint = new FormData();
+
+    let userId = this.authService.getUser().id.toString();
   
-    complaint.append('userId', complaintData.userId.toString());
-    complaint.append('complaintType', complaintData.complaintType);
+    complaint.append('userId', userId);
+    complaint.append('complaintReason', complaintData.complaintReason);
+    complaint.append('anotherReason', complaintData.anotherReason)
     complaint.append('description', complaintData.description);
   
     if (complaintData.pictures && complaintData.pictures.length > 0) {
@@ -30,10 +39,9 @@ export class ComplaintService {
     return this.http.post(this.url, complaint);
   }
 
-
-  //Obtiene todos los tipos de denuncia (motivos)
-  getTypes(): Observable<any> {
-    return this.http.get(this.url + `/types`);
+  // Obtiene todos los tipos de razones
+  getAllReportReasons(): Observable<any> {
+    return this.http.get<ReportReasonDto[]>(this.reportReasonUrl + "/all");
   }
 
 
@@ -49,8 +57,17 @@ export class ComplaintService {
   }
 
 
+
+  //Gets the images by their id.
+  getFilesById(id: number): Observable<Map<string, string>> {
+    return this.http.get<Map<string, string>>(this.url + `/getFiles/${id}`);
+  }
+
+
   //Actualiza el estado de una denuncia
   putStateComplaint(idcomplaint: number, updatedData: PutStateComplaintDto): Observable<any> {
+    updatedData.userId = this.authService.getUser().id;
+    
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -73,5 +90,16 @@ export class ComplaintService {
       return createdDate.toLocaleDateString('es-ES');
     }
     return new Date(date).toLocaleDateString('es-ES');
+  }
+
+  getCurrentYearMonth(): string {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  }
+
+  getDefaultFromDate(): string {
+    const date = new Date();
+    date.setMonth(date.getMonth() - 6);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 }
